@@ -6,6 +6,10 @@
 #property copyright "Copyright 2012, Aurora Solutions (pvt) Ltd."
 #property link      "http://www.aurorasolutions.org"
 
+#import "Trade Mirror Communication Library.dll"
+   bool SendToSocket(string orderInfo);
+#import
+
 #include <stdlib.mqh>
 
 //=============GLOBAL VARIABLES=============
@@ -484,20 +488,7 @@ void SendSignals()
 
 void SendOrderInformation(string orderInformation)
 {
-   //Send the order to the server
-   Print("Sending Order Info = " + orderInformation);
-   
-   int handle = FileOpen("orders.csv", FILE_CSV|FILE_WRITE, ';');
-   
-   if (handle != -1)
-   {
-      string order = FileWrite(handle, orderInformation);
-      FileClose(handle);
-   }
-   else
-   {
-      Print("[ReadOrderInformation] File orders.csv could not be opened. ERROR: " + ErrorDescription(GetLastError()));
-   }
+   SendToSocket(orderInformation);
 }
 
 int CheckPartialClose(string symbol, int ordertype, double lots, double openprice, datetime opentime, double stoploss,double takeprofit,int magicnumber)

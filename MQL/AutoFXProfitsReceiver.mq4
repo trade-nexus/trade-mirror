@@ -71,9 +71,10 @@ int init()
    
    LastProcessingTk = 0; 
    
-   //Print("gmtTime = " + gmtTime);
+   Print("GMT Time = " + gmtTime);
    EA_StartTime = ConvertToString(gmtTime);
    LastReceivingTime = EA_StartTime;
+   Print("EA Start Time / Last Receiving Time = " + LastReceivingTime);
    
    SetSymbolPrefixAndPostfix();
    
@@ -199,7 +200,7 @@ void SetSymbolPrefixAndPostfix()
    }
 }
 
-void split(string& arr[], string str, string sym) 
+void split(string& arr[], string str, string sym)
 {
    ArrayResize(arr, 0);
    string item;
@@ -256,7 +257,7 @@ string ConvertToString(datetime dt)
     
     string str3 = str1 + str2;
     
-    //2011.01.13 
+    //2011.01.13
     str1 = StringSubstr(str1,0,4)+StringSubstr(str1,5,2) + StringSubstr(str1,8,2);
     
     //10:02:03
@@ -1141,4 +1142,3 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
 //+-------------------------------------------------------------------------------------+
 //|                                   END Core Logic                                    |
 //+-------------------------------------------------------------------------------------+
-
