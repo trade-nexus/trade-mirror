@@ -1,47 +1,101 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.ServiceModel;
+using System.Text;
+using TraceSourceLogger;
 
 namespace Microsoft.ServiceModel.Samples
 {
     //The service contract is defined in generatedClient.cs, generated from the service by the svcutil tool.
 
-    //Client implementation code.
+    //DataSource implementation code.
 
-    class Client : ISampleContractCallback
+    public class DataSource : ISampleContractCallback
     {
-        static void Main(string[] args)
+        private const int PortNumber = 6666;
+        private static Type _oType = typeof(DataSource);
+
+        private static byte[] Buffer { get; set; }
+        private static Socket _socket;
+
+        private static InstanceContext _site;
+        private static SampleContractClient _client;
+
+        public static void Main(string[] args)
         {
-            InstanceContext site = new InstanceContext(new Client());
-            SampleContractClient client = new SampleContractClient(site);
+            _site = new InstanceContext(new DataSource());
+            _client = new SampleContractClient(_site);
 
-            Console.WriteLine("Sending PublishPriceChange(Gold, 400.00D, -0.25D)");
-            client.PublishPriceChange("Gold");
+            while(true)
+            {
+                ReadDataFromSocket();
+            }
+            
+        }
 
-            Console.WriteLine("Sending PublishPriceChange(Silver, 7.00D, -0.20D)");
-            client.PublishPriceChange("Silver");
+        /// <summary>
+        /// Processes the data received
+        /// </summary>
+        private static void ProcessDataReceived(string signalInformation)
+        {
+            try
+            {
+                Logger.Debug("New Signal received = " + signalInformation, _oType.FullName, "ProcessDataReceived");
 
-            Console.WriteLine("Sending PublishPriceChange(Platinum, 850.00D, +0.50D)");
-            client.PublishPriceChange("Platinum");
+                _client.PublishPriceChange(signalInformation);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Exception = " + ex.Message, _oType.FullName, "ProcessDataReceived");
+            }
+        }
 
-            Console.WriteLine("Sending PublishPriceChange(Gold, 401.00D, 1.00D)");
-            client.PublishPriceChange("Gold");
+        /// <summary>
+        /// Reads data from socket
+        /// </summary>
+        public static void ReadDataFromSocket()
+        {
+            try
+            {
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            Console.WriteLine("Sending PublishPriceChange(Silver, 6.60D, -0.40D)");
-            client.PublishPriceChange("Silver");
+                _socket.Bind(new IPEndPoint(0, PortNumber));
+                _socket.Listen(100);
 
-            Console.WriteLine();
-            Console.WriteLine("Press ENTER to shut down data source");
-            Console.ReadLine();
+                while (true)
+                {
+                    Socket accpeted = _socket.Accept();
+                    Buffer = new byte[accpeted.SendBufferSize];
+                    int bytesRead = accpeted.Receive(Buffer);
+                    Logger.Info("Number of bytes received form socket = " + bytesRead, _oType.FullName, "ReadDataFromSocket");
 
-            //Closing the client gracefully closes the connection and cleans up resources
-            client.Close();
+                    byte[] formatted = new byte[bytesRead];
+                    for (int i = 0; i < bytesRead; i++)
+                    {
+                        formatted[i] = Buffer[i];
+                    }
+
+                    string strData = Encoding.ASCII.GetString(formatted);
+                    Logger.Info("Data received form socket = " + strData, _oType.FullName, "ReadDataFromSocket");
+
+                    ProcessDataReceived(strData);
+
+                    accpeted.Close();
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, _oType.FullName, "ReadDataFromSocket");
+                _socket.Close();
+            }
+
         }
 
         public void PriceChange(string signalInformation)
         {
-            Console.WriteLine("Signal Informaton = " + signalInformation);
+            Console.WriteLine("Signal Received = " + signalInformation);
         }
-
     }
 }
 
