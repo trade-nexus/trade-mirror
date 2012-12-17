@@ -35,7 +35,7 @@ namespace Microsoft.ServiceModel.Samples
 
     // The Service implementation implements your service contract.
     [ServiceBehavior(InstanceContextMode=InstanceContextMode.PerSession)]
-    public class SampleService : ISampleContract
+    public class TradeMirrorService : ISampleContract
     {
         public static event PriceChangeEventHandler PriceChangeEvent;
         public delegate void PriceChangeEventHandler(object sender, PriceChangeEventArgs e);

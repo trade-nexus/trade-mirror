@@ -1,2 +1,2 @@
-﻿<%@ServiceHost language="c#" Debug="true" Service="Microsoft.ServiceModel.Samples.SampleService" %>
+﻿<%@ServiceHost language="c#" Debug="true" Service="Microsoft.ServiceModel.Samples.TradeMirrorService" %>
 
