@@ -14,8 +14,9 @@ namespace Microsoft.ServiceModel.Samples
     [ServiceContract(Namespace="http://Microsoft.ServiceModel.Samples", SessionMode=SessionMode.Required, CallbackContract=typeof(ISampleClientContract))]
     public interface ISampleContract
     {
-        [OperationContract(IsOneWay = false, IsInitiating=true)]
-        void Subscribe();
+        [OperationContract(IsOneWay = false, IsInitiating = true)]
+        //void Subscribe();
+        bool Subscribe(string userName, string password);
         [OperationContract(IsOneWay = false, IsTerminating=true)]
         void Unsubscribe();
         [OperationContract(IsOneWay = true)]
@@ -47,11 +48,20 @@ namespace Microsoft.ServiceModel.Samples
         //Clients call this service operation to subscribe.
         //A price change event handler is registered for this client instance.
 
-        public void Subscribe()
+        //public void Subscribe()
+        public bool Subscribe(string userName, string password)
         {
-            callback = OperationContext.Current.GetCallbackChannel<ISampleClientContract>();
-            priceChangeHandler = new PriceChangeEventHandler(PriceChangeHandler);
-            PriceChangeEvent += priceChangeHandler;
+            if(userName == "umerazizmalik" && password == "abdulaziz")
+            {
+                callback = OperationContext.Current.GetCallbackChannel<ISampleClientContract>();
+                priceChangeHandler = new PriceChangeEventHandler(PriceChangeHandler);
+                PriceChangeEvent += priceChangeHandler;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         //Clients call this service operation to unsubscribe.
