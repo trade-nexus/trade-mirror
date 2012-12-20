@@ -31,20 +31,31 @@ namespace Microsoft.ServiceModel.Samples
                 //Subscribe.
                 Console.WriteLine("Subscribing");
                 Logger.Info("Subscribing", _oType.FullName, "Main");
-                client.Subscribe();
 
-                //client.PublishPriceChange("HELLO");
+                if (client.Subscribe("umerazizmalik", "abdulaziz"))
+                {
+                    //client.PublishPriceChange("HELLO");
 
-                Console.WriteLine();
-                Console.WriteLine("Press ENTER to unsubscribe and shut down client");
-                Console.ReadLine();
+                    Console.WriteLine();
+                    Console.WriteLine("Press ENTER to unsubscribe and shut down client");
+                    Console.ReadLine();
 
-                Console.WriteLine("Unsubscribing");
-                Logger.Info("Unsubscribing", _oType.FullName, "Main");
-                client.Unsubscribe();
+                    Console.WriteLine("Unsubscribing");
+                    Logger.Info("Unsubscribing", _oType.FullName, "Main");
+                    client.Unsubscribe();
 
-                //Closing the client gracefully closes the connection and cleans up resources
-                client.Close();
+                    //Closing the client gracefully closes the connection and cleans up resources
+                    client.Close();
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Invalid Client Credentials");
+                    Console.ReadLine();
+
+                    //Closing the client gracefully closes the connection and cleans up resources
+                    client.Close();
+                }
             }
             catch (Exception exception)
             {
@@ -52,11 +63,17 @@ namespace Microsoft.ServiceModel.Samples
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signalInformation"></param>
         public void PriceChange(string signalInformation)
         {
             Console.WriteLine("Signal Received = " + signalInformation);
             Logger.Info("Signal Received = " + signalInformation, _oType.FullName, "PriceChange");
-            PlaceOrder(signalInformation);
+
+            TransformOrderInformation(signalInformation);
+            //PlaceOrder(signalInformation);
         }
 
         /// <summary>
@@ -89,6 +106,17 @@ namespace Microsoft.ServiceModel.Samples
             {
                 Logger.Error(exception, _oType.FullName, "PlaceOrder");
             }
+        }
+
+        public static void TransformOrderInformation(string originalSignalInformation)
+        {
+            int id = 2222;
+            string type = "manual";
+            DateTime dateTime = DateTime.UtcNow;
+
+            string newSignalInformation = id + "," + type + "," + originalSignalInformation + "," + dateTime.ToString("yyyyMMddhhmmss") + ";";    //20110113093101
+
+            PlaceOrder(newSignalInformation);
         }
     }
 }
