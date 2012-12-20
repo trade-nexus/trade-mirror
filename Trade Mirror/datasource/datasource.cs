@@ -42,6 +42,7 @@ namespace Microsoft.ServiceModel.Samples
             try
             {
                 Logger.Debug("New Signal received = " + signalInformation, _oType.FullName, "ProcessDataReceived");
+                Console.WriteLine("New Signal received = " + signalInformation);
 
                 _client.PublishPriceChange(signalInformation);
             }
