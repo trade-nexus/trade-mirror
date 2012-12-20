@@ -1,0 +1,6 @@
+LIBRARY ATCTFuncDll
+DESCRIPTION 'This is my DLL
+
+EXPORTS
+SpawnOrderPad @2
+SendToSocket @4
