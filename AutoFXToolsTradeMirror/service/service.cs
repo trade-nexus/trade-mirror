@@ -1,20 +1,20 @@
-﻿//----------------------------------------------------------------
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//----------------------------------------------------------------
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
+using System.Timers;
+using TraceSourceLogger;
 
 namespace Microsoft.Samples.NetTcp
 {
-    // Define a service contract.
     [ServiceContract(Namespace = "http://Microsoft.Samples.NetTcp", SessionMode = SessionMode.Required, CallbackContract = typeof(ITradeMirrorClientContract))]
     public interface ITradeMirror
     {
         [OperationContract]
-        bool Subscribe(string userName, string password);
+        bool Subscribe(string userName, string password, int accountID);
+
         [OperationContract]
-        void Unsubscribe();
+        bool Unsubscribe(string userName, string password, int accountID);
+
         [OperationContract]
         void PublishNewSignal(string signalInformation);
     }
@@ -30,96 +30,219 @@ namespace Microsoft.Samples.NetTcp
         public string SignalInformation;
     }
 
-    // Service class which implements the service contract.
-    // Added code to write output to the console window
     public class TradeMirrorService : ITradeMirror
     {
+        private static readonly Type OType = typeof(TradeMirrorService);
+
         public static event NewSignalEventHandler NewSignalEvent;
         public delegate void NewSignalEventHandler(object sender, NewSignalEventArgs e);
 
-        ITradeMirrorClientContract callback = null;
+        ITradeMirrorClientContract _callback = null;
 
-        NewSignalEventHandler newSignalHandler = null;
+        NewSignalEventHandler _newSignalHandler = null;
+
+        private static DBHelper _helper = null;
+
+        private static List<User> AutoFXUsers { get; set; }
+
+        private static Timer _updateUserListTimer;
+        private const int UpdateUserListSeconds = 86400;
+
+        private int _systemOrderID = 0;
+
+        public int SystemOrderID
+        {
+            get { return this._systemOrderID; }
+            set { this._systemOrderID = value; }
+        }
 
         /// <summary>
-        /// 
+        /// Subscribes a user to the signals
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
+        /// <param name="accountID"> </param>
         /// <returns></returns>
-        public bool Subscribe(string userName, string password)
+        public bool Subscribe(string userName, string password, int accountID)
         {
+            Logger.Debug("New Client Connection received. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
+
             try
             {
-                if (userName == "umerazizmalik" && password == "abdulaziz")
+                
+                if (AuthenticateUserCredentials(userName, password, accountID))
                 {
-                    callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();
-                    newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
-                    NewSignalEvent += newSignalHandler;
+                    Logger.Debug("Client Authenticated. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
+                    _callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();
+                    _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
+                    NewSignalEvent += _newSignalHandler;
+                    //ToDO: Add to active users list
                     return true;
                 }
                 else
                 {
+                    Logger.Debug("Client Authentication failed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
                     return false;
                 }
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                Console.ReadLine();
+                Logger.Error(exception, OType.FullName, "Subscribe");
                 return false;
             }
         }
 
         /// <summary>
-        /// 
+        /// Un-Subscribes a user
         /// </summary>
-        public void Unsubscribe()
+        public bool Unsubscribe(string userName, string password, int accountID)
         {
             try
             {
-                NewSignalEvent -= newSignalHandler;
+                NewSignalEvent -= _newSignalHandler;
+                Logger.Debug("Client Unsubscribed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Unsubscribe");
+                return true;
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
-                Console.ReadLine();
+                Logger.Error(exception, OType.FullName, "Unsubscribe");
+                return false;
             }
         }
 
-        //Information source clients call this service operation to report a price change.
-        //A price change event is raised. The price change event handlers for each subscriber will execute.
-
+        /// <summary>
+        /// Fire the new sinal event to the subscribed users
+        /// </summary>
+        /// <param name="signalInformation"></param>
         public void PublishNewSignal(string signalInformation)
         {
-            NewSignalEventArgs e = new NewSignalEventArgs();
-            e.SignalInformation = signalInformation;
-            NewSignalEvent(this, e);
+            try
+            {
+                if (signalInformation.Contains("___autofxtools trademirror___Alive___"))
+                {
+                    Logger.Debug("Heartbeat. = " + signalInformation, OType.FullName, "PublishNewSignal");
+                }
+                else
+                {
+                    Logger.Debug("New Signal Receievd from data source. Signal = " + signalInformation, OType.FullName, "PublishNewSignal");
+                    _systemOrderID++;
+
+                    signalInformation = TransformSignalInformation(signalInformation, _systemOrderID);
+                }
+
+                var e = new NewSignalEventArgs {SignalInformation = signalInformation};
+                NewSignalEvent(this, e);
+                Logger.Debug("New Message Published. Message = " + signalInformation, OType.FullName, "PublishNewSignal");
+
+                //_helper.ParseAndInsertData(signalInformation);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "PublishNewSignal");
+            }
         }
 
-        // Host the service within this EXE console application.
+        /// <summary>
+        /// Service host console
+        /// </summary>
         public static void Main()
         {
-            // Create a ServiceHost for the TradeMirrorService type.
-            using (ServiceHost serviceHost = new ServiceHost(typeof(TradeMirrorService), new Uri("net.tcp://localhost:9000/servicemodelsamples/service")))
+            var connectionManager = new ConnectionManager();
+            _helper = new DBHelper(connectionManager);
+            AutoFXUsers = _helper.BuildUsersList();
+
+            _updateUserListTimer = new Timer(UpdateUserListSeconds * 1000);
+            _updateUserListTimer.Elapsed += UpdateUserListTimerElapsed;
+            _updateUserListTimer.AutoReset = true;
+            _updateUserListTimer.Enabled = true;
+
+            //TEST
+            //AuthenticateUserCredentials("1413684", "forexsuccess", 1413684);
+
+            ServiceHost serviceHost = null;
+            try
             {
+                serviceHost = new ServiceHost(typeof (TradeMirrorService),
+                                                          new Uri("net.tcp://localhost:9000/servicemodelsamples/service"));
+                
                 // Open the ServiceHost to create listeners and start listening for messages.
                 serviceHost.Open();
+                Logger.Debug("Service host started", OType.FullName, "Main");
 
                 // The service can now be accessed.
                 Console.WriteLine("The service is ready.");
-                Console.WriteLine("Press <ENTER> to terminate service.");
-                Console.WriteLine();
-                Console.ReadLine();
+                Console.WriteLine("Type 'quit' to terminate service.");
+
+                if (Console.ReadLine() == "quit")
+                {
+                    serviceHost.Close();
+                }
+                else
+                {
+                    Console.ReadLine();
+                    serviceHost.Close();
+                }
+                
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "Main");
+            }
+            finally
+            {
+                if (serviceHost != null)
+                    ((IDisposable)serviceHost).Dispose();
             }
         }
 
-        //This event handler runs when a PriceChange event is raised.
-        //The client's PriceChange service operation is invoked to provide notification about the price change.
-
+        /// <summary>
+        /// New Signal event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void NewSignalHandler(object sender, NewSignalEventArgs e)
         {
-            callback.NewSignal(e.SignalInformation);
+            _callback.NewSignal(e.SignalInformation);
+        }
+
+        public static bool AuthenticateUserCredentials(string userName, string password, int accountID)
+        {
+            try
+            {
+                User testUser = new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password);
+                if (AutoFXUsers.BinarySearch(testUser) > -1)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "AuthenticateUserCredentials");
+                return false;
+            }
+            
+        }
+
+        private string TransformSignalInformation(string originalSignal, int orderID)
+        {
+            //222,manual,OP9476112_S_USDJPY_T_0_L_1.00_P_83.03_sl_0.00_tp_0.00,20110113093101;
+
+            string strategyType = "manual";
+            DateTime creationTime = DateTime.UtcNow;
+
+            string newSignal = orderID + "," + strategyType + "," + originalSignal + "," + creationTime.ToString("yyyyMMddHHmmss") + ";";
+            Logger.Info("Signal information transformed to = " + newSignal, OType.FullName, "TransformSignalInformation");
+
+            return newSignal;
+        }
+
+        public static void UpdateUserListTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            AutoFXUsers = _helper.BuildUsersList();
+            Logger.Debug("User List Updated. Count = " + AutoFXUsers.Count, OType.FullName, "UpdateUserListTimerElapsed");
         }
     }
 }
