@@ -16,10 +16,10 @@ public interface ITradeMirror
 {
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/Subscribe", ReplyAction = "http://Microsoft.Samples.NetTcp/ITradeMirror/SubscribeResponse")]
-    bool Subscribe(string userName, string password);
+    bool Subscribe(string userName, string password, int accountID);
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/Unsubscribe", ReplyAction = "http://Microsoft.Samples.NetTcp/ITradeMirror/UnsubscribeResponse")]
-    void Unsubscribe();
+    bool Unsubscribe(string userName, string password, int accountID);
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/PublishNewSignal", ReplyAction = "http://Microsoft.Samples.NetTcp/ITradeMirror/PublishNewSignalResponse")]
     void PublishNewSignal(string signalInformation);
@@ -68,14 +68,14 @@ public partial class TradeMirrorClient : System.ServiceModel.DuplexClientBase<IT
     {
     }
 
-    public bool Subscribe(string userName, string password)
+    public bool Subscribe(string userName, string password, int accountID)
     {
-        return base.Channel.Subscribe(userName, password);
+        return base.Channel.Subscribe(userName, password, accountID);
     }
 
-    public void Unsubscribe()
+    public bool Unsubscribe(string userName, string password, int accountID)
     {
-        base.Channel.Unsubscribe();
+        return base.Channel.Unsubscribe(userName, password, accountID);
     }
 
     public void PublishNewSignal(string signalInformation)

@@ -56,10 +56,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
+    <Reference Include="TraceSourceLogger">
+      <HintPath>..\Library\TraceSourceLogger.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="client.cs" />
-    <Compile Include="generatedClient.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="GeneratedClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
