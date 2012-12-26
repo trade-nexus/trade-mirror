@@ -3,58 +3,67 @@ using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
 using System.Text;
+using System.Timers;
 using TraceSourceLogger;
 
 namespace Microsoft.ServiceModel.Samples
 {
-    //The service contract is defined in generatedClient.cs, generated from the service by the svcutil tool.
-
-    //DataSource implementation code.
-
     public class DataSource : ITradeMirrorCallback
     {
         private const int PortNumber = 6666;
-        private static Type _oType = typeof (DataSource);
+        private static readonly Type OType = typeof (DataSource);
 
         private static byte[] Buffer { get; set; }
         private static Socket _socket;
 
         private static InstanceContext _site;
         private static TradeMirrorClient _client;
+        private static Timer _heartbeatTimer;
+        private const int DelaySeconds = 30;
 
+        private const string HeartbeatMessage = "___autofxtools trademirror___Alive___";
+
+        /// <summary>
+        /// DataSource Main function
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             // Create a client
             _site = new InstanceContext(null, new DataSource());
             _client = new TradeMirrorClient(_site);
 
+            _heartbeatTimer = new Timer(DelaySeconds * 1000);
+            _heartbeatTimer.Elapsed += HeartbeatTimerElapsed;
+            _heartbeatTimer.AutoReset = true;
+            _heartbeatTimer.Enabled = true;
+
             while (true)
             {
                 ReadDataFromSocket();
             }
-
         }
 
         /// <summary>
-        /// Processes the data received
+        /// Processes the data received from AutoFXToolsSender
         /// </summary>
         private static void ProcessDataReceived(string signalInformation)
         {
             try
             {
-                Logger.Debug("New Signal received = " + signalInformation, _oType.FullName, "ProcessDataReceived");
+                Logger.Debug("New Signal received = " + signalInformation, OType.FullName, "ProcessDataReceived");
                 Console.WriteLine("New Signal received = " + signalInformation);
 
                 _client.PublishNewSignal(signalInformation);
             }
             catch (Exception ex)
             {
-                Logger.Error("Exception = " + ex.Message, _oType.FullName, "ProcessDataReceived");
+                Logger.Error("Exception = " + ex.Message, OType.FullName, "ProcessDataReceived");
             }
         }
 
         /// <summary>
-        /// Reads data from socket
+        /// Reads data from socket sent by AutoFXToolsSender
         /// </summary>
         public static void ReadDataFromSocket()
         {
@@ -70,17 +79,17 @@ namespace Microsoft.ServiceModel.Samples
                     Socket accpeted = _socket.Accept();
                     Buffer = new byte[accpeted.SendBufferSize];
                     int bytesRead = accpeted.Receive(Buffer);
-                    Logger.Info("Number of bytes received form socket = " + bytesRead, _oType.FullName,
+                    Logger.Info("Number of bytes received form socket = " + bytesRead, OType.FullName,
                                 "ReadDataFromSocket");
 
-                    byte[] formatted = new byte[bytesRead];
+                    var formatted = new byte[bytesRead];
                     for (int i = 0; i < bytesRead; i++)
                     {
                         formatted[i] = Buffer[i];
                     }
 
                     string strData = Encoding.ASCII.GetString(formatted);
-                    Logger.Info("Data received form socket = " + strData, _oType.FullName, "ReadDataFromSocket");
+                    Logger.Info("Data received form socket = " + strData, OType.FullName, "ReadDataFromSocket");
 
                     ProcessDataReceived(strData);
 
@@ -89,7 +98,7 @@ namespace Microsoft.ServiceModel.Samples
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, _oType.FullName, "ReadDataFromSocket");
+                Logger.Error(exception, OType.FullName, "ReadDataFromSocket");
                 _socket.Close();
             }
 
@@ -105,6 +114,11 @@ namespace Microsoft.ServiceModel.Samples
 
             //TransformOrderInformation(signalInformation);
             //PlaceOrder(signalInformation);
+        }
+
+        public static void HeartbeatTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            _client.PublishNewSignal(HeartbeatMessage + DateTime.UtcNow);
         }
     }
 }

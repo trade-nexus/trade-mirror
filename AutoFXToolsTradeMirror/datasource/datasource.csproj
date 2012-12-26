@@ -64,8 +64,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="datasource.cs" />
-    <Compile Include="generatedClient.cs" />
+    <Compile Include="Datasource.cs" />
+    <Compile Include="GeneratedClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
