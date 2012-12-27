@@ -11,7 +11,7 @@
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>datasource</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -60,7 +60,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     <Reference Include="TraceSourceLogger">
-      <HintPath>..\Library\TraceSourceLogger.dll</HintPath>
+      <HintPath>..\Library\TraceSourceLogger 3.5\TraceSourceLogger.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
