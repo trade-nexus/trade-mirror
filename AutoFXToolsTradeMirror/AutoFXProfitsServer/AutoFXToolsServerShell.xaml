@@ -1,0 +1,445 @@
+﻿<Window x:Class="AutoFXProfitsServer.AutoFXToolsServerShell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Auto FX Profits - Trade Mirror Server" Height="550" Width="520">
+
+    <Grid Width="500" Height="630" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.85*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid 
+            Grid.Column="0"
+            Grid.ColumnSpan="2" 
+            Grid.Row="0" 
+            Grid.RowSpan="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.4*"/>
+                <RowDefinition Height="0.6*"/>
+            </Grid.RowDefinitions>
+
+            <Label 
+                Content="Auto FX Profits Trade Mirror" 
+                Grid.Column="0"
+                Grid.ColumnSpan="2" 
+                Grid.Row="0" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="1,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="16"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="Total Clients:" 
+                Grid.Column="0"
+                Grid.ColumnSpan="1" 
+                Grid.Row="1" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="1,1,50,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="{Binding TotalClients}" 
+                Grid.Column="0"
+                Grid.ColumnSpan="1" 
+                Grid.Row="1" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="60,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="Connected Clients:" 
+                Grid.Column="1"
+                Grid.ColumnSpan="1" 
+                Grid.Row="1" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="1,1,65,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="{Binding ConnectedClients}" 
+                Grid.Column="1"
+                Grid.ColumnSpan="1" 
+                Grid.Row="1" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="75,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+        </Grid>
+
+        <TabControl 
+            Grid.Column="0"
+            Grid.ColumnSpan="2" 
+            Grid.Row="1" 
+            Grid.RowSpan="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Name="UsersTabControl" 
+            Width="500">
+            
+            <TabItem Header="Users" Name="UsersTabItem">
+                <Grid Width="515" Height="395" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.9*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label 
+                        Content="Search:" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Name="SearchLabel"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+                    
+                    <TextBox 
+                        Text="{Binding SearchItem}" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Name="textBox1" 
+                        Width="100"
+                        Height="25"
+                        Margin="1,1,1,1"/>
+
+                    <ComboBox 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Width="80"
+                        ItemsSource="{Binding SearchTermsCollection}"
+                        SelectedItem="{Binding SelectedSearchType}"
+                        Margin="1,1,50,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12" 
+                        FontWeight="Bold" 
+                        SelectionChanged="SearchTermsComboBoxSelectionChanged" />
+                    
+                    <Button 
+                        Content="Go" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SearchGoCommand}"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+                    
+                    <RadioButton 
+                        Content="All Users" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="40,1,1,1"/>
+
+                    <RadioButton 
+                        Content="Active" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="15,1,1,1"/>
+
+                    <RadioButton 
+                        Content="Revoked" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="1,1,30,1"/>
+
+                    <ListView 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Width="485"
+                        Height="325"
+                        ItemsSource="{Binding FilteredUsersCollection}">
+
+                        <ListView.View>
+                            
+                            <GridView>
+                                <GridViewColumn 
+                                    Width="40">
+                                    <GridViewColumnHeader>S. No</GridViewColumnHeader>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding ID}"
+                                                    HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn
+                                    Width="100">
+                                    <GridViewColumnHeader>Account ID</GridViewColumnHeader>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding AccountNumber}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="100">
+                                    <GridViewColumnHeader>Key String</GridViewColumnHeader>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding KeyString}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="180">
+                                    <GridViewColumnHeader>Email ID</GridViewColumnHeader>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding Email}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="60">
+                                    <GridViewColumnHeader>Status</GridViewColumnHeader>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding Status}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                            
+                        </ListView.View>
+                    </ListView>
+
+                    <Button 
+                        Content="Add New User" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding AddNewUserCommand}"
+                        Margin="1,1,30,3" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+                    
+                    
+                </Grid>
+                
+                
+                
+            </TabItem>
+
+            <TabItem Header="Email" Name="EmailTabItem">
+                <Grid Width="495" Height="400" >
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.9*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label 
+                        Content="Select Email Template:" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Name="EmailTemplateLabel"
+                        Margin="1,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <ComboBox 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Width="100"
+                        ItemsSource="{Binding EmailTemplateNamesCollection}"
+                        SelectedItem="{Binding SelectedEmailTemplateName}"
+                        Margin="1,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12" 
+                        FontWeight="Bold" 
+                        SelectionChanged ="EmailTemplateSelectionChanged" />
+
+                    <Button 
+                        Content="Save" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SaveTemplateChangesCommand}"
+                        Margin="1,1,91,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <Button 
+                        Content="Undo" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding UndoEmailTemplateCommand}"
+                        Margin="1,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+                    
+                    <TextBox 
+                        Text="{Binding SelectedEmailTemplate}"
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Top"
+                        HorizontalContentAlignment="Left"
+                        Width="490" 
+                        Height="350"
+                        IsEnabled="{Binding EmailTemplateViewEnabled}"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
