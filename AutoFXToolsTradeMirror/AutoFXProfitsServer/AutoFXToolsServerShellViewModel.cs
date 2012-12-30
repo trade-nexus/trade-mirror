@@ -22,6 +22,7 @@ namespace AutoFXProfitsServer
         public ICommand AddNewUserCommand { get; set; }
 
         private DBHelper _helper = null;
+        private SearchHelper _searchHelper = null;
 
         private static List<User> AutoFXUsers { get; set; }
 
@@ -166,6 +167,71 @@ namespace AutoFXProfitsServer
 
         #endregion
 
+        #region ActiveClients
+
+        public static readonly DependencyProperty ActiveClientsProperty =
+            DependencyProperty.Register("ActiveClients", typeof (int), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(int)));
+
+        public int ActiveClients
+        {
+            get { return (int) GetValue(ActiveClientsProperty); }
+            set { SetValue(ActiveClientsProperty, value); }
+        }
+
+        #endregion
+
+        #region RevokedClients
+
+        public static readonly DependencyProperty RevokedClientsProperty =
+            DependencyProperty.Register("RevokedClients", typeof (int), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(int)));
+
+        public int RevokedClients
+        {
+            get { return (int) GetValue(RevokedClientsProperty); }
+            set { SetValue(RevokedClientsProperty, value); }
+        }
+
+        #endregion
+
+        #region IsAllUsersChecked
+
+        public static readonly DependencyProperty IsAllUsersCheckedProperty =
+            DependencyProperty.Register("IsAllUsersChecked", typeof (bool), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(true));
+
+        public bool IsAllUsersChecked
+        {
+            get { return (bool) GetValue(IsAllUsersCheckedProperty); }
+            set { SetValue(IsAllUsersCheckedProperty, value); }
+        }
+
+        #endregion
+
+        #region IsActiveUsersChecked
+
+        public static readonly DependencyProperty IsActiveUsersCheckedProperty =
+            DependencyProperty.Register("IsActiveUsersChecked", typeof (bool), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(bool)));
+
+        public bool IsActiveUsersChecked
+        {
+            get { return (bool) GetValue(IsActiveUsersCheckedProperty); }
+            set { SetValue(IsActiveUsersCheckedProperty, value); }
+        }
+
+        #endregion
+
+        #region IsRevokedUsersChecked
+
+        public static readonly DependencyProperty IsRevokedUsersCheckedProperty =
+            DependencyProperty.Register("IsRevokedUsersChecked", typeof (bool), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(bool)));
+
+        public bool IsRevokedUsersChecked
+        {
+            get { return (bool) GetValue(IsRevokedUsersCheckedProperty); }
+            set { SetValue(IsRevokedUsersCheckedProperty, value); }
+        }
+
+        #endregion
+
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -189,7 +255,9 @@ namespace AutoFXProfitsServer
             InitializeSearchTermsCollection();
             InitializeEmailTemplateNamesCollection();
             InitializeFilteredUsersCollection();
-            
+            this._searchHelper = new SearchHelper(AutoFXUsers);
+            SetActiveUsersOnUI();
+            SetRevokedUsersOnUI();
         }
 
         /// <summary>
@@ -282,7 +350,77 @@ namespace AutoFXProfitsServer
         /// </summary>
         public void SearchUsers()
         {
+            try
+            {
+                string searchFilter = "All";
+                this.FilteredUsersCollection.Clear();
+
+                if (IsAllUsersChecked)
+                {
+                    searchFilter = "All";
+                }
+                else if(IsActiveUsersChecked)
+                {
+                    searchFilter = "Active";
+                }
+                else if (IsRevokedUsersChecked)
+                {
+                    searchFilter = "Revoked";
+                }
+
+                var searchedUsers = this._searchHelper.SearchUser(SelectedSearchType, SearchItem, searchFilter);
+                foreach (var revokedUser in searchedUsers)
+                {
+                    this.FilteredUsersCollection.Add(revokedUser);
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SearchUsers");
+                throw;
+            }
             
+        }
+        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetActiveUsersOnUI()
+        {
+            try
+            {
+                int numberOfActiveUsers = this._searchHelper.GetActiveUsers().Count;
+
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                                                                                       {
+                                                                                           this.ActiveClients = numberOfActiveUsers;
+                                                                                       }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SetActiveUsersOnUI");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetRevokedUsersOnUI()
+        {
+            try
+            {
+                int numberOfRevokedUsers = this._searchHelper.GetRevokedUsers().Count;
+
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    this.RevokedClients = numberOfRevokedUsers;
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SetRevokedUsersOnUI");
+            }
         }
     }
 }

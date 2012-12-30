@@ -39,10 +39,19 @@ namespace AutoFXProfitsServer
             set { this._role = value; }
         }
 
-        public bool Status
+        public string Status
         {
-            get { return this._status; }
-            set { this._status = value; }
+            get
+            {
+                if (this._status == true)
+                {
+                    return "Active";
+                }
+                else
+                {
+                    return "Revoked";
+                }
+            }
         }
 
         public int AccountNumber
@@ -121,7 +130,7 @@ namespace AutoFXProfitsServer
         {
             this._accountNumber = accountNumber;
             this._created = created;
-            this._email = email;
+            this._email = email.ToLower();
             this._id = id;
             this._keyString = keyString;
             this._modified = modified;
@@ -138,27 +147,27 @@ namespace AutoFXProfitsServer
                    Role + " | Status = " + Status;
         }
 
-        public override bool Equals(object obj)
-        {
-            User user2 = (User)obj;
-            if(this.AccountNumber == user2.AccountNumber)
-            {
-                if (this.KeyString == user2.KeyString)
-                {
-                    return true;
-                }
-                else
-                {
-                    //Logger.Debug("The Keystring provided is incorrect. Username = " + user2.AccountNumber + " | Password = " + user2.KeyString, OType.FullName, "Equals");
-                    return false;
-                }
-            }
-            else
-            {
-                //Logger.Debug("The UserName provided is incorrect. Username = " + user2.AccountNumber + " | Password = " + user2.KeyString, OType.FullName, "Equals");
-                return false;
-            }
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    User user2 = (User)obj;
+        //    if(this.AccountNumber == user2.AccountNumber)
+        //    {
+        //        if (this.KeyString == user2.KeyString)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            //Logger.Debug("The Keystring provided is incorrect. Username = " + user2.AccountNumber + " | Password = " + user2.KeyString, OType.FullName, "Equals");
+        //            return false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //Logger.Debug("The UserName provided is incorrect. Username = " + user2.AccountNumber + " | Password = " + user2.KeyString, OType.FullName, "Equals");
+        //        return false;
+        //    }
+        //}
 
         public int CompareTo(object obj)
         {
@@ -167,7 +176,7 @@ namespace AutoFXProfitsServer
             {
                 if (this.KeyString == user2.KeyString)
                 {
-                    if (this.Status)
+                    if (this.Status == "Active")
                     {
                         return 0;
                     }

@@ -1,9 +1,11 @@
 ﻿<Window x:Class="AutoFXProfitsServer.AutoFXToolsServerShell"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auto FX Profits - Trade Mirror Server" Height="550" Width="520">
+        Title="Auto FX Profits - Trade Mirror Server" Height="550" Width="530"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanMinimize">
 
-    <Grid Width="500" Height="630" >
+    <Grid Width="520" Height="630" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition Width="0.5*"/>
@@ -21,71 +23,69 @@
             Grid.RowSpan="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.25*"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.4*"/>
-                <RowDefinition Height="0.6*"/>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.3*"/>
             </Grid.RowDefinitions>
 
-            <Label 
-                Content="Auto FX Profits Trade Mirror" 
+            <Image 
                 Grid.Column="0"
-                Grid.ColumnSpan="2" 
+                Grid.ColumnSpan="4" 
                 Grid.Row="0" 
                 Grid.RowSpan="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                VerticalContentAlignment="Center"
-                HorizontalContentAlignment="Center" 
-                Margin="1,1,1,1" 
-                FontFamily="Calibri" 
-                FontSize="16"
-                FontWeight="Bold" />
-
+                Stretch="Fill" 
+                Source="/AutoFXProfitsServer;component/Resources/auto-logo.jpg" />
+            
             <Label 
                 Content="Total Clients:" 
                 Grid.Column="0"
                 Grid.ColumnSpan="1" 
                 Grid.Row="1" 
                 Grid.RowSpan="1"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center" 
-                Margin="1,1,50,1" 
+                Margin="1,1,1,1" 
                 FontFamily="Calibri" 
                 FontSize="14"
                 FontWeight="Bold" />
 
             <Label 
                 Content="{Binding TotalClients}" 
-                Grid.Column="0"
+                Grid.Column="1"
                 Grid.ColumnSpan="1" 
                 Grid.Row="1" 
                 Grid.RowSpan="1"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center" 
-                Margin="60,1,1,1" 
+                Margin="20,1,1,1" 
                 FontFamily="Calibri" 
                 FontSize="14"
                 FontWeight="Bold" />
 
             <Label 
                 Content="Connected Clients:" 
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="1" 
-                Grid.Row="1" 
+                Grid.Row="2" 
                 Grid.RowSpan="1"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center" 
-                Margin="1,1,65,1" 
+                Margin="1,1,1,1" 
                 FontFamily="Calibri" 
                 FontSize="14"
                 FontWeight="Bold" />
@@ -94,17 +94,76 @@
                 Content="{Binding ConnectedClients}" 
                 Grid.Column="1"
                 Grid.ColumnSpan="1" 
-                Grid.Row="1" 
+                Grid.Row="2" 
                 Grid.RowSpan="1"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center" 
-                Margin="75,1,1,1" 
+                Margin="20,1,1,1" 
                 FontFamily="Calibri" 
                 FontSize="14"
                 FontWeight="Bold" />
 
+            <Label 
+                Content="Active Clients:" 
+                Grid.Column="2"
+                Grid.ColumnSpan="1" 
+                Grid.Row="1" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="1,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="{Binding ActiveClients}" 
+                Grid.Column="3"
+                Grid.ColumnSpan="1" 
+                Grid.Row="1" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="20,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="Revoked Clients:" 
+                Grid.Column="2"
+                Grid.ColumnSpan="1" 
+                Grid.Row="2" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="1,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
+
+            <Label 
+                Content="{Binding RevokedClients}" 
+                Grid.Column="3"
+                Grid.ColumnSpan="1" 
+                Grid.Row="2" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center" 
+                Margin="20,1,1,1" 
+                FontFamily="Calibri" 
+                FontSize="14"
+                FontWeight="Bold" />
         </Grid>
 
         <TabControl 
@@ -117,10 +176,10 @@
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
             Name="UsersTabControl" 
-            Width="500">
+            Width="520">
             
             <TabItem Header="Users" Name="UsersTabItem">
-                <Grid Width="515" Height="395" >
+                <Grid Width="520" Height="395" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*"/>
                         <ColumnDefinition Width="0.5*"/>
@@ -197,6 +256,7 @@
                         FontWeight="Bold" />
                     
                     <RadioButton 
+                        GroupName="SearchType"
                         Content="All Users" 
                         Grid.Column="1" 
                         Grid.ColumnSpan="1" 
@@ -206,9 +266,11 @@
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        Margin="40,1,1,1"/>
+                        Margin="40,1,1,1"
+                        IsChecked="{Binding IsAllUsersChecked}"/>
 
                     <RadioButton 
+                        GroupName="SearchType"
                         Content="Active" 
                         Grid.Column="1" 
                         Grid.ColumnSpan="1" 
@@ -218,9 +280,11 @@
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        Margin="15,1,1,1"/>
+                        Margin="15,1,1,1"
+                        IsChecked="{Binding IsActiveUsersChecked}"/>
 
                     <RadioButton 
+                        GroupName="SearchType"
                         Content="Revoked" 
                         Grid.Column="1" 
                         Grid.ColumnSpan="1" 
@@ -230,7 +294,8 @@
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        Margin="1,1,30,1"/>
+                        Margin="1,1,30,1"
+                        IsChecked="{Binding IsRevokedUsersChecked}"/>
 
                     <ListView 
                         Grid.Column="0" 
@@ -241,7 +306,7 @@
                         VerticalAlignment="Top"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        Width="485"
+                        Width="500"
                         Height="325"
                         ItemsSource="{Binding FilteredUsersCollection}">
 
@@ -250,7 +315,7 @@
                             <GridView>
                                 <GridViewColumn 
                                     Width="40">
-                                    <GridViewColumnHeader>S. No</GridViewColumnHeader>
+                                    <GridViewColumnHeader>ID</GridViewColumnHeader>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -291,7 +356,7 @@
                                 </GridViewColumn>
 
                                 <GridViewColumn 
-                                    Width="180">
+                                    Width="170">
                                     <GridViewColumnHeader>Email ID</GridViewColumnHeader>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -305,7 +370,7 @@
                                 </GridViewColumn>
 
                                 <GridViewColumn 
-                                    Width="60">
+                                    Width="70">
                                     <GridViewColumnHeader>Status</GridViewColumnHeader>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -334,7 +399,7 @@
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
                         Command="{Binding AddNewUserCommand}"
-                        Margin="1,1,30,3" 
+                        Margin="1,1,20,1" 
                         FontFamily="Calibri" 
                         FontSize="14"
                         FontWeight="Bold" />
