@@ -11,17 +11,17 @@
 
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-[System.ServiceModel.ServiceContractAttribute(Namespace = "http://Microsoft.Samples.NetTcp", ConfigurationName = "ITradeMirror", CallbackContract = typeof(ITradeMirrorCallback), SessionMode = System.ServiceModel.SessionMode.Required)]
+[System.ServiceModel.ServiceContractAttribute(Namespace = "http://AutoFXProfitsServer", ConfigurationName = "ITradeMirror", CallbackContract = typeof(ITradeMirrorCallback), SessionMode = System.ServiceModel.SessionMode.Required)]
 public interface ITradeMirror
 {
 
-    [System.ServiceModel.OperationContractAttribute(Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/Subscribe", ReplyAction = "http://Microsoft.Samples.NetTcp/ITradeMirror/SubscribeResponse")]
+    [System.ServiceModel.OperationContractAttribute(Action = "http://AutoFXProfitsServer/ITradeMirror/Subscribe", ReplyAction = "http://AutoFXProfitsServer/ITradeMirror/SubscribeResponse")]
     bool Subscribe(string userName, string password, int accountID);
 
-    [System.ServiceModel.OperationContractAttribute(Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/Unsubscribe", ReplyAction = "http://Microsoft.Samples.NetTcp/ITradeMirror/UnsubscribeResponse")]
+    [System.ServiceModel.OperationContractAttribute(Action = "http://AutoFXProfitsServer/ITradeMirror/Unsubscribe", ReplyAction = "http://AutoFXProfitsServer/ITradeMirror/UnsubscribeResponse")]
     bool Unsubscribe(string userName, string password, int accountID);
 
-    [System.ServiceModel.OperationContractAttribute(Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/PublishNewSignal", ReplyAction = "http://Microsoft.Samples.NetTcp/ITradeMirror/PublishNewSignalResponse")]
+    [System.ServiceModel.OperationContractAttribute(Action = "http://AutoFXProfitsServer/ITradeMirror/PublishNewSignal", ReplyAction = "http://AutoFXProfitsServer/ITradeMirror/PublishNewSignalResponse")]
     void PublishNewSignal(string signalInformation);
 }
 
@@ -29,7 +29,7 @@ public interface ITradeMirror
 public interface ITradeMirrorCallback
 {
 
-    [System.ServiceModel.OperationContractAttribute(IsOneWay = true, Action = "http://Microsoft.Samples.NetTcp/ITradeMirror/NewSignal")]
+    [System.ServiceModel.OperationContractAttribute(IsOneWay = true, Action = "http://AutoFXProfitsServer/ITradeMirror/NewSignal")]
     void NewSignal(string signalInformation);
 }
 
