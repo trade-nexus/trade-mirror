@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -23,8 +24,12 @@ namespace AutoFXProfitsServer
 
         private DBHelper _helper = null;
         private SearchHelper _searchHelper = null;
+        //private TradeMirrorService _tradeMirrorService = null;
 
         private static List<User> AutoFXUsers { get; set; }
+        private static TradeMirrorService _service = null;
+
+        private bool _servcieStatus = false;
 
         /// <summary>
         /// Holds reference to UI dispatcher
@@ -154,6 +159,19 @@ namespace AutoFXProfitsServer
 
         #endregion
 
+        #region Service
+
+        public static readonly DependencyProperty ServiceProperty =
+            DependencyProperty.Register("Service", typeof (TradeMirrorService), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(TradeMirrorService)));
+
+        public TradeMirrorService Service
+        {
+            get { return (TradeMirrorService) GetValue(ServiceProperty); }
+            set { SetValue(ServiceProperty, value); }
+        }
+
+        #endregion
+
         #region ConnectedClients
 
         public static readonly DependencyProperty ConnectedClientsProperty =
@@ -246,11 +264,10 @@ namespace AutoFXProfitsServer
 
             var connectionManager = new ConnectionManager();
             _helper = new DBHelper(connectionManager);
-            //User user = new User(1, 12345, "hello");
-            //FilteredUsersCollection.Add(user);
+            AutoFXUsers = _helper.BuildUsersList();
 
-            //TotalClients = 1000;
-            ConnectedClients = 1;
+            Service = new TradeMirrorService();
+            ThreadPool.QueueUserWorkItem(InitializeService, Service);
 
             InitializeSearchTermsCollection();
             InitializeEmailTemplateNamesCollection();
@@ -312,7 +329,6 @@ namespace AutoFXProfitsServer
             try
             {
                 this.FilteredUsersCollection=new ObservableCollection<User>();
-                AutoFXUsers = _helper.BuildUsersList();
 
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
                                                                                         {
@@ -421,6 +437,57 @@ namespace AutoFXProfitsServer
             {
                 Logger.Error(exception, OType.FullName, "SetRevokedUsersOnUI");
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tradeMirrorServiceObject"></param>
+        private void InitializeService(Object tradeMirrorServiceObject)
+        {
+            try
+            {
+                var tradeMirrorService = (TradeMirrorService) tradeMirrorServiceObject;
+                tradeMirrorService.Start();
+                _servcieStatus = true;
+                while (_servcieStatus)
+                {
+                    
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeService");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tradeMirrorServiceObject"></param>
+        private void StopService(Object tradeMirrorServiceObject)
+        {
+            try
+            {
+                var tradeMirrorService = (TradeMirrorService)tradeMirrorServiceObject;
+                tradeMirrorService.Stop();
+                _servcieStatus = false;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "StopService");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void FreeResources()
+        {
+            //StopService(_tradeMirrorService);
+            StopService(Service);
         }
     }
 }

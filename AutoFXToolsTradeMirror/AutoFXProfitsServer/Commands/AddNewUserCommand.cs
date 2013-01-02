@@ -45,7 +45,7 @@ namespace AutoFXProfitsServer.Commands
         /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-            
+            //_autoFXToolsServerShellViewModel.AddNewUser();
         }
         #endregion
     }

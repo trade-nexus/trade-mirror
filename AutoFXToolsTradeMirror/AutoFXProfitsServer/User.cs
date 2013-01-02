@@ -4,8 +4,6 @@ namespace AutoFXProfitsServer
 {
     public class User : IComparable
     {
-        private readonly Type OType = typeof(User);
-
         #region Private Members
 
         private int _id;

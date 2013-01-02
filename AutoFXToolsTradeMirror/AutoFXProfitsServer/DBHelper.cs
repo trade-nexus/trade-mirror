@@ -89,15 +89,17 @@ namespace AutoFXProfitsServer
                 {
                     string strategy = tempArray[1].Trim();
                     string signal = tempArray[2].Trim();
-                    DateTime processingTime = Convert.ToDateTime(tempArray[3].Trim());
-                    //string processingTime = Convert.ToDateTime(tempArray[3].Trim()).ToString("yyyy-MM-dd hh:mm:ss");
+                    string processingTime = tempArray[3].TrimEnd(';');
+                    //DateTime processingTime = Convert.ToDateTime(time.ToString("yyyyMMddHHmmss"));
+                    //string processingTime = Convert.ToDateTime(tempArray[3].TrimEnd(';')).ToString("yyyyMMddHHmmss");
+                    //string processingTime = tempArray[3].Trim();
 
                     Logger.Debug(
                         "About to execute query = " + "INSERT INTO signals(strategy, signal, processing_time) " +
-                        "values('" + strategy + "'," + signal + ",'" + processingTime.ToString("yyyy-MM-dd hh:mm:ss") + ")", OType.FullName,
+                        "values(`" + strategy + "`,`" + signal + "`," + processingTime + ")", OType.FullName,
                         "ParseAndInsertData");
 
-                    string query = "INSERT INTO signals(strategy, signal, processing_time) " +
+                    string query = "INSERT INTO signals(`strategy`, `signal`, `processing time`) " +
                                    "values(@strategy,@signal,@processing_time)";
 
                     //temp.Close();
@@ -105,7 +107,7 @@ namespace AutoFXProfitsServer
 
                     dataInsertion.Parameters.AddWithValue("@strategy", strategy);
                     dataInsertion.Parameters.AddWithValue("@signal", signal);
-                    dataInsertion.Parameters.AddWithValue("@processing_time", processingTime.ToString("yyyy-MM-dd hh:mm:ss"));
+                    dataInsertion.Parameters.AddWithValue("@processing_time", processingTime);
 
                     Logger.Debug("Number of Rows Affected = " + dataInsertion.ExecuteNonQuery(), OType.FullName, "ParseAndInsertData");
                 }

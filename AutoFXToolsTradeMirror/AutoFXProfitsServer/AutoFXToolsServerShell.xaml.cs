@@ -49,5 +49,10 @@ namespace AutoFXProfitsServer
         {
             _autoFXToolsServerShellViewModel.EmailTemplateSelectionChanged();
         }
+
+        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _autoFXToolsServerShellViewModel.FreeResources();
+        }
     }
 }

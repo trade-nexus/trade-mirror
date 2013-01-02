@@ -1,9 +1,9 @@
 ﻿<Window x:Class="AutoFXProfitsServer.AutoFXToolsServerShell"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auto FX Profits - Trade Mirror Server" Height="550" Width="530"
+        Title="Auto FX Profits - Trade Mirror Server" Height="600" Width="530"
         WindowStyle="SingleBorderWindow"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize" Closing="WindowClosing">
 
     <Grid Width="520" Height="630" >
         <Grid.ColumnDefinitions>
@@ -12,7 +12,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.25*"/>
             <RowDefinition Height="0.85*"/>
         </Grid.RowDefinitions>
         
@@ -23,16 +23,16 @@
             Grid.RowSpan="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="130*"/>
+                <ColumnDefinition Width="130*"/>
+                <ColumnDefinition Width="130*"/>
+                <ColumnDefinition Width="130*"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.4*"/>
-                <RowDefinition Height="0.3*"/>
-                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="86*"/>
+                <RowDefinition Height="29*"/>
+                <RowDefinition Height="29*"/>
             </Grid.RowDefinitions>
 
             <Image 
@@ -91,7 +91,7 @@
                 FontWeight="Bold" />
 
             <Label 
-                Content="{Binding ConnectedClients}" 
+                Content="{Binding Service.ConnectedUsers.Count}" 
                 Grid.Column="1"
                 Grid.ColumnSpan="1" 
                 Grid.Row="2" 
