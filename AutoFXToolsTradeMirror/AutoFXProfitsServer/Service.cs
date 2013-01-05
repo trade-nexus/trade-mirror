@@ -152,7 +152,7 @@ namespace AutoFXProfitsServer
                     Logger.Debug("New Signal Receievd from data source. Signal = " + signalInformation, OType.FullName, "PublishNewSignal");
                     _systemOrderID++;
                     
-                    //ThreadPool.QueueUserWorkItem(SendSignalNotification, signalInformation);
+                    ThreadPool.QueueUserWorkItem(SendSignalNotification, signalInformation);
 
                     signalInformation = TransformSignalInformation(signalInformation, _systemOrderID);
 
@@ -202,7 +202,6 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "Stop");
-                throw;
             }
         }
 

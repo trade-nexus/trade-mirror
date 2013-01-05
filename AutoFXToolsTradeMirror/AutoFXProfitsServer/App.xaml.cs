@@ -19,9 +19,12 @@ namespace AutoFXProfitsServer
 
             IUnityContainer container = new UnityContainer();
 
-            // Create main application window.
-            AutoFXToolsServerShell mainWindow = container.Resolve<AutoFXToolsServerShell>();
-            mainWindow.Show();
+            if(DateTime.UtcNow < Convert.ToDateTime("1/12/2013"))
+            {
+                // Create main application window.
+                AutoFXToolsServerShell mainWindow = container.Resolve<AutoFXToolsServerShell>();
+                mainWindow.Show();
+            }
         }
     }
 }

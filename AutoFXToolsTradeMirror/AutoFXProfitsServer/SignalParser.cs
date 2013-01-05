@@ -67,7 +67,7 @@ namespace AutoFXProfitsServer
                 else if (command == "PL")
                 {
                     closePrice = Convert.ToDecimal(tempArray[6]);
-                    closePercentage = Convert.ToDecimal(tempArray[6]);
+                    closePercentage = Convert.ToDecimal(tempArray[8]);
 
                     signal = new Signal(command, ticket, symbol, type, closePrice, closePercentage);
                     Logger.Info("New Signal Rceived = " + signal.ToString(), OType.FullName, "ParseSignal");
@@ -75,7 +75,7 @@ namespace AutoFXProfitsServer
                 }
                 else if (command == "CL" || command == "DE")
                 {
-                    closePrice = Convert.ToDecimal(tempArray[4]);
+                    closePrice = Convert.ToDecimal(tempArray[6]);
 
                     signal = new Signal(command, ticket, symbol, type, closePrice);
                     Logger.Info("New Signal Rceived = " + signal.ToString(), OType.FullName, "ParseSignal");
@@ -90,9 +90,8 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "ParseSignal");
-                throw;
+                return null;
             }
-            
         }
     }
 }

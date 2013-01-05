@@ -469,13 +469,14 @@
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
                         Command="{Binding SaveTemplateChangesCommand}"
-                        Margin="1,1,91,1" 
+                        Margin="1,1,1,1" 
+                        Width="30"
                         FontFamily="Calibri" 
                         FontSize="12"
                         FontWeight="Bold" />
 
                     <Button 
-                        Content="Undo" 
+                        Content="Edit" 
                         Grid.Column="1" 
                         Grid.ColumnSpan="1" 
                         Grid.Row="0" 
@@ -485,7 +486,8 @@
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
                         Command="{Binding UndoEmailTemplateCommand}"
-                        Margin="1,1,1,1" 
+                        Margin="1,1,91,1" 
+                        Width="30"
                         FontFamily="Calibri" 
                         FontSize="12"
                         FontWeight="Bold" />
@@ -499,10 +501,11 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         VerticalContentAlignment="Top"
-                        HorizontalContentAlignment="Left"
+                        HorizontalContentAlignment="Stretch"
                         Width="490" 
                         Height="350"
-                        IsEnabled="{Binding EmailTemplateViewEnabled}"/>
+                        IsEnabled="{Binding EmailTemplateViewEnabled}"
+                        TextWrapping="Wrap"/>
                 </Grid>
             </TabItem>
         </TabControl>

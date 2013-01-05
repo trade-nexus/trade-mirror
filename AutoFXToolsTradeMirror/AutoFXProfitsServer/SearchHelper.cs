@@ -31,7 +31,7 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "GetActiveUsers");
-                throw;
+                return null;
             }
         }
 
@@ -49,7 +49,7 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "GetRevokedUsers");
-                throw;
+                return null;
             }
         }
 
@@ -151,7 +151,7 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "GetActiveUserAddresses");
-                throw;
+                return null;
             }
         }
     }

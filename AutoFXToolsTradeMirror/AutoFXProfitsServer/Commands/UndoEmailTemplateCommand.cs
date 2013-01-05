@@ -45,7 +45,7 @@ namespace AutoFXProfitsServer.Commands
         /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-            
+            this._autoFXToolsServerShellViewModel.EditTemplate();
         }
         #endregion
     }

@@ -12,7 +12,7 @@ namespace AutoFXProfitsServer
         /// <summary>
         /// Send Mail Notification to the specified Recipients
         /// </summary>
-        public void SendMailNotification(string subject, string mailId, string password, string mailClient, string mailRecipients, string report)
+        public void SendMailNotification(string subject, string mailId, string password, string mailClient, string mailRecipients, string report, string senderName)
         {
             try
             {
@@ -22,11 +22,14 @@ namespace AutoFXProfitsServer
 
                 foreach (var id in mailingList)
                 {
-                    message.To.Add(id);
+                    if(!String.IsNullOrEmpty(id))
+                    {
+                        message.Bcc.Add(id);
+                    }
                 }
 
                 message.Subject = subject;
-                message.From = new MailAddress(mailId);
+                message.From = new MailAddress(mailId, senderName);
                 message.Body = report;
                 var smtp = InitializeSmtpClient(mailClient);
 
@@ -49,7 +52,8 @@ namespace AutoFXProfitsServer
         {
             try
             {
-                var smtp = new SmtpClient {Port = 587};
+                //var smtp = new SmtpClient {Port = 587};
+                var smtp = new SmtpClient { Port = 25 };
                 if (mailingClient.Equals("GOOGLE"))
                 {
                     smtp.Host = "smtp.gmail.com";
@@ -58,6 +62,16 @@ namespace AutoFXProfitsServer
                 else if (mailingClient.Equals("YAHOO"))
                 {
                     smtp.Host = "smtp.mail.yahoo.com";
+                    smtp.EnableSsl = false;
+                }
+                else if (mailingClient.Equals("AURORA"))
+                {
+                    smtp.Host = "mail.aurorasolutions.org";
+                    smtp.EnableSsl = false;
+                }
+                else if (mailingClient.Equals("autofxprofits"))
+                {
+                    smtp.Host = "mail.autofxprofits.com";
                     smtp.EnableSsl = false;
                 }
 

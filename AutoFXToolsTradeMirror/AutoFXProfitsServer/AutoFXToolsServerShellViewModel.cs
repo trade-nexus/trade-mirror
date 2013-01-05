@@ -28,6 +28,7 @@ namespace AutoFXProfitsServer
 
         private static List<User> AutoFXUsers { get; set; }
         private static TradeMirrorService _service = null;
+        private MailingHelper _mailingHelper;
 
         private bool _servcieStatus = false;
 
@@ -266,6 +267,8 @@ namespace AutoFXProfitsServer
             _helper = new DBHelper(connectionManager);
             AutoFXUsers = _helper.BuildUsersList();
 
+            _mailingHelper = new MailingHelper(AutoFXUsers);
+
             Service = new TradeMirrorService();
             ThreadPool.QueueUserWorkItem(InitializeService, Service);
 
@@ -350,6 +353,34 @@ namespace AutoFXProfitsServer
         /// </summary>
         public void EmailTemplateSelectionChanged()
         {
+            try
+            {
+                string command = string.Empty;
+                if (SelectedEmailTemplateName == "New")
+                {
+                    command = "OP";
+                }
+                else if (SelectedEmailTemplateName == "Modify")
+                {
+                    command = "MO";
+                }
+                else if (SelectedEmailTemplateName == "Partial Close")
+                {
+                    command = "PL";
+                }
+                else if (SelectedEmailTemplateName == "Exit")
+                {
+                    command = "CL";
+                }
+
+                string emailTemplate = _mailingHelper.GetEmailTemplate(command);
+                Logger.Info("Email Template Selected = " + emailTemplate, OType.FullName, "EmailTemplateSelectionChanged");
+                SelectedEmailTemplate = emailTemplate;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "EmailTemplateSelectionChanged");
+            }
             
         }
 
@@ -393,7 +424,6 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "SearchUsers");
-                throw;
             }
             
         }
@@ -458,7 +488,6 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "InitializeService");
-                throw;
             }
         }
 
@@ -477,7 +506,6 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "StopService");
-                throw;
             }
         }
 
@@ -488,6 +516,20 @@ namespace AutoFXProfitsServer
         {
             //StopService(_tradeMirrorService);
             StopService(Service);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SaveTemplateChanges()
+        {
+            _mailingHelper.SaveTemplate(SelectedEmailTemplateName, SelectedEmailTemplate);
+            EmailTemplateViewEnabled = false;
+        }
+
+        public void EditTemplate()
+        {
+            EmailTemplateViewEnabled = true;
         }
     }
 }

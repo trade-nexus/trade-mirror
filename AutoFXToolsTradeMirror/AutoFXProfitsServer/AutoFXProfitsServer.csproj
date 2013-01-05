@@ -89,6 +89,9 @@
     <Compile Include="Signal.cs" />
     <Compile Include="SignalParser.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserWindow.xaml.cs">
+      <DependentUpon>UserWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="AutoFXToolsServerShell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +105,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Filters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -146,6 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\auto-logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Close Trade.txt" />
+    <Resource Include="Resources\New Trade.txt" />
+    <Resource Include="Resources\Partial Close.txt" />
+    <Resource Include="Resources\Stop Move.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
