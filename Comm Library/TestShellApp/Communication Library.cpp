@@ -5,8 +5,6 @@
 #include <time.h>
 #include <iostream>
 #include <fstream>
-#include <Psapi.h>
-#include <WinBase.h>
 
 using namespace std;
 
@@ -82,6 +80,51 @@ namespace CommunicationLibrary
 		else
 		{
 			logFile << getTime()  << "Connection to socket Failed\n";
+			return false;
+		}
+	}
+
+	bool SpawnClientTerminal(int hwnd, char *terminalPath, char* runningMode, char* terminalName)
+	{
+		string path, logPath, mode;
+		path = terminalPath;
+		mode = runningMode;
+
+		string logFilePath = getenv("USERPROFILE");
+
+		if(mode == "LIVE")
+		{
+			path = path + "\\experts\\files\\" + terminalName + ".exe";
+		}
+		else if(mode == "TEST")
+		{
+			path = path + "\\tester\\files\\" + terminalName + ".exe";
+		}
+		else
+		{
+			return false;
+		}
+
+		
+		logFilePath = logFilePath + "\\LogClientTerminal.txt";
+		ofstream logFile;
+		try
+		{
+			logFile.open(logFilePath, ios::app);
+
+			logFile << getTime() << "Terminal Path = " << terminalPath << endl;
+			logFile << getTime() << "Order Pad Path = " << path << endl;
+			logFile << getTime() << "Log File Path = " << logFilePath << endl;
+					
+			ShellExecuteA((HWND)hwnd, "open", LPCSTR(path.c_str()), NULL, NULL, SW_SHOWNORMAL);
+			logFile << getTime() << "Order Pad executed successfully"<< endl;
+			logFile.close();
+			return true;
+		}
+		catch(exception exception)
+		{
+			logFile << getTime() << "Exception = " << exception.what() << endl;
+			logFile.close();
 			return false;
 		}
 	}
