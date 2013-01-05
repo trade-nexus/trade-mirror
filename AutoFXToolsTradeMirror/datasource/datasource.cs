@@ -118,7 +118,7 @@ namespace Microsoft.ServiceModel.Samples
 
         public static void HeartbeatTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            //_client.PublishNewSignal(HeartbeatMessage + DateTime.UtcNow);
+            _client.PublishNewSignal(HeartbeatMessage + DateTime.UtcNow);
         }
     }
 }
