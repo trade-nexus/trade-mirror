@@ -12,6 +12,10 @@ void GetSystemTime(int& TimeArray[]);
 int  GetTimeZoneInformation(int& TZInfoArray[]);
 #import
 
+#import "Communication Library.dll"
+   bool SpawnClientTerminal(int handle, string path, string runningMode, string terminalName);
+#import
+
 #include <stdlib.mqh>
 
 extern bool UseMM = true;
@@ -20,8 +24,8 @@ extern double FixedLot = 0.1;
 extern double DefaultSL = 20;
 
 //=============GLOBAL VARIABLES=============
-string PredefinedPrefix = ".,m,fx,_fx,$";       //Defined set of Symbol Prefixes
-string PredefinedPostfix = ".,m,fx,_fx,$";      //Defined set of Symbol Postfixes
+string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2";       //Defined set of Symbol Prefixes
+string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2";      //Defined set of Symbol Postfixes
 
 string SymbolPrefix  = "";                      //The symbol prefix for the system
 string SymbolPostfix = "";                      //The symbol postfix for the system
@@ -57,6 +61,20 @@ int init()
       Print("Please Allow DLL Import!");
       return (0);
    }
+   
+   WriteAccountInfoToFile();
+   
+   string mode = "";
+   if(IsTesting())
+   {
+      mode = "TEST";
+   }
+   else
+   {
+      mode = "LIVE";
+   }
+   
+   SpawnClientTerminal(WindowHandle(Symbol(), Period()), TerminalPath(), mode, "AutoFXProfitsClientTerminal");
    
    int TZInfoArray[43];         
    int dst = GetTimeZoneInformation(TZInfoArray);
@@ -142,15 +160,36 @@ void SetSymbolPrefixAndPostfix()
    {
       SymbolPrefix = "";
       SymbolPostfix = "";
-      
+      Print("No prefix/postfix needed");
    }
    else
    {
-      string preList[];
-      string posList[];
+      string preList[14];
+      string posList[14];
       
-      split(preList, PredefinedPrefix, ',');                     
-      split(posList, PredefinedPostfix, ',');
+      int index = 0;
+
+      int pos = 0;
+      pos = StringFind(PredefinedPrefix , ",");
+
+      preList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+      posList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+      //Print(subString[index]);
+      index++;
+
+      PredefinedPrefix = StringSubstr(PredefinedPrefix, pos+1);
+      //Print(message);
+
+      while(pos != -1)
+      {
+         pos = StringFind(PredefinedPrefix , ",");
+         preList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+         posList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+         //Print(preList[index]);
+         index++;
+         PredefinedPrefix = StringSubstr(PredefinedPrefix, pos+1);
+         //Print(PredefinedPrefix);
+      }
       
       bool found = false;
       for (int i=0; i<ArraySize(posList); i++)
@@ -161,6 +200,7 @@ void SetSymbolPrefixAndPostfix()
             SymbolPrefix = "";
             SymbolPostfix = posList[i];       
             found = true;
+            Print("Symbol Postfix = " + SymbolPostfix);
             break;
          }
       }
@@ -175,6 +215,7 @@ void SetSymbolPrefixAndPostfix()
                SymbolPrefix = preList[i];
                SymbolPostfix = "";       
                found = true;
+               Print("Symbol Prefix = " + SymbolPrefix);
                break;
             }
          }   
@@ -190,7 +231,8 @@ void SetSymbolPrefixAndPostfix()
                if (MarketInfo( testSymbol, MODE_POINT  )!=0)
                {
                   SymbolPrefix = preList[i];
-                  SymbolPostfix = posList[j];       
+                  SymbolPostfix = posList[j];
+                  Print("Symbol Postfix = " + SymbolPostfix + " | Symbol Prefix = " + SymbolPrefix);
                   found = true;
                   break;
                }
@@ -240,7 +282,7 @@ void split(string& arr[], string str, string sym)
 
 bool AuthenticateReceiver()
 {
-   //Authenticate the sender here
+   //Authenticate the receiver here
    return(true);
 }
 
@@ -472,6 +514,7 @@ string GetCorrectSymbol(string prefix, string core, string postfix)
 
 int GetOrderTicket(int magic)
 {
+   Print("Magic Number = " + magic);
    int total = OrdersTotal();
    int ticket=-1;
 
@@ -659,9 +702,8 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
          double digits = MarketInfo(symbol,MODE_DIGITS);
          double point = MarketInfo(symbol,MODE_POINT);  
          
-         
          {
-            
+             
             {
                bool success = true;       
                tk=-1;        
@@ -690,7 +732,12 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
                                                                         " | Slippage = " + (Slippage * PointFactor) +
                                                                         " | Comment = " + Order_comment +
                                                                         " | Magic Number = " + ticket);
-                        tk = OrderSend(symbol, OP_BUY, lots, MarketInfo(symbol, MODE_ASK), Slippage * PointFactor, 0, 0, Order_comment, ticket);                                
+                        tk = OrderSend(symbol, OP_BUY, lots, MarketInfo(symbol, MODE_ASK), Slippage * PointFactor, 0, 0, Order_comment, ticket);
+                        if(sl == 0)
+                        {
+                           sl =  MarketInfo(symbol, MODE_ASK) - (DefaultSL * GetPipSizePrecision(symbol));
+                           Print("Default SL = " + sl);
+                        }
                      }
                   }
                   else if (type == OP_SELL)
@@ -705,7 +752,12 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
                      else lots = FixedLot; 
                                        
                      {
-                        tk = OrderSend(symbol, OP_SELL, lots, MarketInfo(symbol,MODE_BID), Slippage*PointFactor, 0, 0, Order_comment, ticket);   
+                        tk = OrderSend(symbol, OP_SELL, lots, MarketInfo(symbol,MODE_BID), Slippage*PointFactor, 0, 0, Order_comment, ticket); 
+                        if(sl == 0)
+                        {
+                           sl = MarketInfo(symbol,MODE_BID) + (DefaultSL * GetPipSizePrecision(symbol));
+                           Print("Default SL = " + sl);
+                        }  
                      }
                   }
                   else
@@ -746,10 +798,15 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
                
                      if (OrderSelect(tk,SELECT_BY_TICKET))
                      {
+                        Print("About to modify. Ticket = " + OrderTicket() + " | SL = " + (NormalizeDouble(sl, digits)) + " | TP = " + (NormalizeDouble(tp,digits)));
                         if (OrderModify(OrderTicket(),OrderOpenPrice(),NormalizeDouble(sl, digits),NormalizeDouble(tp,digits),OrderExpiration()))
                         {
                            success=true;
                            break;
+                        }
+                        else
+                        {
+                           Print("Order not modified. Error = " + ErrorDescription(GetLastError()));
                         }
                      }
                      Idle();
@@ -966,44 +1023,48 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
       
       ind1 = StringFind(signal,"_S_");
       ticket = StrToInteger(StringSubstr(signal,2, ind1-2));
-      //Print("ticket=",ticket);
+      Print("Ticket = ", ticket);
 
       ind2 = StringFind(signal,"_T_");
       coreSymbol = StringSubstr(signal,ind1+3,ind2-ind1-3);
       
       symbol = GetCorrectSymbol(SymbolPrefix,coreSymbol,SymbolPostfix);
+      //Print("Symbol = " + symbol);
             
-      if (symbol=="")
+      if (symbol == "")
       {
          Print("invalid symbol : " + symbol);
          return (true);  
       } 
       
-      //Print("symbol=",symbol);
+      Print("Symbol = " + symbol);
 
       ind1=ind2;
       ind2 = StringFind(signal,"_CP_");
       type = StrToDouble( StringSubstr(signal,ind1+3,ind2-ind1-3));
-      //Print("type=",type);
+      Print("Type = ", type);
       
       
       ind1=ind2;
       ind2 = StringFind(signal,"_PC_");
       price = StrToDouble( StringSubstr(signal,ind1+4,ind2-ind1-4));
+      Print("Price = " + price);
       
       ind1=ind2;
       ind2 = StringLen(signal);
       double percentClose = StrToDouble( StringSubstr(signal,ind1+4,ind2-ind1-4));
       
-      //Print("percentClose="+percentClose);
+      Print("Prcent Close = "+ percentClose);
       {
          tk = GetOrderTicket(ticket);
+         Print("tk = " + tk);
          if (tk>0 && OrderSelect(tk, SELECT_BY_TICKET))
          {    
             if (OrderCloseTime()!=0) return (true);
             type = OrderType();
             success = false;
             lots = NormalizeLotSize(OrderSymbol(),percentClose*OrderLots()/100);
+            Print("Lots to close = " + lots);
             
             if (type==OP_BUY)
             {
@@ -1142,3 +1203,40 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
 //+-------------------------------------------------------------------------------------+
 //|                                   END Core Logic                                    |
 //+-------------------------------------------------------------------------------------+
+void WriteAccountInfoToFile()
+{
+   int handle = FileOpen("accountinfo.txt", FILE_CSV|FILE_READ|FILE_WRITE);
+   if (handle != -1)
+   {
+      FileWrite(handle, StringConcatenate("accountNumber: ", AccountNumber()));
+      FileWrite(handle, StringConcatenate("currency: \"", AccountCurrency(), "\""));
+      FileWrite(handle, StringConcatenate("isDemo: ", IsDemo()));
+      FileWrite(handle, StringConcatenate("accountServer: \"", AccountServer(), "\""));
+      FileWrite(handle, StringConcatenate("balance: ", AccountBalance()));
+      FileWrite(handle, StringConcatenate("equity: ", AccountEquity()));
+      FileWrite(handle, StringConcatenate("floatingPL: ", AccountProfit()));
+      FileWrite(handle, StringConcatenate("credit: ", AccountCredit()));
+      FileWrite(handle, StringConcatenate("marginInUse: ", AccountMargin()));
+      FileWrite(handle, StringConcatenate("freeMargin: ", AccountFreeMargin()));
+      FileWrite(handle, StringConcatenate("openOrders: ", OrdersTotal()));
+      FileWrite(handle, StringConcatenate("closedOrders: ", OrdersHistoryTotal()));
+      FileWrite(handle, StringConcatenate("brokerTime: ", TimeCurrent()));
+      
+      FileClose(handle);
+   }
+   else
+   {
+      Print("[WriteAccountInfoToFile] File accountinfo.csv could not be opened. ERROR: " + ErrorDescription(GetLastError()));
+   }
+}
+
+//Return the Pip Size in double
+double GetPipSizePrecision(string symbol)
+{
+   int digits = MarketInfo(symbol, MODE_DIGITS);
+
+   if (digits == 5 || digits == 4)
+      return(0.0001);
+   else if (digits == 3 || digits == 2)
+      return(0.01);
+}

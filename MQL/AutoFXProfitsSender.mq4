@@ -6,15 +6,16 @@
 #property copyright "Copyright 2012, Aurora Solutions (pvt) Ltd."
 #property link      "http://www.aurorasolutions.org"
 
-#import "Trade Mirror Communication Library.dll"
+#import "Communication Library.dll"
    bool SendToSocket(string orderInfo);
+   bool SpawnClientTerminal(int handle, string path, string runningMode, string terminalName);
 #import
 
 #include <stdlib.mqh>
 
 //=============GLOBAL VARIABLES=============
-string PredefinedPrefix = ".,m,fx,_fx,$";       //Defined set of Symbol Prefixes
-string PredefinedPostfix = ".,m,fx,_fx,$";      //Defined set of Symbol Postfixes
+string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2";       //Defined set of Symbol Prefixes
+string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2";      //Defined set of Symbol Postfixes
 
 string SymbolPrefix  = "";                      //The symbol prefix for the system
 string SymbolPostfix = "";                      //The symbol postfix for the system
@@ -32,6 +33,9 @@ static double   LotSizeArr   [100];
 static double   RiskPercentArr   [100];
 static double   StopLossArr  [100];
 static double   TakeProfitArr[100];
+
+static string   PartialCloseTickets[100];
+static int      PartialCloseCount = 0;
 
 int      temp_TicketArr[100];
 int      temp_TypeArr[100];
@@ -55,22 +59,34 @@ int init()
    if (!IsDllsAllowed())
    {
       Comment("Please Allow DLL Import!");
-      Print("Please Allow DLL Import!");
+      Print("[init]Please Allow DLL Import!");
       return (0);
    }
+   
+   string mode = "";
+   if(IsTesting())
+   {
+      mode = "TEST";
+   }
+   else
+   {
+      mode = "LIVE";
+   }
+   
+   SpawnClientTerminal(WindowHandle(Symbol(), Period()), TerminalPath(), mode, "datasource");
    
    SetSymbolPrefixAndPostfix();
    
    if (!AuthenticateSender())
    {
       Alert("TradeMirror Sender: NO PERMISION TO POST SIGNALS!!!");
-      Print("TradeMirror Sender: NO PERMISION TO POST SIGNALS!!!");
+      Print("[init]TradeMirror Sender: NO PERMISION TO POST SIGNALS!!!");
       Token=0;
    }
    else
    {
       Alert("TradeMirror Sender is READY!");
-      Print("TradeMirror Sender is READY!");
+      Print("[init]TradeMirror Sender is READY!");
       Token=1;
    }
    
@@ -135,15 +151,36 @@ void SetSymbolPrefixAndPostfix()
    {
       SymbolPrefix = "";
       SymbolPostfix = "";
-      
+      Print("[SetSymbolPrefixAndPostfix]No prefix/postfix needed");
    }
    else
    {
-      string preList[];
-      string posList[];
+      string preList[14];
+      string posList[14];
       
-      split(preList, PredefinedPrefix, ',');                     
-      split(posList, PredefinedPostfix, ',');
+      int index = 0;
+
+      int pos = 0;
+      pos = StringFind(PredefinedPrefix , ",");
+
+      preList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+      posList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+      //Print(subString[index]);
+      index++;
+
+      PredefinedPrefix = StringSubstr(PredefinedPrefix, pos+1);
+      //Print(message);
+
+      while(pos != -1)
+      {
+         pos = StringFind(PredefinedPrefix , ",");
+         preList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+         posList[index] = StringSubstr(PredefinedPrefix, 0, pos);
+         //Print(preList[index]);
+         index++;
+         PredefinedPrefix = StringSubstr(PredefinedPrefix, pos+1);
+         //Print(PredefinedPrefix);
+      }
       
       bool found = false;
       for (int i=0; i<ArraySize(posList); i++)
@@ -154,6 +191,7 @@ void SetSymbolPrefixAndPostfix()
             SymbolPrefix = "";
             SymbolPostfix = posList[i];       
             found = true;
+            Print("[SetSymbolPrefixAndPostfix]Symbol Postfix = " + SymbolPostfix);
             break;
          }
       }
@@ -168,6 +206,7 @@ void SetSymbolPrefixAndPostfix()
                SymbolPrefix = preList[i];
                SymbolPostfix = "";       
                found = true;
+               Print("[SetSymbolPrefixAndPostfix]Symbol Prefix = " + SymbolPrefix);
                break;
             }
          }   
@@ -183,7 +222,8 @@ void SetSymbolPrefixAndPostfix()
                if (MarketInfo( testSymbol, MODE_POINT  )!=0)
                {
                   SymbolPrefix = preList[i];
-                  SymbolPostfix = posList[j];       
+                  SymbolPostfix = posList[j];
+                  Print("[SetSymbolPrefixAndPostfix]Symbol Postfix = " + SymbolPostfix + " | Symbol Prefix = " + SymbolPrefix);
                   found = true;
                   break;
                }
@@ -271,8 +311,9 @@ void SendSignals()
    for(int index = 0; index < orderCount; index++)
    {    
       if(OrderSelect(orderArrays[index], SELECT_BY_TICKET))
-      {
-         if (OrderTicket() > LastProcessingTk)                
+      {  
+         //Print("Order Ticket = " +  OrderTicket() + " | LastProcessingTk = " + LastProcessingTk);
+         if (OrderTicket() >= LastProcessingTk)                
          {                     
             int currentTicket = OrderTicket();
             int masterTicket = CheckPartialClose(OrderSymbol(), OrderType(), OrderLots(), OrderOpenPrice(), 
@@ -288,10 +329,10 @@ void SendSignals()
             {         
                partialCloseOldTicket=masterTicket;
                partialCloseNewTicket=currentTicket;
-               //Print("partial close order #"+partialCloseOldTicket + ", new ticket #" + partialCloseNewTicket);
+               Print("[SendSignals]Partial Close Order #"+ partialCloseOldTicket + ", New Ticket #" + partialCloseNewTicket);
                break;                       
             }
-            //Print("new ordertime = ",TimeToStr(OrderOpenTime(),TIME_DATE|TIME_SECONDS));
+            Print("[SendSignals]New Ordertime = ",TimeToStr(OrderOpenTime(),TIME_DATE|TIME_SECONDS));
          
             OrderSelect(currentTicket, SELECT_BY_TICKET);
          
@@ -327,9 +368,11 @@ void SendSignals()
             string message = CreateSignalMessage("OP",OrderTicket(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderOpenPrice(),OrderStopLoss(), OrderTakeProfit());
             //Print("Sending a signal...",message);
             
+            InsertIntoPartialCheckArray(OrderTicket());
+            
             SendOrderInformation(message);
             
-            Print("Sent: Open new order!!!");
+            Print("[SendSignals]Sent: Open new order!!!");
          }//if ( OrderTicket()>LastProcessingTk)
       }//if(OrderSelect(orderArrays[index],SELECT_BY_TICKET))
    }//for(int index = 0; index < orderCount; index++)
@@ -366,14 +409,16 @@ void SendSignals()
          {
             //Order modified
             updateFlag = true;
+            int modifyTicket = GetCloseTicket(OrderTicket());
             //message = CreateSignalMessage("MO",OrderOpenTime(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderOpenPrice(),OrderStopLoss(), OrderTakeProfit());
-            message = CreateSignalMessage("MO",OrderTicket(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderOpenPrice(),OrderStopLoss(), OrderTakeProfit());
+            //message = CreateSignalMessage("MO",OrderTicket(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderOpenPrice(),OrderStopLoss(), OrderTakeProfit());
+            message = CreateSignalMessage("MO",modifyTicket,OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderOpenPrice(),OrderStopLoss(), OrderTakeProfit());
       
             //Print("Sending a signal...",message);
             
             SendOrderInformation(message);
             
-            Print("Sent: modify order!!!");
+            Print("[SendSignals]Sent: modify order!!!");
          }        
       
          temp_TicketArr[temp_NumberOfOrders] = TicketArr[i];
@@ -411,15 +456,22 @@ void SendSignals()
                
                   double partialClosePercent = (masterLots - OrderLots()) / masterLots * 100;
                
-                  //message = CreateSignalMessage("PL",OrderOpenTime(),OrderSymbol(), OrderType(),partialClosePercent,RiskPercent,masterClosePrice,OrderStopLoss(), OrderTakeProfit());                
-                  message = CreateSignalMessage("PL",OrderTicket(),OrderSymbol(), OrderType(),partialClosePercent,RiskPercent,masterClosePrice,OrderStopLoss(), OrderTakeProfit());
+                  //message = CreateSignalMessage("PL",OrderOpenTime(),OrderSymbol(), OrderType(),partialClosePercent,
+                  //RiskPercent,masterClosePrice,OrderStopLoss(), OrderTakeProfit());                
+                  //message = CreateSignalMessage("PL",OrderTicket(),OrderSymbol(), OrderType(),partialClosePercent,
+                  //RiskPercent,masterClosePrice,OrderStopLoss(), OrderTakeProfit());
+                  
+                  int partialCloseTicket = GetPartialCloseTicket(partialCloseOldTicket, partialCloseNewTicket);
+                  
+                  message = CreateSignalMessage("PL",partialCloseTicket,OrderSymbol(), OrderType(),partialClosePercent,RiskPercent,masterClosePrice,OrderStopLoss(), OrderTakeProfit());
                   
                   SendOrderInformation(message);
                   
-                  Print("Sent: partially close order!!!");
+                  Print("[SendSignals]Sent: partially close order!!!");
                }
                else
                {
+                  //temp_TicketArr[temp_NumberOfOrders] = TicketArr[i];
                   temp_TicketArr[temp_NumberOfOrders] = TicketArr[i];
                   temp_TypeArr[temp_NumberOfOrders] = TypeArr[i];
                   temp_LotSizeArr[temp_NumberOfOrders] = LotSizeArr[i];
@@ -436,11 +488,14 @@ void SendSignals()
                if (OrderLots() == LotSizeArr[i])     //fully close
                {
                   //message = CreateSignalMessage("CL",OrderOpenTime(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderClosePrice(),OrderStopLoss(), OrderTakeProfit());                
-                  message = CreateSignalMessage("CL",OrderTicket(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderClosePrice(),OrderStopLoss(), OrderTakeProfit());
+                  //message = CreateSignalMessage("CL",OrderTicket(),OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderClosePrice(),OrderStopLoss(), OrderTakeProfit());
+                  int closeTicket = GetCloseTicket(OrderTicket());
+                  
+                  message = CreateSignalMessage("CL",closeTicket,OrderSymbol(), OrderType(),OrderLots(),RiskPercent,OrderClosePrice(),OrderStopLoss(), OrderTakeProfit());
                   
                   SendOrderInformation(message);
                    
-                  Print("Sent: close order!!!");
+                  Print("[SendSignals]Sent: close order!!!");
                }    
                else
                {
@@ -463,7 +518,7 @@ void SendSignals()
             
             SendOrderInformation(message);
          
-            Print("Sent: delete order!!!");
+            Print("[SendSignals]Sent: delete order!!!");
          }
       }
    }
@@ -488,6 +543,7 @@ void SendSignals()
 
 void SendOrderInformation(string orderInformation)
 {
+   Print("[SendOrderInformation]Sending Order Information = " + orderInformation);
    SendToSocket(orderInformation);
 }
 
@@ -508,6 +564,7 @@ int CheckPartialClose(string symbol, int ordertype, double lots, double openpric
       bool success =true;
       for (int i=0; i<NumberOfOrders; i++)
       {
+         //Print("TicketArr[i] = " + TicketArr[i]);
          if (!OrderSelect(TicketArr[i], SELECT_BY_TICKET)) 
          {
             success = false;
@@ -518,11 +575,11 @@ int CheckPartialClose(string symbol, int ordertype, double lots, double openpric
          
          if (OrderType() == ordertype && MathAbs(OrderOpenPrice() - openprice) <= 1 * point && OrderOpenTime() == opentime)
          {
-            //Print("get here"); 
+            //Print("LotSizeArr[" + i + "] = " + LotSizeArr[i] + " | lots = " + lots); 
             if (LotSizeArr[i]>lots)
             {
                masterTicket = OrderTicket();
-               //Print("Found masterTicket="+masterTicket);
+               Print("[CheckPartialClose]Found masterTicket = " + masterTicket);
             }               
             else  masterTicket=0;
             
@@ -608,3 +665,168 @@ string CreateSignalMessage(string cmd,int ticket,string sym, int type,double lot
 //+-------------------------------------------------------------------------------------+
 //|                                   END Core Logic                                    |
 //+-------------------------------------------------------------------------------------+
+
+void InsertIntoPartialCheckArray(int ticket)
+{
+   string entry = "" + ticket;
+   bool found = false;
+   for(int i = 0; i < PartialCloseCount; i++)
+   {
+      string checkString = PartialCloseTickets[i];
+      Print("[InsertIntoPartialCheckArray]Check String = " + checkString);
+      
+      int index = 0;
+      string subString[20];
+   
+      int pos = 0;
+      pos = StringFind(checkString , ",");
+   
+      subString[index] = StringSubstr(checkString, 0, pos);
+      //Print(subString[index]);
+      index++;
+   
+      checkString = StringSubstr(checkString, pos+1);
+      //Print(message);
+   
+      while(pos != -1)
+      {
+         pos = StringFind(checkString , ",");
+         subString[index] = StringSubstr(checkString, 0, pos);
+         //Print(subString[index]);
+         index++;
+         checkString = StringSubstr(checkString, pos+1);
+         //Print(orderInfo);
+      }
+      Print("[InsertIntoPartialCheckArray]Number of tickets found = " + index);
+      
+      for(int j = 0; j < index; j++)
+      {
+         if(entry == subString[j])
+         {
+            found = true;
+            break;
+         }
+      }
+   }
+   if(!found)
+   {
+      PartialCloseTickets[PartialCloseCount] = entry;
+      Print("[InsertIntoPartialCheckArray]Ticket#" + entry + " added to PartialCloseTickets");
+      PartialCloseCount++;
+   }
+   else
+   {
+      Print("[InsertIntoPartialCheckArray]Ticket#" + entry + "already presenet in PartialCloseTickets");
+   }
+}
+
+int GetPartialCloseTicket(int old, int new)
+{
+   string oldTkt = old + "";
+   Print("[GetPartialCloseTicket]OLD = " + oldTkt + " | NEW = " + new);
+   string result = -1;
+   
+   bool found = false;
+   for(int i = 0; i < PartialCloseCount; i++)
+   {
+      string checkString = PartialCloseTickets[i];
+      
+      int index = 0;
+      string subString[20];
+   
+      int pos = 0;
+      pos = StringFind(checkString , ",");
+   
+      subString[index] = StringSubstr(checkString, 0, pos);
+      //Print(subString[index]);
+      index++;
+   
+      checkString = StringSubstr(checkString, pos+1);
+      //Print(message);
+   
+      while(pos != -1)
+      {
+         pos = StringFind(checkString , ",");
+         subString[index] = StringSubstr(checkString, 0, pos);
+         //Print(subString[index]);
+         index++;
+         checkString = StringSubstr(checkString, pos+1);
+         //Print(orderInfo);
+      }
+      Print("[GetPartialCloseTicket]Number of tickets found = " + index);
+      for(int k = 0; k < index; k++)
+      {
+         Print("[GetPartialCloseTicket]Ticket found at " + k + " = " + subString[k]);
+      }
+      
+      for(int j = 0; j < index; j++)
+      {
+         if(oldTkt == subString[j])
+         {
+            found = true;
+            Print("[GetPartialCloseTicket]Old Ticket found at location " + j);
+            result = subString[0];
+            Print("[GetPartialCloseTicket]Result set to = " + result);
+            break;
+         }
+      }
+      
+      if(found)
+      {
+         PartialCloseTickets[i] = PartialCloseTickets[i] + "," + new;
+      }
+      
+      Print("New Ticket = " + new + " added | PartialCloseTickets[" + i + "] = " + PartialCloseTickets[i]);
+   }
+   return(StrToInteger(result));
+}
+
+int GetCloseTicket(int ticket)
+{
+   string tkt = ticket + "";
+   Print("[GetCloseTicket]Ticket = " + tkt);
+   string result = -1;
+   
+   bool found = false;
+   for(int i = 0; i < PartialCloseCount; i++)
+   {
+      string checkString = PartialCloseTickets[i];
+      
+      int index = 0;
+      string subString[10];
+   
+      int pos = 0;
+      pos = StringFind(checkString , ",");
+   
+      subString[index] = StringSubstr(checkString, 0, pos);
+      //Print(subString[index]);
+      index++;
+   
+      checkString = StringSubstr(checkString, pos+1);
+      //Print(message);
+   
+      while(pos != -1)
+      {
+         pos = StringFind(checkString , ",");
+         subString[index] = StringSubstr(checkString, 0, pos);
+         //Print(subString[index]);
+         index++;
+         checkString = StringSubstr(checkString, pos+1);
+         //Print(orderInfo);
+      }
+      Print("[GetCloseTicket]Number of tickets found = " + index);
+      
+      for(int j = 0; j < index; j++)
+      {
+         if(tkt == subString[j])
+         {
+            found = true;
+            Print("[GetCloseTicket]Old Ticket found at location " + j);
+            result = subString[0];
+            Print("[GetCloseTicket]Result set to = " + result);
+            break;
+         }
+      }
+   }
+   return(StrToInteger(result));
+}
