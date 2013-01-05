@@ -32,81 +32,20 @@ namespace InstallerHelpProject
         {
             try
             {
-                //Declare the string to hold the list:
-                string target = null;
-                //The registry key's path
-                string softwareKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-                //string softwareKey = @"Software\MetaQuotes Software";
-                //Registry.CurrentUser.OpenSubKey(softwareKey);
-                ////MessageBox.Show(softwareKey);
+                var copier = new CopyFiles();
 
-                using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(softwareKey))
+                var files = new List<string>();
+                foreach (var d in DriveInfo.GetDrives().Where(x => x.IsReady == true))
                 {
-                    //Loop through the registry directory of installed softwares
-                    foreach (string skName in rk.GetSubKeyNames())
-                    {
-                        ////MessageBox.Show("registry key of " + skName);
-                        //Logger.Info("registry key of " + skName, OType.FullName, "GetInstalledSoftware2");
-                        
-                        using (RegistryKey sk = rk.OpenSubKey(skName))
-                        {
-                            try
-                            {
-                                string data = (string)sk.GetValue("DisplayName");
-                                //string[] split = data.Split(new Char[] { ' ' });
-                                if (data.Contains("MetaTrader") || data.Contains("MT") || data.Contains("IBFX"))
-                                //if ((split[0] == "MetaTrader") || (split[1] == "MetaTrader") || (split[2] == "MetaTrader"))
-                                {
-                                    //MessageBox.Show("MetaTrader instance " + skName + " found");
-                                    //Logger.Info("MetaTrader instance " + skName + " found", OType.FullName, "GetInstalledSoftware2");
-
-                                    if (sk.GetValue("InstallLocation") == null)
-                                    {
-                                        target = sk.GetValue("DisplayName") + " - Install path not known\n";
-                                        //MessageBox.Show("Not MetaTrader registry key");
-                                        //Logger.Info("Not MetaTrader registry key", OType.FullName, "GetInstalledSoftware2");
-                                    }
-                                    else
-                                    {
-                                        target = (string)sk.GetValue("InstallLocation");
-                                        //MessageBox.Show("Location where this MetaTrader is installed = " + target);
-                                        //Logger.Info("Location where this MetaTrader is installed = " + target, OType.FullName, "GetInstalledSoftware2");
-                                    }
-                                    //MessageBox.Show(target);
-                                    //Logger.Info("target = " + target, OType.FullName, "GetInstalledSoftware2");
-
-                                    CopyFiles copier = new CopyFiles();
-                                    copier.Run(source, target);
-
-                                }
-                                else
-                                {
-                                    //MessageBox.Show("Not the desired key");
-                                    //Logger.Info("Not the desired key", OType.FullName, "GetInstalledSoftware2");
-                                }
-                            }
-                            catch (Exception exception)
-                            {
-                                //MessageBox.Show(exception.ToString());
-                                //Logger.Error(exception, OType.FullName, "GetInstalledSoftware2");
-                            }
-                        }
-                    }
+                    files.AddRange(GetFiles(d.RootDirectory.FullName, "terminal.exe"));
                 }
-
-                //C:\Users\Aurora\AppData\Roaming\MetaQuotes\Terminal\D0E8209F77C8CF37AD8BF550E51FF075\MQL5
-                string temp = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-                string appDataLoc = temp + "\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075";
-                //MessageBox.Show("App Data location = " + appDataLoc);
-                //Logger.Info("App Data location = " + appDataLoc, OType.FullName, "GetInstalledSoftware2");
-
-                CopyFiles copier2 = new CopyFiles();
-                copier2.Run(source, appDataLoc);
-
-                //  Delete(target);
+                //MessageBox.Show(files.Count + " MetaTrader Instances found");
+                foreach (var file in files)
+                {
+                    string path = Path.GetDirectoryName(file);
+                    copier.Run(source, path);
+                }
             }
-
             catch (Exception exception)
             {
                 //MessageBox.Show(exception.ToString());
@@ -117,7 +56,7 @@ namespace InstallerHelpProject
         /// <summary>
         /// Method delete to delete the file from the source directory after detecting it haas been copied to the target directory
         /// </summary>
-        /// <param name="Software"></param>
+        /// <param name="target"></param>
         public void Delete(string target)
         {
             try
@@ -133,6 +72,30 @@ namespace InstallerHelpProject
             {
                 //Logger.Error(exception, OType.FullName, "Delete");
                 //MessageBox.Show(exception.ToString());
+            }
+        }
+
+        public static IEnumerable<string> GetFiles(string root, string searchPattern)
+        {
+            Stack<string> pending = new Stack<string>();
+            pending.Push(root);
+            while (pending.Count != 0)
+            {
+                var path = pending.Pop();
+                string[] next = null;
+                try
+                {
+                    next = Directory.GetFiles(path, searchPattern);
+                }
+                catch { }
+                if (next != null && next.Length != 0)
+                    foreach (var file in next) yield return file;
+                try
+                {
+                    next = Directory.GetDirectories(path);
+                    foreach (var subdir in next) pending.Push(subdir);
+                }
+                catch { }
             }
         }
     }

@@ -97,9 +97,9 @@ namespace InstallerHelpProject
 
                                         string target = string.Empty;
 
-                                        if (splitFile[splitFile.Length - 1].Trim() == "AutoFXProfitsSender.mq4")
+                                        if (splitFile[splitFile.Length - 1].Trim() == "AutoFXProfits - Sender.mq4")
                                         {
-                                            target = @targetDirectory + "experts\\AutoFXProfitsSender.mq4";
+                                            target = @targetDirectory + "experts\\AutoFXProfits - Sender.mq4";
                                             //MessageBox.Show("Target location = " + target);
                                             //Logger.Debug("Target location = " + target, OType.FullName, "Run");
                                         }
