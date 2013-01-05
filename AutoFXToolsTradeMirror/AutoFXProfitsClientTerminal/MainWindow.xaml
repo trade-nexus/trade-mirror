@@ -4,7 +4,7 @@
         Title="Auto FX Profits Client Terminal" 
         Height="180" 
         Width="260"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize" Closing="WindowClosing">
 
     <Grid Width="240" Height="140" >
         <Grid.ColumnDefinitions>
@@ -124,7 +124,7 @@
             FontWeight="Bold" />
         
         <CheckBox 
-            Content="Login Automatically at Startup"
+            Content="Save Key String"
             Grid.Column="0" 
             Grid.ColumnSpan="5" 
             Grid.Row="3" 
@@ -135,7 +135,8 @@
             HorizontalContentAlignment="Center"
             FontFamily="Calibri" 
             FontSize="12"
-            Margin="2,2,2,2"/>
+            Margin="2,2,2,2"
+            IsChecked="{Binding IsSavePasswordChecked}"/>
 
         <Label 
             Content= "Status:" 

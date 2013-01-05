@@ -27,5 +27,10 @@ namespace AutoFXProfitsClientTerminal
                 this.DataContext = _mainWindowViewModel;
             }
         }
+
+        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this._mainWindowViewModel.FreeResources();
+        }
     }
 }
