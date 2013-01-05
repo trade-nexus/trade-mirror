@@ -1,10 +1,9 @@
 //+------------------------------------------------------------------+
-//|                                          AutoFXProfitsSender.mq4 |
-//|                      Copyright 2012, Aurora Solutions (pvt) Ltd. |
-//|                                   http://www.aurorasolutions.org |
+//|                                       AutoFXProfits - Sender.mq4 |
+//|                                  Copyright 2013, Auto FX Profits |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2012, Aurora Solutions (pvt) Ltd."
-#property link      "http://www.aurorasolutions.org"
+
+#property copyright "Copyright 2013, Auto FX Profits"
 
 #import "Communication Library.dll"
    bool SendToSocket(string orderInfo);
@@ -14,8 +13,9 @@
 #include <stdlib.mqh>
 
 //=============GLOBAL VARIABLES=============
-string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2";       //Defined set of Symbol Prefixes
-string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2";      //Defined set of Symbol Postfixes
+//string PredefinedPrefix=".,m,fx,_fx,$,pro,r,FXF,.arm,-,_,.,iam,SB,fxr,v";
+string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";       //Defined set of Symbol Prefixes
+string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";      //Defined set of Symbol Postfixes
 
 string SymbolPrefix  = "";                      //The symbol prefix for the system
 string SymbolPostfix = "";                      //The symbol postfix for the system
@@ -147,16 +147,16 @@ int start()
 //+-------------------------------------------------------------------------------------+
 void SetSymbolPrefixAndPostfix()
 {
-   if (MarketInfo("EURUSD", MODE_POINT) != 0)      //If there is not prefix & postfix in our symbol
+   /*if (MarketInfo("EURUSD", MODE_POINT) != 0)      //If there is not prefix & postfix in our symbol
    {
       SymbolPrefix = "";
       SymbolPostfix = "";
       Print("[SetSymbolPrefixAndPostfix]No prefix/postfix needed");
    }
    else
-   {
-      string preList[14];
-      string posList[14];
+   {*/
+      string preList[17];
+      string posList[17];
       
       int index = 0;
 
@@ -230,7 +230,7 @@ void SetSymbolPrefixAndPostfix()
             }
          }   
       }         
-   }
+   //}
 }
 
 void split(string& arr[], string str, string sym) 
