@@ -97,9 +97,9 @@ namespace InstallerHelpProject
 
                                         string target = string.Empty;
 
-                                        if (splitFile[splitFile.Length - 1].Trim() == "AutoFXProfitsReceiver.mq4")
+                                        if (splitFile[splitFile.Length - 1].Trim() == "AutoFXProfits - Client.mq4")
                                         {
-                                            target = @targetDirectory + "experts\\AutoFXProfitsReceiver.mq4";
+                                            target = @targetDirectory + "experts\\AutoFXProfits - Client.mq4";
                                             //MessageBox.Show("Target location = " + target);
                                             //Logger.Debug("Target location = " + target, OType.FullName, "Run");
                                         }
@@ -185,7 +185,6 @@ namespace InstallerHelpProject
         /// <summary>
         /// Method Copy copies the file from souce directory to the target directory
         /// </summary>
-        /// <param name="sw"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand)]
@@ -205,7 +204,6 @@ namespace InstallerHelpProject
                 //MessageBox.Show("Copied file from " + source + " to " + target);
                 //Logger.Debug("Copied " + source + " to " + target, OType.FullName, "Copy");
             }
-
             catch (Exception exception)
             {
                 //MessageBox.Show(exception.ToString());
