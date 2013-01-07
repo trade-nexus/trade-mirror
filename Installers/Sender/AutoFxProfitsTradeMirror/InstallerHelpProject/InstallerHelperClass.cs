@@ -35,12 +35,6 @@ namespace InstallerHelpProject
             string targeted = this.Context.Parameters["targetdir"];
             //string dir = targeted + "InstallerHelpProject.exe";
 
-            Process redistributablesComponent = new Process();
-            redistributablesComponent.StartInfo.FileName = targeted + "\\Dependancy\\vcredist_x86.exe";
-            //MessageBox.Show("Target DIR = " + redistributablesComponent.StartInfo.FileName);
-
-            redistributablesComponent.Start();
-
             DirFinder dr = new DirFinder();
             ////MessageBox.Show("Deleting target: " + dir);
 

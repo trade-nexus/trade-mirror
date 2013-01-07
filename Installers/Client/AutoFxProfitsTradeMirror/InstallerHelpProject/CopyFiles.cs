@@ -109,6 +109,18 @@ namespace InstallerHelpProject
                                             //MessageBox.Show("Target location = " + target);
                                             //Logger.Debug("Target location = " + target, OType.FullName, "Run");
                                         }
+                                        else if (splitFile[splitFile.Length - 1].Trim() == "msvcp100.dll")
+                                        {
+                                            target = @targetDirectory + "experts\\libraries\\msvcp100.dll";
+                                            //MessageBox.Show("Target location = " + target);
+                                            //Logger.Debug("Target location = " + target, OType.FullName, "Run");
+                                        }
+                                        else if (splitFile[splitFile.Length - 1].Trim() == "msvcr100.dll")
+                                        {
+                                            target = @targetDirectory + "experts\\libraries\\msvcr100.dll";
+                                            //MessageBox.Show("Target location = " + target);
+                                            //Logger.Debug("Target location = " + target, OType.FullName, "Run");
+                                        }
 
                                         if(!string.IsNullOrEmpty(target))
                                         {

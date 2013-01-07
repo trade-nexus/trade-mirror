@@ -21,32 +21,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_099F0E79B3884AC0A3A3C618174F2A57"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_18B52F13196D4A57A05B71EF3E0161F6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_19436E2D573B4A44B55DFCFBB22D02B5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4B3C69E544F040553D7C82AFF34DF596"
-        "OwnerKey" = "8:_875B78D9830141B39BF47CCE7E5CF3DC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_589AE2129D1A4EFCBC4FF0DE631DFCF6"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BA7F93A0E0A04236A17CB0D06DEDD72F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -57,38 +39,56 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7308EC245F1E4FE9AB1458203CCCB748"
+        "MsmKey" = "8:_59B0003DB9444F798645DF114F3CDD91"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_875B78D9830141B39BF47CCE7E5CF3DC"
+        "MsmKey" = "8:_5A9AE55358794CEDBE78D8E77F47506C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_93530D88833745CE927617413246DCEB"
+        "MsmKey" = "8:_5CEF294E5449487B8A2C03F835A9EBA7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9360AC534F894A26A306FE0DAE7E6607"
+        "MsmKey" = "8:_79CBAE9746F94BEC98899D3D8E9B8C3B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CD17F899E8A84316BAB1B2ACAE74282F"
+        "MsmKey" = "8:_9A7C34CE0E8944958928375DCDB6E8ED"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A5FB26235D444B93B0EDD9B1CFCB3454"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BA7F93A0E0A04236A17CB0D06DEDD72F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D1FF4EA9B984402B95F0C5DC99A52140"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F6BF1FFE657FD05110BAC0F0FA4B52BB"
-        "OwnerKey" = "8:_19436E2D573B4A44B55DFCFBB22D02B5"
+        "OwnerKey" = "8:_5CEF294E5449487B8A2C03F835A9EBA7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,31 +106,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7308EC245F1E4FE9AB1458203CCCB748"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_19436E2D573B4A44B55DFCFBB22D02B5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F6BF1FFE657FD05110BAC0F0FA4B52BB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_875B78D9830141B39BF47CCE7E5CF3DC"
+        "OwnerKey" = "8:_D1FF4EA9B984402B95F0C5DC99A52140"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BA7F93A0E0A04236A17CB0D06DEDD72F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4B3C69E544F040553D7C82AFF34DF596"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5CEF294E5449487B8A2C03F835A9EBA7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -197,10 +197,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.0"
+                    "Name" = "8:.NET Framework 3.5 SP1"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -258,7 +258,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                "FrameworkVersion" = "8:.NETFramework,Version=v3.5"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=131000"
                 }
@@ -286,63 +286,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_099F0E79B3884AC0A3A3C618174F2A57"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\Dependancy\\vcredist_x86.exe"
-            "TargetName" = "8:vcredist_x86.exe"
-            "Tag" = "8:"
-            "Folder" = "8:_C48F093A9CAB4CF99804C747D62A68DA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_18B52F13196D4A57A05B71EF3E0161F6"
             {
             "SourcePath" = "8:..\\..\\..\\..\\Comm Library\\Release\\Communication Library.dll"
             "TargetName" = "8:Communication Library.dll"
             "Tag" = "8:"
             "Folder" = "8:_A56455148DB549DC90400B87ED34CF1A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_19436E2D573B4A44B55DFCFBB22D02B5"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:vshost-clr2, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_19436E2D573B4A44B55DFCFBB22D02B5"
-                    {
-                    "Name" = "8:datasource.vshost.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.vshost.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -388,7 +337,7 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_589AE2129D1A4EFCBC4FF0DE631DFCF6"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_59B0003DB9444F798645DF114F3CDD91"
             {
             "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.exe.config"
             "TargetName" = "8:datasource.exe.config"
@@ -408,20 +357,40 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7308EC245F1E4FE9AB1458203CCCB748"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5A9AE55358794CEDBE78D8E77F47506C"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.pdb"
+            "TargetName" = "8:datasource.pdb"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5CEF294E5449487B8A2C03F835A9EBA7"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TraceSourceLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:vshost-clr2, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7308EC245F1E4FE9AB1458203CCCB748"
+                    "_5CEF294E5449487B8A2C03F835A9EBA7"
                     {
-                    "Name" = "8:TraceSourceLogger.dll"
+                    "Name" = "8:datasource.vshost.exe"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\TraceSourceLogger.dll"
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.vshost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
@@ -439,14 +408,54 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_875B78D9830141B39BF47CCE7E5CF3DC"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_79CBAE9746F94BEC98899D3D8E9B8C3B"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.vshost.exe.config"
+            "TargetName" = "8:datasource.vshost.exe.config"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9A7C34CE0E8944958928375DCDB6E8ED"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.vshost.exe.manifest"
+            "TargetName" = "8:datasource.vshost.exe.manifest"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BA7F93A0E0A04236A17CB0D06DEDD72F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:datasource, Version=1.0.4753.34674, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:datasource, Version=1.0.4755.20942, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_875B78D9830141B39BF47CCE7E5CF3DC"
+                    "_BA7F93A0E0A04236A17CB0D06DEDD72F"
                     {
                     "Name" = "8:datasource.exe"
                     "Attributes" = "3:512"
@@ -470,50 +479,21 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_93530D88833745CE927617413246DCEB"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D1FF4EA9B984402B95F0C5DC99A52140"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.vshost.exe.config"
-            "TargetName" = "8:datasource.vshost.exe.config"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9360AC534F894A26A306FE0DAE7E6607"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.pdb"
-            "TargetName" = "8:datasource.pdb"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD17F899E8A84316BAB1B2ACAE74282F"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\datasource.vshost.exe.manifest"
-            "TargetName" = "8:datasource.vshost.exe.manifest"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:TraceSourceLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_D1FF4EA9B984402B95F0C5DC99A52140"
+                    {
+                    "Name" = "8:TraceSourceLogger.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\datasource\\bin\\TraceSourceLogger.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
             "Condition" = "8:"
@@ -670,15 +650,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Auto Fx Profits - Sender"
-        "ProductCode" = "8:{57BE889B-C15B-4F18-A552-B663F8B1EC8B}"
-        "PackageCode" = "8:{9F5AADE4-CA84-4842-8C50-4E0A8815CAE3}"
+        "ProductCode" = "8:{71CAFC21-0EEA-4146-9FC0-B85A79531788}"
+        "PackageCode" = "8:{840D9013-AEE5-4245-81C0-A02E7FC8A056}"
         "UpgradeCode" = "8:{65E184D1-DB81-4C91-84B5-02FCE6801A63}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:Auto Fx Profits"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1187,6 +1167,20 @@
         }
         "MergeModule"
         {
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A5FB26235D444B93B0EDD9B1CFCB3454"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC100_CRT_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
         }
         "ProjectOutput"
         {
