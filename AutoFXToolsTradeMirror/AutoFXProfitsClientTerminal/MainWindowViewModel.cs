@@ -114,7 +114,6 @@ namespace AutoFXProfitsClientTerminal
                 _heartbeatTimer = new Timer(AcceptedDelaySeconds * 1000);
                 _heartbeatTimer.Elapsed += HeartbeatTimerElapsed;
                 _heartbeatTimer.AutoReset = true;
-                _heartbeatTimer.Enabled = true;
 
                 UpdateUI("Disconnected");
                 if (!InitializeCredentials())
@@ -139,25 +138,30 @@ namespace AutoFXProfitsClientTerminal
         {
             try
             {
-                if (_client.Subscribe(AccountID, KeyString, Convert.ToInt32(AccountID)))
-                {
-                    Logger.Info("Subscribed", OType.FullName, "ConnectToServer");
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
+                                                                                        {
+                                                                                            if (_client.Subscribe(AccountID, KeyString,Convert.ToInt32(AccountID)))
+                                                                                            {
+                                                                                                Logger.Info("Subscribed",OType.FullName,"ConnectToServer");
 
-                    UpdateUI("Connected");
+                                                                                                UpdateUI("Connected");
 
-                    if (IsSavePasswordChecked)
-                    {
-                        SaveAccountCredentials();
-                    }
-                    else
-                    {
-                        DeleteAccountCredentials();
-                    }
-                }
-                else
-                {
-                    Logger.Info("Invalid Credentials", OType.FullName, "ConnectToServer");
-                }
+                                                                                                _heartbeatTimer.Enabled = true;
+
+                                                                                                if (IsSavePasswordChecked)
+                                                                                                {
+                                                                                                    SaveAccountCredentials();
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    DeleteAccountCredentials();
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                Logger.Info("Invalid Credentials",OType.FullName,"ConnectToServer");
+                                                                                            }
+                                                                                        }));
             }
             catch (Exception exception)
             {
@@ -202,6 +206,11 @@ namespace AutoFXProfitsClientTerminal
             if (signalInformation.Contains("___autofxtools trademirror___Alive___"))
             {
                 Logger.Debug("Heartbeat. = " + signalInformation, OType.FullName, "PublishNewSignal");
+
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
+                                                                                        {
+                                                                                            ResetTimer();
+                                                                                        }));
                 return;
             }
 
@@ -261,11 +270,7 @@ namespace AutoFXProfitsClientTerminal
                             string[] tempArray = tempString.Split(':');
                             this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
                                                                                                     {
-                                                                                                        AccountID =
-                                                                                                            tempArray[1]
-                                                                                                                .
-                                                                                                                Trim();
-
+                                                                                                        AccountID = tempArray[1].Trim();
                                                                                                     }));
                         }
                         break;
@@ -409,7 +414,19 @@ namespace AutoFXProfitsClientTerminal
         /// </summary>
         public void FreeResources()
         {
-            this.DisconnectFromServer();
+            if (Status == "Connected")
+            {
+                this.DisconnectFromServer();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ResetTimer()
+        {
+            _heartbeatTimer.Stop();
+            _heartbeatTimer.Start();
         }
     }
 }
