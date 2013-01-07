@@ -308,7 +308,7 @@
                         HorizontalContentAlignment="Center"
                         Width="500"
                         Height="325"
-                        ItemsSource="{Binding FilteredUsersCollection}">
+                        ItemsSource="{Binding FilteredUsersCollection}" SelectionChanged="ListView_SelectionChanged">
 
                         <ListView.View>
                             

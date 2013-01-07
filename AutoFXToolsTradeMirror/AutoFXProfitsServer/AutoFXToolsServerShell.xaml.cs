@@ -54,5 +54,10 @@ namespace AutoFXProfitsServer
         {
             _autoFXToolsServerShellViewModel.FreeResources();
         }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _autoFXToolsServerShellViewModel.FreeResources();
+        }
     }
 }
