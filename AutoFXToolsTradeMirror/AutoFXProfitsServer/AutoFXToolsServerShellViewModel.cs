@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using AutoFXProfitsServer.Commands;
+using Microsoft.Practices.Unity;
 using TraceSourceLogger;
 
 namespace AutoFXProfitsServer
@@ -21,16 +23,27 @@ namespace AutoFXProfitsServer
         public ICommand SearchGoCommand { get; set; }
         public ICommand UndoEmailTemplateCommand { get; set; }
         public ICommand AddNewUserCommand { get; set; }
+        public ICommand EditUserCommand { get; set; }
+        public ICommand SaveUserCommand { get; set; }
+        public ICommand SendManualEmailCommand { get; set; }
+        public ICommand ExportUserCommand { get; set; }
 
         private DBHelper _helper = null;
-        private SearchHelper _searchHelper = null;
         //private TradeMirrorService _tradeMirrorService = null;
 
-        private static List<User> AutoFXUsers { get; set; }
+        public List<User> AutoFXUsers { get; set; }
         private static TradeMirrorService _service = null;
         private MailingHelper _mailingHelper;
 
         private bool _servcieStatus = false;
+        private bool _editStatus = false;
+        private UserWindow _userWindow;
+
+        public bool EditStatus
+        {
+            get { return this._editStatus; }
+            set { this._editStatus = value; }
+        }
 
         /// <summary>
         /// Holds reference to UI dispatcher
@@ -59,6 +72,32 @@ namespace AutoFXProfitsServer
         {
             get { return (ObservableCollection<string>) GetValue(SearchTermsCollectionProperty); }
             set { SetValue(SearchTermsCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region NotificationStatusesCollection
+
+        public static readonly DependencyProperty NotificationStatusesCollectionProperty =
+            DependencyProperty.Register("NotificationStatusesCollection", typeof (ObservableCollection<string>), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(ObservableCollection<string>)));
+
+        public ObservableCollection<string> NotificationStatusesCollection
+        {
+            get { return (ObservableCollection<string>) GetValue(NotificationStatusesCollectionProperty); }
+            set { SetValue(NotificationStatusesCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region UserStatusesCollection
+
+        public static readonly DependencyProperty UserStatusesCollectionProperty =
+            DependencyProperty.Register("UserStatusesCollection", typeof (ObservableCollection<string>), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(ObservableCollection<string>)));
+
+        public ObservableCollection<string> UserStatusesCollection
+        {
+            get { return (ObservableCollection<string>) GetValue(UserStatusesCollectionProperty); }
+            set { SetValue(UserStatusesCollectionProperty, value); }
         }
 
         #endregion
@@ -251,6 +290,155 @@ namespace AutoFXProfitsServer
 
         #endregion
 
+        #region SelectedUser
+
+        public static readonly DependencyProperty SelectedUserProperty =
+            DependencyProperty.Register("SelectedUser", typeof (object), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(object)));
+
+        public object SelectedUser
+        {
+            get { return (object) GetValue(SelectedUserProperty); }
+            set { SetValue(SelectedUserProperty, value); }
+        }
+
+        #endregion
+
+        #region ID
+
+        public int ID { get; set; }
+
+        #endregion
+
+        #region Email
+
+        public static readonly DependencyProperty EmailProperty =
+            DependencyProperty.Register("Email", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
+
+        public string Email
+        {
+            get { return (string) GetValue(EmailProperty); }
+            set { SetValue(EmailProperty, value); }
+        }
+
+        #endregion
+
+        #region Account
+
+        public static readonly DependencyProperty AccountProperty =
+            DependencyProperty.Register("Account", typeof (int), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(int)));
+
+        public int Account
+        {
+            get { return (int) GetValue(AccountProperty); }
+            set { SetValue(AccountProperty, value); }
+        }
+
+        #endregion
+
+        #region Key
+
+        public static readonly DependencyProperty KeyProperty =
+            DependencyProperty.Register("Key", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
+
+        public string Key
+        {
+            get { return (string) GetValue(KeyProperty); }
+            set { SetValue(KeyProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedStatus
+
+        public static readonly DependencyProperty SelectedStatusProperty =
+            DependencyProperty.Register("SelectedStatus", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
+
+        public string SelectedStatus
+        {
+            get { return (string) GetValue(SelectedStatusProperty); }
+            set { SetValue(SelectedStatusProperty, value); }
+        }
+
+        #endregion
+
+        #region AlternateEmail
+
+        public static readonly DependencyProperty AlternativeEmailProperty =
+            DependencyProperty.Register("AlternativeEmail", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(""));
+
+        public string AlternativeEmail
+        {
+            get { return (string) GetValue(AlternativeEmailProperty); }
+            set { SetValue(AlternativeEmailProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedNotificationMode
+
+        public static readonly DependencyProperty SelectedNotificationModeProperty =
+            DependencyProperty.Register("SelectedNotificationMode", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
+
+        public string SelectedNotificationMode
+        {
+            get { return (string) GetValue(SelectedNotificationModeProperty); }
+            set { SetValue(SelectedNotificationModeProperty, value); }
+        }
+
+        #endregion
+
+        #region ConnectedUsers
+
+        public static readonly DependencyProperty ConnectedUsersProperty =
+            DependencyProperty.Register("ConnectedUsers", typeof (ObservableCollection<User>), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(ObservableCollection<User>)));
+
+        public ObservableCollection<User> ConnectedUsers
+        {
+            get { return (ObservableCollection<User>) GetValue(ConnectedUsersProperty); }
+            set { SetValue(ConnectedUsersProperty, value); }
+        }
+
+        #endregion
+
+        #region ManualEmailSubject
+
+        public static readonly DependencyProperty ManualEmailSubjectProperty =
+            DependencyProperty.Register("ManualEmailSubject", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
+
+        public string ManualEmailSubject
+        {
+            get { return (string) GetValue(ManualEmailSubjectProperty); }
+            set { SetValue(ManualEmailSubjectProperty, value); }
+        }
+
+        #endregion
+
+        #region EnteredManualEmail
+
+        public static readonly DependencyProperty EnteredManualEmailProperty =
+            DependencyProperty.Register("EnteredManualEmail", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
+
+        public string EnteredManualEmail
+        {
+            get { return (string) GetValue(EnteredManualEmailProperty); }
+            set { SetValue(EnteredManualEmailProperty, value); }
+        }
+
+        #endregion
+
+        #region ConnectedUsersCount
+
+        public static readonly DependencyProperty ConnectedUsersCountProperty =
+            DependencyProperty.Register("ConnectedUsersCount", typeof (int), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(int)));
+
+        public int ConnectedUsersCount
+        {
+            get { return (int) GetValue(ConnectedUsersCountProperty); }
+            set { SetValue(ConnectedUsersCountProperty, value); }
+        }
+
+        #endregion
+
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -260,6 +448,16 @@ namespace AutoFXProfitsServer
             this.SearchGoCommand = new SearchGoCommand(this);
             this.UndoEmailTemplateCommand = new UndoEmailTemplateCommand(this);
             this.AddNewUserCommand = new AddNewUserCommand(this);
+            this.EditUserCommand=new EditUserCommand(this);
+            this.SaveUserCommand=new SaveUserCommand(this);
+            this.SendManualEmailCommand = new SendManualEmailCommand(this);
+            this.ExportUserCommand = new ExportUserCommand(this);
+
+            SearchHelper.ClientSubscribed += ClientSubscribed;
+            SearchHelper.ClientUnSubscribed += ClientUnSubscribed;
+            ConnectedUsersCount = 0;
+
+            ConnectedUsers = new ObservableCollection<User>();
 
             this._currentDispatcher = Dispatcher.CurrentDispatcher;
 
@@ -275,9 +473,49 @@ namespace AutoFXProfitsServer
             InitializeSearchTermsCollection();
             InitializeEmailTemplateNamesCollection();
             InitializeFilteredUsersCollection();
-            this._searchHelper = new SearchHelper(AutoFXUsers);
+            InitializeNotificationStatusesCollection();
+            InitializeUserStatusesCollection();
+
             SetActiveUsersOnUI();
             SetRevokedUsersOnUI();
+        }
+
+        private void ClientUnSubscribed(User user)
+        {
+            try
+            {
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
+                                                                                        {
+                                                                                            if (ConnectedUsers.Contains(user))
+                                                                                            {
+                                                                                                ConnectedUsers.Remove(user);
+                                                                                                ConnectedUsersCount--;
+                                                                                            }
+                                                                                        }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "ClientUnSubscribed");
+            }
+        }
+
+        private void ClientSubscribed(User user)
+        {
+            try
+            {
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
+                                                                                        {
+                                                                                            if (!ConnectedUsers.Contains(user))
+                                                                                            {
+                                                                                                ConnectedUsers.Add(user);
+                                                                                                ConnectedUsersCount++;
+                                                                                            }
+                                                                                        }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "ClientSubscribed");
+            }
         }
 
         /// <summary>
@@ -299,6 +537,48 @@ namespace AutoFXProfitsServer
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "InitializeSearchTermsCollection");
+            }
+        }
+
+        /// <summary>
+        /// Initializes the Search Terms Collection
+        /// </summary>
+        private void InitializeNotificationStatusesCollection()
+        {
+            try
+            {
+                this.NotificationStatusesCollection = new ObservableCollection<string>();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    this.NotificationStatusesCollection.Add("Yes");
+                    this.NotificationStatusesCollection.Add("No");
+                }));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeNotificationStatusesCollection");
+            }
+        }
+
+        /// <summary>
+        /// Initializes the Search Terms Collection
+        /// </summary>
+        private void InitializeUserStatusesCollection()
+        {
+            try
+            {
+                this.UserStatusesCollection = new ObservableCollection<string>();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    this.UserStatusesCollection.Add("Active");
+                    this.UserStatusesCollection.Add("Revoked");
+                }));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeNotificationStatusesCollection");
             }
         }
 
@@ -415,7 +695,7 @@ namespace AutoFXProfitsServer
                     searchFilter = "Revoked";
                 }
 
-                var searchedUsers = this._searchHelper.SearchUser(SelectedSearchType, SearchItem, searchFilter);
+                var searchedUsers = SearchHelper.SearchUser(SelectedSearchType, SearchItem, searchFilter, AutoFXUsers);
                 foreach (var revokedUser in searchedUsers)
                 {
                     this.FilteredUsersCollection.Add(revokedUser);
@@ -436,7 +716,7 @@ namespace AutoFXProfitsServer
         {
             try
             {
-                int numberOfActiveUsers = this._searchHelper.GetActiveUsers().Count;
+                int numberOfActiveUsers = SearchHelper.GetActiveUsers(AutoFXUsers).Count;
 
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                                                                                        {
@@ -456,7 +736,7 @@ namespace AutoFXProfitsServer
         {
             try
             {
-                int numberOfRevokedUsers = this._searchHelper.GetRevokedUsers().Count;
+                int numberOfRevokedUsers = SearchHelper.GetRevokedUsers(AutoFXUsers).Count;
 
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
@@ -527,9 +807,194 @@ namespace AutoFXProfitsServer
             EmailTemplateViewEnabled = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void EditTemplate()
         {
             EmailTemplateViewEnabled = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void AddNewUser()
+        {
+            _editStatus = false;
+            _userWindow = new UserWindow(this);
+            _userWindow.Show();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void EditUser()
+        {
+            _editStatus = true;
+            _userWindow = new UserWindow(this);
+            _userWindow.Show();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SaveUser()
+        {
+            if (_editStatus)
+            {
+                _helper.EditUser(ID, Email, Account, Key, SelectedStatus, SelectedNotificationMode, AlternativeEmail);
+            }
+            else
+            {
+                if(String.IsNullOrEmpty(AlternativeEmail))
+                {
+                    AlternativeEmail = Email;
+                }
+                _helper.AddNewUser(Email, Account, Key, SelectedStatus, SelectedNotificationMode, AlternativeEmail);
+            }
+            UpdateUserList();
+            _userWindow.Close();
+
+            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+            {
+                this.ID = 0;
+                this.Email = "";
+                this.SelectedStatus = "";
+                this.Account = 0;
+                this.Key = "";
+                this.SelectedNotificationMode = "";
+                this.AlternativeEmail = "";
+            }));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateSelectedUserDetails()
+        {
+            try
+            {
+                var selectedUser = (User)SelectedUser;
+
+                if(selectedUser != null)
+                {
+                    this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                    {
+                        this.ID = selectedUser.ID;
+                        this.Email = selectedUser.Email;
+                        this.SelectedStatus = selectedUser.Status;
+                        this.Account = selectedUser.AccountNumber;
+                        this.Key = selectedUser.KeyString;
+                        this.SelectedNotificationMode = selectedUser.SendNotifications;
+                        this.AlternativeEmail = selectedUser.AlternativeEmail;
+                    }));
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "UpdateSelectedUserDetails");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateUserList()
+        {
+            try
+            {
+                AutoFXUsers.Clear();
+                AutoFXUsers = _helper.BuildUsersList();
+
+                FilteredUsersCollection.Clear();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    foreach (var user in AutoFXUsers)
+                    {
+                        this.FilteredUsersCollection.Add(user);
+                    }
+                    this.TotalClients = this.FilteredUsersCollection.Count;
+                }));
+
+                _mailingHelper.UsersList = AutoFXUsers;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "UpdateUserList");
+            }
+        }
+
+        public void SendManualEmail()
+        {
+            try
+            {
+                MailingHelper mailingHelper = new MailingHelper(AutoFXUsers);
+                string receipientType = string.Empty;
+
+                if (IsAllUsersChecked)
+                {
+                    receipientType = "All";
+                }
+                else if (IsActiveUsersChecked)
+                {
+                    receipientType = "Active";
+                }
+                else if (IsRevokedUsersChecked)
+                {
+                    receipientType = "Revoked";
+                }
+
+                mailingHelper.SendEmail(ManualEmailSubject, receipientType, EnteredManualEmail);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SendManualEmail");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ExportUsers()
+        {
+            try
+            {
+                string path = AppDomain.CurrentDomain.BaseDirectory + "Export";
+
+                if(!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                path = path + "\\user_" + DateTime.UtcNow.ToString("yyyy-MM-dd") + ".csv";
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                using (File.Create(path))
+                {
+                }
+
+                FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Write, FileShare.None);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
+
+                foreach (var autoFXUser in AutoFXUsers)
+                {
+                    streamWriter.WriteLine(autoFXUser.Email);
+                    if(autoFXUser.AlternativeEmail != autoFXUser.Email)
+                    {
+                        streamWriter.WriteLine(autoFXUser.AlternativeEmail);
+                    }
+                }
+
+                streamWriter.Close();
+                fileStream.Close();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "ExportUsers");
+            }
         }
     }
 }

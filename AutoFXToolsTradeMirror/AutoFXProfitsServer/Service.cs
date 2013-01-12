@@ -12,7 +12,8 @@ namespace AutoFXProfitsServer
     public interface ITradeMirror
     {
         [OperationContract]
-        bool Subscribe(string userName, string password, int accountID);
+        //bool Subscribe(string userName, string password, int accountID);
+        string Subscribe(string userName, string password, int accountID);
 
         [OperationContract]
         bool Unsubscribe(string userName, string password, int accountID);
@@ -52,9 +53,6 @@ namespace AutoFXProfitsServer
 
         private static ConnectionManager _connectionManager = new ConnectionManager();
 
-        public static Action<User> ClientSubscribed;
-        public static Action<User> ClientUnSubscribed;
-
         private int _systemOrderID = 0;
 
         public int SystemOrderID
@@ -71,8 +69,6 @@ namespace AutoFXProfitsServer
             if (_helper == null)
             {
                 _helper = new DBHelper(_connectionManager);
-                AutoFXUsers = _helper.BuildUsersList();
-                ConnectedUsers = new List<User>();
             }
         }
 
@@ -83,32 +79,40 @@ namespace AutoFXProfitsServer
         /// <param name="password"></param>
         /// <param name="accountID"> </param>
         /// <returns></returns>
-        public bool Subscribe(string userName, string password, int accountID)
+        //public bool Subscribe(string userName, string password, int accountID)
+        public string Subscribe(string userName, string password, int accountID)
         {
             Logger.Debug("New Client Connection received. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
 
             try
             {
-                if (AuthenticateUserCredentials(userName, password, accountID))
+                if (SearchHelper.AuthenticateUserCredentials(userName, password, accountID, _helper))
                 {
                     Logger.Debug("Client Authenticated. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
                     _callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();
                     _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
                     NewSignalEvent += _newSignalHandler;
-                    ConnectedUsers.Add(new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password));
-                    return true;
+                    //return true;
+
+                    string suffixes = GetSuffixes();
+                    Logger.Debug("Suffixes = " + suffixes, OType.FullName, "Subscribe");
+                    return suffixes;
                 }
                 else
                 {
                     Logger.Debug("Client Authentication failed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
-                    return false;
+                    //return false;
+
+                    return "FAILED";
                 }
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
                 Logger.Error(exception, OType.FullName, "Subscribe");
-                return false;
+                //return false;
+                //ToDO: Return a string showing authentication failure
+                return "FAILED";
             }
         }
 
@@ -119,13 +123,17 @@ namespace AutoFXProfitsServer
         {
             try
             {
-                NewSignalEvent -= _newSignalHandler;
-                if (ClientUnSubscribed != null)
+                if (SearchHelper.UnAuthenticateUserCredentials(userName, password, accountID, _helper))
                 {
-                    ClientUnSubscribed(new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password));
+                    NewSignalEvent -= _newSignalHandler;
+                    Logger.Debug("Client Unsubscribed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Unsubscribe");
+                    return true;
                 }
-                Logger.Debug("Client Unsubscribed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Unsubscribe");
-                return true;
+                else
+                {
+                    Logger.Debug("Client Cant be unsubscirbed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
+                    return false;
+                }
             }
             catch (Exception exception)
             {
@@ -227,32 +235,6 @@ namespace AutoFXProfitsServer
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <param name="accountID"></param>
-        /// <returns></returns>
-        public bool AuthenticateUserCredentials(string userName, string password, int accountID)
-        {
-            try
-            {
-                User testUser = new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password);
-                if (AutoFXUsers.BinarySearch(testUser) > -1)
-                {
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, OType.FullName, "AuthenticateUserCredentials");
-                return false;
-            }
-            
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="originalSignal"></param>
         /// <param name="orderID"></param>
         /// <returns></returns>
@@ -287,6 +269,11 @@ namespace AutoFXProfitsServer
             string signalInformation = (string) signalInfo;
 
             _helper.ParseAndInsertData(signalInformation);
+        }
+
+        private string GetSuffixes()
+        {
+            return _helper.GetSuffixes();
         }
     }
 }

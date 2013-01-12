@@ -91,7 +91,7 @@
                 FontWeight="Bold" />
 
             <Label 
-                Content="{Binding Service.ConnectedUsers.Count}" 
+                Content="{Binding ConnectedUsersCount}" 
                 Grid.Column="1"
                 Grid.ColumnSpan="1" 
                 Grid.Row="2" 
@@ -308,7 +308,9 @@
                         HorizontalContentAlignment="Center"
                         Width="500"
                         Height="325"
-                        ItemsSource="{Binding FilteredUsersCollection}" SelectionChanged="ListView_SelectionChanged">
+                        ItemsSource="{Binding FilteredUsersCollection}" 
+                        SelectionChanged="ListViewSelectionChanged"
+                        SelectedItem="{Binding SelectedUser}">
 
                         <ListView.View>
                             
@@ -403,11 +405,40 @@
                         FontFamily="Calibri" 
                         FontSize="14"
                         FontWeight="Bold" />
-                    
-                    
+
+                    <Button 
+                        Content="Edit User" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding EditUserCommand}"
+                        Margin="1,1,120,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                    <Button 
+                        Content="Export" 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding ExportUserCommand}"
+                        Margin="1,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
                 </Grid>
-                
-                
                 
             </TabItem>
 
@@ -505,7 +536,127 @@
                         Width="490" 
                         Height="350"
                         IsEnabled="{Binding EmailTemplateViewEnabled}"
-                        TextWrapping="Wrap"/>
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Visible"
+                        AcceptsReturn="True"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Manual Email" Name="ManualEmailTabItem">
+                <Grid Width="495" Height="400" >
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.9*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label 
+                        Content="Subject:" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Margin="1,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <TextBox 
+                        Text="{Binding ManualEmailSubject}" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Width="200"
+                        Height="25"
+                        Margin="1,1,1,1"/>
+                    
+                    <Button 
+                        Content="Send" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SendManualEmailCommand}"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <RadioButton 
+                        GroupName="EmailRecipientsType"
+                        Content="All Users" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="50,1,1,1"
+                        IsChecked="{Binding IsAllUsersChecked}"/>
+
+                    <RadioButton 
+                        GroupName="EmailRecipientsType"
+                        Content="Active" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="25,1,1,1"
+                        IsChecked="{Binding IsActiveUsersChecked}"/>
+
+                    <RadioButton 
+                        GroupName="EmailRecipientsType"
+                        Content="Revoked" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="1,1,20,1"
+                        IsChecked="{Binding IsRevokedUsersChecked}"/>
+
+                    <TextBox 
+                        Text="{Binding EnteredManualEmail}"
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Top"
+                        HorizontalContentAlignment="Stretch"
+                        Width="490" 
+                        Height="350"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Visible"
+                        AcceptsReturn="True"/>
                 </Grid>
             </TabItem>
         </TabControl>

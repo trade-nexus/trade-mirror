@@ -18,14 +18,11 @@ namespace AutoFXProfitsServer
 
         public List<User> UsersList { get; set; }
 
-        private SearchHelper _searchHelper = null;
-
         private MailingService _mailingService = new MailingService();
 
         public MailingHelper(List<User> users)
         {
             UsersList = users;
-            _searchHelper = new SearchHelper(UsersList);
         }
 
         /// <summary>
@@ -37,25 +34,32 @@ namespace AutoFXProfitsServer
             try
             {
                 StringBuilder stringBuilder = new StringBuilder();
+                string subject = string.Empty;
 
                 string path = AppDomain.CurrentDomain.BaseDirectory + @"\\Templates\\";
 
                 if (signal.Command == "OP")
                 {
                     path = path + "New Trade.txt";
+                    subject = Constants.EmailSubjectEntry;
                 }
                 else if (signal.Command == "MO")
                 {
                     path = path + "Stop Move.txt";
+                    subject = Constants.EmailSubjectStopAdjustment;
                 }
                 else if (signal.Command == "PL")
                 {
                     path = path + "Partial Close.txt";
+                    subject = Constants.EmailSubjectPartial;
                 }
                 else if (signal.Command == "CL")
                 {
                     path = path + "Close Trade.txt";
+                    subject = Constants.EmailSubjectExit;
                 }
+
+                subject = subject.Replace("<Symbol>", signal.Symbol);
 
                 if (!File.Exists(path))
                 {
@@ -109,7 +113,20 @@ namespace AutoFXProfitsServer
                 fs.Close();
 
                 Logger.Info("Sending Notfocation = " + stringBuilder.ToString(), OType.FullName, "SendEmail");
-                _mailingService.SendMailNotification(Constants.EmailSubject, MailID, Password, MailingClient, GetEmailReceipients(), stringBuilder.ToString(), SenderName);
+                _mailingService.SendMailNotification(subject, MailID, Password, MailingClient, GetEmailReceipients(), stringBuilder.ToString(), SenderName);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SendEmail");
+            }
+        }
+
+        public void SendEmail(string subject, string receipients, string body)
+        {
+            try
+            {
+                Logger.Info("Sending Manual Email = " + body, OType.FullName, "SendEmail");
+                _mailingService.SendMailNotification(subject, MailID, Password, MailingClient, GetEmailReceipients(receipients), body, SenderName);
             }
             catch (Exception exception)
             {
@@ -171,7 +188,12 @@ namespace AutoFXProfitsServer
 
         private string GetEmailReceipients()
         {
-            return _searchHelper.GetActiveUserAddresses();
+            return SearchHelper.GetActiveUserAlternateAddresses(UsersList);
+        }
+
+        private string GetEmailReceipients(string receipientType)
+        {
+            return SearchHelper.GetReceipientsFromType(UsersList, receipientType);
         }
 
         public void SaveTemplate(string templateName, string newEmailTemplate)

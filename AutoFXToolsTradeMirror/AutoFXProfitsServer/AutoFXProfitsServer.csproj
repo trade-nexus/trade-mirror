@@ -76,12 +76,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\AddNewUserCommand.cs" />
+    <Compile Include="Commands\EditUserCommand.cs" />
+    <Compile Include="Commands\ExportUserCommand.cs" />
+    <Compile Include="Commands\SaveUserCommand.cs" />
+    <Compile Include="Commands\SendManualEmailCommand.cs" />
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DBHelper.cs" />
-    <Compile Include="Filters.xaml.cs">
-      <DependentUpon>Filters.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MailingHelper.cs" />
     <Compile Include="MailingService.cs" />
     <Compile Include="SearchHelper.cs" />
@@ -104,10 +105,6 @@
       <DependentUpon>AutoFXToolsServerShell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Filters.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

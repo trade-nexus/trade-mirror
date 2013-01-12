@@ -14,6 +14,8 @@ namespace AutoFXProfitsServer
         private string _keyString;
         private DateTime _created;
         private DateTime _modified;
+        private bool _sendNotifications;
+        private string _alternativeEmail;
 
         #endregion
 
@@ -76,6 +78,27 @@ namespace AutoFXProfitsServer
             set { this._modified = value; }
         }
 
+        public string SendNotifications
+        {
+            get
+            {
+                if (this._sendNotifications == true)
+                {
+                    return "Yes";
+                }
+                else
+                {
+                    return "No";
+                }
+            }
+        }
+
+        public string AlternativeEmail
+        {
+            get { return this._alternativeEmail; }
+            set { this._alternativeEmail = value; }
+        }
+
         #endregion
 
         #region Constructors
@@ -93,6 +116,8 @@ namespace AutoFXProfitsServer
             this._modified = DateTime.MaxValue;
             this._role = "user";
             this._status = false;
+            this._sendNotifications = false;
+            this._alternativeEmail = "alternative_email@default.com";
         }
 
         /// <summary>
@@ -111,6 +136,8 @@ namespace AutoFXProfitsServer
             this._modified = DateTime.MaxValue;
             this._role = "user";
             this._status = true;
+            this._sendNotifications = false;
+            this._alternativeEmail = "alternative_email@default.com";
         }
 
         /// <summary>
@@ -134,6 +161,35 @@ namespace AutoFXProfitsServer
             this._modified = modified;
             this._role = role;
             this._status = status;
+            this._sendNotifications = false;
+            this._alternativeEmail = "alternative_email@default.com";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="email"></param>
+        /// <param name="role"></param>
+        /// <param name="status"></param>
+        /// <param name="accountNumber"></param>
+        /// <param name="keyString"></param>
+        /// <param name="created"></param>
+        /// <param name="modified"></param>
+        /// <param name="sendNotifications"></param>
+        /// <param name="alternativeEmail"></param>
+        public User(int id, string email, string role, bool status, int accountNumber, string keyString, DateTime created, DateTime modified, bool sendNotifications, string alternativeEmail)
+        {
+            this._accountNumber = accountNumber;
+            this._created = created;
+            this._email = email.ToLower();
+            this._id = id;
+            this._keyString = keyString;
+            this._modified = modified;
+            this._role = role;
+            this._status = status;
+            this._sendNotifications = sendNotifications;
+            this._alternativeEmail = alternativeEmail;
         }
 
         #endregion
@@ -142,30 +198,9 @@ namespace AutoFXProfitsServer
         {
             return "Account Number = " + AccountNumber + " | Date Created = " + Created + " | Email ID = " + Email +
                    " | ID = " + ID + " | Key String = " + KeyString + " | Modified Date = " + Modified + " | Role = " +
-                   Role + " | Status = " + Status;
+                   Role + " | Status = " + Status + " | Send Notifications = " + SendNotifications +
+                   " | Alternative Email = " + AlternativeEmail;
         }
-
-        //public override bool Equals(object obj)
-        //{
-        //    User user2 = (User)obj;
-        //    if(this.AccountNumber == user2.AccountNumber)
-        //    {
-        //        if (this.KeyString == user2.KeyString)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            //Logger.Debug("The Keystring provided is incorrect. Username = " + user2.AccountNumber + " | Password = " + user2.KeyString, OType.FullName, "Equals");
-        //            return false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        //Logger.Debug("The UserName provided is incorrect. Username = " + user2.AccountNumber + " | Password = " + user2.KeyString, OType.FullName, "Equals");
-        //        return false;
-        //    }
-        //}
 
         public int CompareTo(object obj)
         {

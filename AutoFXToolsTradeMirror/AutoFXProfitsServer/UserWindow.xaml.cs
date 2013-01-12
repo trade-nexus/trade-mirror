@@ -21,9 +21,14 @@ namespace AutoFXProfitsServer
     {
         private AutoFXToolsServerShellViewModel _autoFXToolsServerShellViewModel;
 
-        public UserWindow()
+        public UserWindow(AutoFXToolsServerShellViewModel autoFXToolsServerShellViewModel)
         {
             InitializeComponent();
+            _autoFXToolsServerShellViewModel = autoFXToolsServerShellViewModel;
+            this.DataContext = _autoFXToolsServerShellViewModel;
+
+            this.Activate();
+            this.WindowStartupLocation= WindowStartupLocation.CenterOwner;
         }
 
         /// <summary>
@@ -37,6 +42,16 @@ namespace AutoFXProfitsServer
                 _autoFXToolsServerShellViewModel = value;
                 this.DataContext = _autoFXToolsServerShellViewModel;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace AutoFXProfitsServer
         private static readonly Type OType = typeof(DBHelper);
 
         private const string QueryUsers = "SELECT * FROM users WHERE 1=1 ";
+        private const string QuerySuffixes = "SELECT * FROM suffixes WHERE 1=1 ";
 
         private List<User> _autoFXUsers;
 
@@ -51,10 +52,12 @@ namespace AutoFXProfitsServer
                     string keyString = reader.GetString("keystring");
                     string created = String.IsNullOrEmpty(reader.GetString("created")) ? "1/1/1990" : reader.GetString("created");
                     string modified = String.IsNullOrEmpty(reader.GetString("modified")) ? "1/1/2000" : reader.GetString("modified");
+                    string notificationStatus = String.IsNullOrEmpty(reader.GetString("send_notfications")) ? "0" : reader.GetString("send_notfications");
+                    string alternativeEmail = String.IsNullOrEmpty(reader.GetString("alternate_email")) ? "email@default.com" : reader.GetString("alternate_email");
 
                     User newUser = new User(Convert.ToInt32(id), email, role, Convert.ToBoolean(status),
                                             Convert.ToInt32(accountNumber), keyString, Convert.ToDateTime(created),
-                                            Convert.ToDateTime(modified));
+                                            Convert.ToDateTime(modified), Convert.ToBoolean(notificationStatus), alternativeEmail);
 
                     this._autoFXUsers.Add(newUser);
                     Logger.Info("New User Added = " + newUser, OType.FullName, "BuildUsersList");
@@ -99,8 +102,8 @@ namespace AutoFXProfitsServer
                         "values(`" + strategy + "`,`" + signal + "`," + processingTime + ")", OType.FullName,
                         "ParseAndInsertData");
 
-                    string query = "INSERT INTO signals(`strategy`, `signal`, `processing time`) " +
-                                   "values(@strategy,@signal,@processing_time)";
+                    const string query = "INSERT INTO signals(`strategy`, `signal`, `processing time`) " +
+                                         "values(@strategy,@signal,@processing_time)";
 
                     //temp.Close();
                     dataInsertion.CommandText = query;
@@ -121,6 +124,118 @@ namespace AutoFXProfitsServer
             catch (Exception ex)
             {
                 Logger.Error("Exception while parsing or inserting message. Exception = " + ex, OType.FullName, "ParseAndInsertData");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void AddNewUser(string email, int account, string key, string status, string notificationStatus, string alternateEmail)
+        {
+            try
+            {
+                int dbStatus = status == "Active" ? 1 : 0;
+                int dbNotificationStatus = notificationStatus == "Yes" ? 1 : 0;
+
+                MySqlConnection connection = _connectionManager.Connect();
+                MySqlCommand dataInsertion = new MySqlCommand { Connection = connection };
+
+                string creationTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+                string modificationTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+
+                const string query = "INSERT INTO users(`email`,`account_number`,`keystring`,`status`, `created`, `modified`, `send_notfications`, `alternate_email`)" +
+                                     " VALUES (@email, @account, @key, @status, @created, @modified, @notificationStatus, @alternateEmail)";
+
+                dataInsertion.CommandText = query;
+
+                dataInsertion.Parameters.AddWithValue("@email", email);
+                dataInsertion.Parameters.AddWithValue("@account", account);
+                dataInsertion.Parameters.AddWithValue("@key", key);
+                dataInsertion.Parameters.AddWithValue("@status", dbStatus);
+                dataInsertion.Parameters.AddWithValue("@created", creationTime);
+                dataInsertion.Parameters.AddWithValue("@modified", modificationTime);
+                dataInsertion.Parameters.AddWithValue("@notificationStatus", dbNotificationStatus);
+                dataInsertion.Parameters.AddWithValue("@alternateEmail", alternateEmail);
+
+                Logger.Debug("Number of Rows Affected = " + dataInsertion.ExecuteNonQuery(), OType.FullName, "AddUser");
+                _connectionManager.Disconnect();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "AddUser");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void EditUser(int id, string email, int account, string key, string status, string notificationStatus, string alternateEmail)
+        {
+            try
+            {
+                int dbStatus = status == "Active" ? 1 : 0;
+                int dbNotificationStatus = notificationStatus == "Yes" ? 1 : 0;
+
+                MySqlConnection connection = _connectionManager.Connect();
+                MySqlCommand dataInsertion = new MySqlCommand { Connection = connection };
+
+                string modificationTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+
+                const string query = "UPDATE users SET `email`=@email, `account_number`=@account,`keystring`=@key, `status`=@status, `modified`=@modified, " +
+                                     "`send_notfications`=@notificationStatus, `alternate_email`=@alternateEmail WHERE `id`=@id";
+
+                dataInsertion.CommandText = query;
+
+                dataInsertion.Parameters.AddWithValue("@email", email);
+                dataInsertion.Parameters.AddWithValue("@account", account);
+                dataInsertion.Parameters.AddWithValue("@key", key);
+                dataInsertion.Parameters.AddWithValue("@status", dbStatus);
+                dataInsertion.Parameters.AddWithValue("@id", id);
+                dataInsertion.Parameters.AddWithValue("@modified", modificationTime);
+                dataInsertion.Parameters.AddWithValue("@notificationStatus", dbNotificationStatus);
+                dataInsertion.Parameters.AddWithValue("@alternateEmail", alternateEmail);
+
+                Logger.Debug("Number of Rows Affected = " + dataInsertion.ExecuteNonQuery(), OType.FullName, "EditUser");
+                _connectionManager.Disconnect();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "EditUser");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetSuffixes()
+        {
+            try
+            {
+                MySqlConnection connection = this._connectionManager.Connect();
+                MySqlCommand selectSuffixes = new MySqlCommand(QuerySuffixes, connection);
+                MySqlDataReader reader = selectSuffixes.ExecuteReader();
+
+                string suffixes = string.Empty;
+
+                while (reader.Read())
+                {
+                    string newSuffix = String.IsNullOrEmpty(reader.GetString("suffix"))
+                                           ? ""
+                                           : reader.GetString("suffix");
+                    suffixes = suffixes + "," + newSuffix;
+
+                    Logger.Info("New Suffix Added = " + newSuffix, OType.FullName, "GetSuffixes");
+                }
+                reader.Close();
+                this._connectionManager.Disconnect();
+
+                return suffixes;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "GetSuffixes");
+                return null;
             }
         }
     }

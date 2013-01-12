@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace AutoFXProfitsServer.Commands
 {
-    public class AddNewUserCommand : ICommand
+    public class EditUserCommand : ICommand
     {
         private AutoFXToolsServerShellViewModel _autoFXToolsServerShellViewModel;
         
@@ -14,7 +14,7 @@ namespace AutoFXProfitsServer.Commands
         /// Argument Constructor
         /// </summary>
         /// <param name="autoFXToolsServerShellViewModel"></param>
-        public AddNewUserCommand(AutoFXToolsServerShellViewModel autoFXToolsServerShellViewModel)
+        public EditUserCommand(AutoFXToolsServerShellViewModel autoFXToolsServerShellViewModel)
         {
             this._autoFXToolsServerShellViewModel = autoFXToolsServerShellViewModel;
         }
@@ -45,8 +45,7 @@ namespace AutoFXProfitsServer.Commands
         /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-           _autoFXToolsServerShellViewModel.AddNewUser();
-           _autoFXToolsServerShellViewModel.EditStatus = false;
+            _autoFXToolsServerShellViewModel.EditUser();
         }
         #endregion
     }
