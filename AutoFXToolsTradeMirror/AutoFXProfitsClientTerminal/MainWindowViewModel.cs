@@ -138,13 +138,19 @@ namespace AutoFXProfitsClientTerminal
         {
             try
             {
+                string suffixes = _client.Subscribe(AccountID, KeyString,Convert.ToInt32(AccountID));
+
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
                                                                                         {
-                                                                                            if (_client.Subscribe(AccountID, KeyString,Convert.ToInt32(AccountID)))
+                                                                                            //if (_client.Subscribe(AccountID, KeyString,Convert.ToInt32(AccountID)))
+
+                                                                                            if (suffixes != "FAILED")
                                                                                             {
                                                                                                 Logger.Info("Subscribed",OType.FullName,"ConnectToServer");
 
                                                                                                 UpdateUI("Connected");
+
+                                                                                                SetSuffixes(suffixes);
 
                                                                                                 _heartbeatTimer.Enabled = true;
 
@@ -207,10 +213,7 @@ namespace AutoFXProfitsClientTerminal
             {
                 Logger.Debug("Heartbeat. = " + signalInformation, OType.FullName, "PublishNewSignal");
 
-                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
-                                                                                        {
-                                                                                            ResetTimer();
-                                                                                        }));
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (ResetTimer));
                 return;
             }
 
@@ -427,6 +430,34 @@ namespace AutoFXProfitsClientTerminal
         {
             _heartbeatTimer.Stop();
             _heartbeatTimer.Start();
+        }
+
+        private void SetSuffixes(string suffixes)
+        {
+            try
+            {
+                string path = AppDomain.CurrentDomain.BaseDirectory + "\\suffixes.csv";
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                using (File.Create(path))
+                {
+                }
+
+                FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Write, FileShare.None);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
+
+                streamWriter.Write(suffixes);
+
+                streamWriter.Close();
+                fileStream.Close();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SetSuffixes");
+            }
         }
     }
 }

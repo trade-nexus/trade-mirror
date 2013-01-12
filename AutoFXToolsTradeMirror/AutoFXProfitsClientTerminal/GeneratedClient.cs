@@ -16,7 +16,8 @@ public interface ITradeMirror
 {
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://AutoFXProfitsServer/ITradeMirror/Subscribe", ReplyAction = "http://AutoFXProfitsServer/ITradeMirror/SubscribeResponse")]
-    bool Subscribe(string userName, string password, int accountID);
+    //bool Subscribe(string userName, string password, int accountID);
+    string Subscribe(string userName, string password, int accountID);
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://AutoFXProfitsServer/ITradeMirror/Unsubscribe", ReplyAction = "http://AutoFXProfitsServer/ITradeMirror/UnsubscribeResponse")]
     bool Unsubscribe(string userName, string password, int accountID);
@@ -68,7 +69,11 @@ public partial class TradeMirrorClient : System.ServiceModel.DuplexClientBase<IT
     {
     }
 
-    public bool Subscribe(string userName, string password, int accountID)
+    //public bool Subscribe(string userName, string password, int accountID)
+    //{
+    //    return base.Channel.Subscribe(userName, password, accountID);
+    //}
+    public string Subscribe(string userName, string password, int accountID)
     {
         return base.Channel.Subscribe(userName, password, accountID);
     }
