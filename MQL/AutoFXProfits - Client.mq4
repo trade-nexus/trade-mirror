@@ -22,8 +22,10 @@ extern double FixedLot = 0.1;
 extern double DefaultSL = 20;
 
 //=============GLOBAL VARIABLES=============
-string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";       //Defined set of Symbol Prefixes
-string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";      //Defined set of Symbol Postfixes
+//string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";       //Defined set of Symbol Prefixes
+//string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";      //Defined set of Symbol Postfixes
+string PredefinedPrefix = "";
+string PredefinedPostfix = "";
 
 string SymbolPrefix  = "";                      //The symbol prefix for the system
 string SymbolPostfix = "";                      //The symbol postfix for the system
@@ -37,6 +39,8 @@ string LastReceivingTime;
 string EA_StartTime;
 int LastReceivingId = 0;
 double Slippage = 5;
+bool SuffixesRead = false;
+int WaitingTime = 0;
 
 string Signals[100];
 int SignalIdx;
@@ -92,7 +96,7 @@ int init()
    LastReceivingTime = EA_StartTime;
    Print("EA Start Time / Last Receiving Time = " + LastReceivingTime);
    
-   SetSymbolPrefixAndPostfix();
+   //SetSymbolPrefixAndPostfix();
    
    if (!AuthenticateReceiver())
    {
@@ -139,7 +143,15 @@ int start()
    if (Token==1)
    {
       while(!IsStopped() && IsExpertEnabled() && IsConnected())
-      {     
+      {
+         if(!SuffixesRead)
+         {
+            if (TimeLocal() >= WaitingTime)
+            {
+               ReadSuffixes();
+               WaitingTime = TimeLocal() + 1;
+            }
+         }
          ReceiveSignals();
          Sleep(100);
       }
@@ -555,8 +567,7 @@ double CalculateLotsize(string sym, double riskPercent, double stoploss)
                    
    double dollarsToRisk = riskPercent * bal/100;
    double dollarsPerTick = MarketInfo(sym, MODE_TICKVALUE);
-   double newLotSize = dollarsToRisk/(stoploss*dollarsPerTick);       
-   
+   double newLotSize = dollarsToRisk/(stoploss*dollarsPerTick);
                 
    newLotSize = NormalizeLotSize(sym,newLotSize);   
           
@@ -574,7 +585,7 @@ double NormalizeLotSize(string sym, double lots)
    
    
    if(MarketInfo(sym,MODE_LOTSTEP)>=0.01 && MarketInfo(sym,MODE_LOTSTEP)<0.1) digit_lot=2;   
-   if(MarketInfo(sym,MODE_LOTSTEP)>=0.1 && MarketInfo(sym,MODE_LOTSTEP)<1) digit_lot=1;   
+   if(MarketInfo(sym,MODE_LOTSTEP)>=0.1 && MarketInfo(sym,MODE_LOTSTEP)<1) digit_lot=1;
    if(MarketInfo(sym,MODE_LOTSTEP)>=1) digit_lot=0;  
    lots=NormalizeDouble(lots,digit_lot);
             
@@ -1237,4 +1248,38 @@ double GetPipSizePrecision(string symbol)
       return(0.0001);
    else if (digits == 3 || digits == 2)
       return(0.01);
+}
+
+//Reads order information form file
+void ReadSuffixes()
+{
+   int handle = FileOpen("suffixes.csv", FILE_CSV|FILE_READ, ';');
+   
+   if (handle != -1)
+   {
+      string order = FileReadString(handle);
+      
+      if(order != "NULL")
+      {
+         PredefinedPrefix = order;
+         PredefinedPostfix = order;
+         Print("[ReadSuffixes] Read Suffixes = " + order);
+         SetSymbolPrefixAndPostfix();
+         SuffixesRead = true;
+         
+         FileClose(handle);
+         FileDelete("suffixes.csv");
+         Print("[ReadSuffixes] LAST ERROR: " + ErrorDescription(GetLastError()));
+      }
+      else
+      {
+         Print("[ReadSuffixes] No Suffixes");
+      }
+      //FileClose(handle);
+   }
+   else
+   {
+      //Print("[ReadSuffixes] File orders.csv could not be opened. ERROR: " + ErrorDescription(GetLastError()));
+      return(false);
+   }
 }
