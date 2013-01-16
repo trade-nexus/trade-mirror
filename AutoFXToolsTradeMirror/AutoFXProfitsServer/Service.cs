@@ -259,7 +259,7 @@ namespace AutoFXProfitsServer
         {
             string signalInformation = (string) signalInfo;
 
-            MailingHelper mailingHelper = new MailingHelper(AutoFXUsers);
+            MailingHelper mailingHelper = new MailingHelper(_helper.BuildUsersList());
             mailingHelper.SendEmail(SignalParser.ParseSignal(signalInformation));
         }
 

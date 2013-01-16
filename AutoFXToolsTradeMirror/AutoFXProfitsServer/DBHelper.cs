@@ -223,7 +223,14 @@ namespace AutoFXProfitsServer
                     string newSuffix = String.IsNullOrEmpty(reader.GetString("suffix"))
                                            ? ""
                                            : reader.GetString("suffix");
-                    suffixes = suffixes + "," + newSuffix;
+                    if(suffixes == "")
+                    {
+                        suffixes = newSuffix;
+                    }
+                    else
+                    {
+                        suffixes = suffixes + "," + newSuffix;
+                    }
 
                     Logger.Info("New Suffix Added = " + newSuffix, OType.FullName, "GetSuffixes");
                 }

@@ -154,7 +154,7 @@ namespace AutoFXProfitsServer
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, OType.FullName, "GetActiveUserAddresses");
+                Logger.Error(exception, OType.FullName, "GetActiveUserAlternateAddresses");
                 return null;
             }
         }
