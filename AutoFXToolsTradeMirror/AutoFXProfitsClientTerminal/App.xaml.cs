@@ -13,15 +13,24 @@ namespace AutoFXProfitsClientTerminal
     /// </summary>
     public partial class App : Application
     {
+        private MainWindow _mainWindow;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
             IUnityContainer container = new UnityContainer();
 
             // Create main application window.
-            MainWindow mainWindow = container.Resolve<MainWindow>();
-            mainWindow.Show();
+            _mainWindow = container.Resolve<MainWindow>();
+            _mainWindow.Show();
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            _mainWindow.Close();
         }
     }
 }

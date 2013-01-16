@@ -127,7 +127,7 @@ namespace AutoFXProfitsClientTerminal
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, OType.FullName, "MainWindowViewModel");
+               Logger.Error(exception, OType.FullName, "MainWindowViewModel");
             }
         }
 
@@ -188,6 +188,8 @@ namespace AutoFXProfitsClientTerminal
                                                                                                 _client.Unsubscribe(AccountID, KeyString,Convert.ToInt32(AccountID)))
                                                                                             {
                                                                                                 Logger.Info("Unsubscribed",OType.FullName,"DisconnectFromServer");
+
+
 
                                                                                                 UpdateUI("Disconnected");
                                                                                             }
@@ -421,6 +423,12 @@ namespace AutoFXProfitsClientTerminal
             {
                 this.DisconnectFromServer();
             }
+            if (_client != null)
+            {
+                _client.Close();
+                _client.Abort();
+                _client = null;
+            }
         }
 
         /// <summary>
@@ -450,6 +458,8 @@ namespace AutoFXProfitsClientTerminal
                 StreamWriter streamWriter = new StreamWriter(fileStream);
 
                 streamWriter.Write(suffixes);
+                Logger.Debug("System Suffixes = " + suffixes, OType.FullName, "SetSuffixes");
+                streamWriter.Write(";");
 
                 streamWriter.Close();
                 fileStream.Close();
