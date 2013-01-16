@@ -1,0 +1,557 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Threading;
+using TraceSourceLogger;
+
+namespace RemoteAdministrator
+{
+    public class MainWindowViewModel : DependencyObject
+    {
+        private static readonly Type OType = typeof(MainWindowViewModel);
+
+        public ICommand SearchGoCommand { get; set; }
+        public ICommand AddNewUserCommand { get; set; }
+        public ICommand EditUserCommand { get; set; }
+        public ICommand ExportUserCommand { get; set; }
+        public ICommand SaveUserCommand { get; set; }
+
+        #region SearchItem
+
+        public static readonly DependencyProperty SearchItemProperty =
+            DependencyProperty.Register("SearchItem", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(default(string)));
+
+        public string SearchItem
+        {
+            get { return (string)GetValue(SearchItemProperty); }
+            set { SetValue(SearchItemProperty, value); }
+        }
+
+        #endregion
+
+        #region SearchTermsCollection
+
+        public static readonly DependencyProperty SearchTermsCollectionProperty =
+            DependencyProperty.Register("SearchTermsCollection", typeof(ObservableCollection<string>), typeof(MainWindowViewModel), new PropertyMetadata(default(ObservableCollection<string>)));
+
+        public ObservableCollection<string> SearchTermsCollection
+        {
+            get { return (ObservableCollection<string>)GetValue(SearchTermsCollectionProperty); }
+            set { SetValue(SearchTermsCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedSearchType
+
+        public static readonly DependencyProperty SelectedSearchTypeProperty =
+            DependencyProperty.Register("SelectedSearchType", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(default(string)));
+
+        public string SelectedSearchType
+        {
+            get { return (string)GetValue(SelectedSearchTypeProperty); }
+            set { SetValue(SelectedSearchTypeProperty, value); }
+        }
+
+        #endregion
+
+        #region IsAllUsersChecked
+
+        public static readonly DependencyProperty IsAllUsersCheckedProperty =
+            DependencyProperty.Register("IsAllUsersChecked", typeof(bool), typeof(MainWindowViewModel), new PropertyMetadata(true));
+
+        public bool IsAllUsersChecked
+        {
+            get { return (bool)GetValue(IsAllUsersCheckedProperty); }
+            set { SetValue(IsAllUsersCheckedProperty, value); }
+        }
+
+        #endregion
+
+        #region IsActiveUsersChecked
+
+        public static readonly DependencyProperty IsActiveUsersCheckedProperty =
+            DependencyProperty.Register("IsActiveUsersChecked", typeof(bool), typeof(MainWindowViewModel), new PropertyMetadata(default(bool)));
+
+        public bool IsActiveUsersChecked
+        {
+            get { return (bool)GetValue(IsActiveUsersCheckedProperty); }
+            set { SetValue(IsActiveUsersCheckedProperty, value); }
+        }
+
+        #endregion
+
+        #region IsRevokedUsersChecked
+
+        public static readonly DependencyProperty IsRevokedUsersCheckedProperty =
+            DependencyProperty.Register("IsRevokedUsersChecked", typeof(bool), typeof(MainWindowViewModel), new PropertyMetadata(default(bool)));
+
+        public bool IsRevokedUsersChecked
+        {
+            get { return (bool)GetValue(IsRevokedUsersCheckedProperty); }
+            set { SetValue(IsRevokedUsersCheckedProperty, value); }
+        }
+
+        #endregion
+
+        #region FilteredUsersCollection
+
+        public static readonly DependencyProperty FilteredUsersCollectionProperty =
+            DependencyProperty.Register("FilteredUsersCollection", typeof(ObservableCollection<User>), typeof(MainWindowViewModel), new PropertyMetadata((new ObservableCollection<User>())));
+
+        public ObservableCollection<User> FilteredUsersCollection
+        {
+            get { return (ObservableCollection<User>)GetValue(FilteredUsersCollectionProperty); }
+            set { SetValue(FilteredUsersCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedUser
+
+        public static readonly DependencyProperty SelectedUserProperty =
+            DependencyProperty.Register("SelectedUser", typeof(object), typeof(MainWindowViewModel), new PropertyMetadata(default(object)));
+
+        public object SelectedUser
+        {
+            get { return (object)GetValue(SelectedUserProperty); }
+            set { SetValue(SelectedUserProperty, value); }
+        }
+
+        #endregion
+
+        #region NotificationStatusesCollection
+
+        public static readonly DependencyProperty NotificationStatusesCollectionProperty =
+            DependencyProperty.Register("NotificationStatusesCollection", typeof(ObservableCollection<string>), typeof(MainWindowViewModel), new PropertyMetadata(default(ObservableCollection<string>)));
+
+        public ObservableCollection<string> NotificationStatusesCollection
+        {
+            get { return (ObservableCollection<string>)GetValue(NotificationStatusesCollectionProperty); }
+            set { SetValue(NotificationStatusesCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region UserStatusesCollection
+
+        public static readonly DependencyProperty UserStatusesCollectionProperty =
+            DependencyProperty.Register("UserStatusesCollection", typeof(ObservableCollection<string>), typeof(MainWindowViewModel), new PropertyMetadata(default(ObservableCollection<string>)));
+
+        public ObservableCollection<string> UserStatusesCollection
+        {
+            get { return (ObservableCollection<string>)GetValue(UserStatusesCollectionProperty); }
+            set { SetValue(UserStatusesCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region ID
+
+        public int ID { get; set; }
+
+        #endregion
+
+        #region Email
+
+        public static readonly DependencyProperty EmailProperty =
+            DependencyProperty.Register("Email", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(default(string)));
+
+        public string Email
+        {
+            get { return (string)GetValue(EmailProperty); }
+            set { SetValue(EmailProperty, value); }
+        }
+
+        #endregion
+
+        #region Account
+
+        public static readonly DependencyProperty AccountProperty =
+            DependencyProperty.Register("Account", typeof(int), typeof(MainWindowViewModel), new PropertyMetadata(default(int)));
+
+        public int Account
+        {
+            get { return (int)GetValue(AccountProperty); }
+            set { SetValue(AccountProperty, value); }
+        }
+
+        #endregion
+
+        #region Key
+
+        public static readonly DependencyProperty KeyProperty =
+            DependencyProperty.Register("Key", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(default(string)));
+
+        public string Key
+        {
+            get { return (string)GetValue(KeyProperty); }
+            set { SetValue(KeyProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedStatus
+
+        public static readonly DependencyProperty SelectedStatusProperty =
+            DependencyProperty.Register("SelectedStatus", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(default(string)));
+
+        public string SelectedStatus
+        {
+            get { return (string)GetValue(SelectedStatusProperty); }
+            set { SetValue(SelectedStatusProperty, value); }
+        }
+
+        #endregion
+
+        #region AlternateEmail
+
+        public static readonly DependencyProperty AlternativeEmailProperty =
+            DependencyProperty.Register("AlternativeEmail", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(""));
+
+        public string AlternativeEmail
+        {
+            get { return (string)GetValue(AlternativeEmailProperty); }
+            set { SetValue(AlternativeEmailProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedNotificationMode
+
+        public static readonly DependencyProperty SelectedNotificationModeProperty =
+            DependencyProperty.Register("SelectedNotificationMode", typeof(string), typeof(MainWindowViewModel), new PropertyMetadata(default(string)));
+
+        public string SelectedNotificationMode
+        {
+            get { return (string)GetValue(SelectedNotificationModeProperty); }
+            set { SetValue(SelectedNotificationModeProperty, value); }
+        }
+
+        #endregion
+
+        public List<User> AutoFXUsers { get; set; }
+
+        private DBHelper _helper = null;
+        
+        private bool _editStatus = false;
+        private UserWindow _userWindow;
+
+        public bool EditStatus
+        {
+            get { return this._editStatus; }
+            set { this._editStatus = value; }
+        }
+
+        /// <summary>
+        /// Holds reference to UI dispatcher
+        /// </summary>
+        private readonly Dispatcher _currentDispatcher;
+
+        public MainWindowViewModel()
+        {
+            this.SearchGoCommand = new SearchGoCommand(this);
+            this.AddNewUserCommand = new AddNewUserCommand(this);
+            this.EditUserCommand = new EditUserCommand(this);
+            this.ExportUserCommand = new ExportUserCommand(this);
+            this.SaveUserCommand = new SaveUserCommand(this);
+
+            this._currentDispatcher = Dispatcher.CurrentDispatcher;
+
+            var connectionManager = new ConnectionManager();
+            _helper = new DBHelper(connectionManager);
+            AutoFXUsers = _helper.BuildUsersList();
+
+            InitializeSearchTermsCollection();
+            InitializeFilteredUsersCollection();
+            InitializeUserStatusesCollection();
+            InitializeNotificationStatusesCollection();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void AddNewUser()
+        {
+            _editStatus = false;
+            _userWindow = new UserWindow(this);
+            _userWindow.Show();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void EditUser()
+        {
+            _editStatus = true;
+            _userWindow = new UserWindow(this);
+            _userWindow.Show();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SaveUser()
+        {
+            if (_editStatus)
+            {
+                _helper.EditUser(ID, Email, Account, Key, SelectedStatus, SelectedNotificationMode, AlternativeEmail);
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(AlternativeEmail))
+                {
+                    AlternativeEmail = Email;
+                }
+                _helper.AddNewUser(Email, Account, Key, SelectedStatus, SelectedNotificationMode, AlternativeEmail);
+            }
+            UpdateUserList();
+            _userWindow.Close();
+
+            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+            {
+                this.ID = 0;
+                this.Email = "";
+                this.SelectedStatus = "";
+                this.Account = 0;
+                this.Key = "";
+                this.SelectedNotificationMode = "";
+                this.AlternativeEmail = "";
+            }));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateSelectedUserDetails()
+        {
+            try
+            {
+                var selectedUser = (User)SelectedUser;
+
+                if (selectedUser != null)
+                {
+                    this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                    {
+                        this.ID = selectedUser.ID;
+                        this.Email = selectedUser.Email;
+                        this.SelectedStatus = selectedUser.Status;
+                        this.Account = selectedUser.AccountNumber;
+                        this.Key = selectedUser.KeyString;
+                        this.SelectedNotificationMode = selectedUser.SendNotifications;
+                        this.AlternativeEmail = selectedUser.AlternativeEmail;
+                    }));
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "UpdateSelectedUserDetails");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateUserList()
+        {
+            try
+            {
+                AutoFXUsers.Clear();
+                AutoFXUsers = _helper.BuildUsersList();
+
+                FilteredUsersCollection.Clear();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    foreach (var user in AutoFXUsers)
+                    {
+                        this.FilteredUsersCollection.Add(user);
+                    }
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "UpdateUserList");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ExportUsers()
+        {
+            try
+            {
+                string path = AppDomain.CurrentDomain.BaseDirectory + "Export";
+
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                path = path + "\\user_" + DateTime.UtcNow.ToString("yyyy-MM-dd") + ".csv";
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                using (File.Create(path))
+                {
+                }
+
+                FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Write, FileShare.None);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
+
+                foreach (var autoFXUser in AutoFXUsers)
+                {
+                    streamWriter.WriteLine(autoFXUser.Email);
+                    if (autoFXUser.AlternativeEmail != autoFXUser.Email)
+                    {
+                        streamWriter.WriteLine(autoFXUser.AlternativeEmail);
+                    }
+                }
+
+                streamWriter.Close();
+                fileStream.Close();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "ExportUsers");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void FreeResources()
+        {
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SearchUsers()
+        {
+            try
+            {
+                string searchFilter = "All";
+                this.FilteredUsersCollection.Clear();
+
+                if (IsAllUsersChecked)
+                {
+                    searchFilter = "All";
+                }
+                else if (IsActiveUsersChecked)
+                {
+                    searchFilter = "Active";
+                }
+                else if (IsRevokedUsersChecked)
+                {
+                    searchFilter = "Revoked";
+                }
+
+                var searchedUsers = SearchHelper.SearchUser(SelectedSearchType, SearchItem, searchFilter, AutoFXUsers);
+                foreach (var revokedUser in searchedUsers)
+                {
+                    this.FilteredUsersCollection.Add(revokedUser);
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SearchUsers");
+            }
+        }
+
+        /// <summary>
+        /// Initializes the Search Terms Collection
+        /// </summary>
+        private void InitializeSearchTermsCollection()
+        {
+            try
+            {
+                this.SearchTermsCollection = new ObservableCollection<string>();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    this.SearchTermsCollection.Add("Account ID");
+                    this.SearchTermsCollection.Add("Key String");
+                    this.SearchTermsCollection.Add("Email Address");
+                }));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeSearchTermsCollection");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void InitializeFilteredUsersCollection()
+        {
+            try
+            {
+                this.FilteredUsersCollection = new ObservableCollection<User>();
+
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    foreach (var user in AutoFXUsers)
+                    {
+                        this.FilteredUsersCollection.Add(user);
+                    }
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeFilteredUsersCollection");
+            }
+        }
+
+        /// <summary>
+        /// Initializes the Search Terms Collection
+        /// </summary>
+        private void InitializeNotificationStatusesCollection()
+        {
+            try
+            {
+                this.NotificationStatusesCollection = new ObservableCollection<string>();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    this.NotificationStatusesCollection.Add("Yes");
+                    this.NotificationStatusesCollection.Add("No");
+                }));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeNotificationStatusesCollection");
+            }
+        }
+
+        /// <summary>
+        /// Initializes the Search Terms Collection
+        /// </summary>
+        private void InitializeUserStatusesCollection()
+        {
+            try
+            {
+                this.UserStatusesCollection = new ObservableCollection<string>();
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    this.UserStatusesCollection.Add("Active");
+                    this.UserStatusesCollection.Add("Revoked");
+                }));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "InitializeNotificationStatusesCollection");
+            }
+        }
+    }
+}
