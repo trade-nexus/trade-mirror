@@ -13,15 +13,24 @@ namespace RemoteAdministrator
     /// </summary>
     public partial class App : Application
     {
+        private static readonly Type OType = typeof(App);
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            try
+            {
+                base.OnStartup(e);
 
-            IUnityContainer container = new UnityContainer();
+                IUnityContainer container = new UnityContainer();
 
-            // Create main application window.
-            MainWindow mainWindow = container.Resolve<MainWindow>();
-            mainWindow.Show();
+                // Create main application window.
+                MainWindow mainWindow = container.Resolve<MainWindow>();
+                mainWindow.Show();
+            }
+            catch (Exception exception)
+            {
+                TraceSourceLogger.Logger.Error(exception, OType.FullName, "OnStartup");
+            }
         }
     }
 }

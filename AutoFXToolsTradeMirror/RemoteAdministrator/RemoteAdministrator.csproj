@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>auto-logo2.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Practices.ObjectBuilder2">
       <HintPath>..\Library\Unity\Microsoft.Practices.ObjectBuilder2.dll</HintPath>
@@ -63,14 +66,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ActiveUsersCheckedCommand.cs" />
     <Compile Include="AddNewUserCommand.cs" />
+    <Compile Include="AllUsersCheckedCommand.cs" />
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="EditUserCommand.cs" />
     <Compile Include="ExportUserCommand.cs" />
+    <Compile Include="RefreshCommand.cs" />
+    <Compile Include="RevokedUsersCheckedCommand.cs" />
     <Compile Include="SaveUserCommand.cs" />
     <Compile Include="SearchGoCommand.cs" />
     <Compile Include="SearchHelper.cs" />
+    <Compile Include="SortByAccountIDCommand.cs" />
+    <Compile Include="SortByEmailCommand.cs" />
+    <Compile Include="SortByIDCommand.cs" />
+    <Compile Include="SortByKeyStringCommand.cs" />
+    <Compile Include="SortByStatusCommand.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserWindow.xaml.cs">
       <DependentUpon>UserWindow.xaml</DependentUpon>
@@ -123,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\auto-logo2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="auto-logo2.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

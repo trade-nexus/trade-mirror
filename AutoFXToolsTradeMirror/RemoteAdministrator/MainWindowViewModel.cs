@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -20,6 +21,15 @@ namespace RemoteAdministrator
         public ICommand EditUserCommand { get; set; }
         public ICommand ExportUserCommand { get; set; }
         public ICommand SaveUserCommand { get; set; }
+        public ICommand RefreshCommand { get; set; }
+        public ICommand SortByIDCommand { get; set; }
+        public ICommand SortByAccountIDCommand { get; set; }
+        public ICommand SortByKeyStringCommand { get; set; }
+        public ICommand SortByEmailCommand { get; set; }
+        public ICommand SortByStatusCommand { get; set; }
+        public ICommand RevokedUsersCheckedCommand { get; set; }
+        public ICommand ActiveUsersCheckedCommand { get; set; }
+        public ICommand AllUsersCheckedCommand { get; set; } 
 
         #region SearchItem
 
@@ -242,6 +252,9 @@ namespace RemoteAdministrator
         private bool _editStatus = false;
         private UserWindow _userWindow;
 
+        private static Timer _refreshUsersTimer;
+        private const int RefreshPeriod = 150;
+
         public bool EditStatus
         {
             get { return this._editStatus; }
@@ -253,6 +266,8 @@ namespace RemoteAdministrator
         /// </summary>
         private readonly Dispatcher _currentDispatcher;
 
+        private int _sortingState = 0;
+
         public MainWindowViewModel()
         {
             this.SearchGoCommand = new SearchGoCommand(this);
@@ -260,8 +275,21 @@ namespace RemoteAdministrator
             this.EditUserCommand = new EditUserCommand(this);
             this.ExportUserCommand = new ExportUserCommand(this);
             this.SaveUserCommand = new SaveUserCommand(this);
+            this.RefreshCommand = new RefreshCommand(this);
+            this.SortByIDCommand = new SortByIDCommand(this);
+            this.SortByAccountIDCommand = new SortByAccountIDCommand(this);
+            this.SortByKeyStringCommand = new SortByKeyStringCommand(this);
+            this.SortByEmailCommand = new SortByEmailCommand(this);
+            this.SortByStatusCommand = new SortByStatusCommand(this);
+            this.AllUsersCheckedCommand = new AllUsersCheckedCommand(this);
+            this.ActiveUsersCheckedCommand = new ActiveUsersCheckedCommand(this);
+            this.RevokedUsersCheckedCommand = new RevokedUsersCheckedCommand(this);
 
             this._currentDispatcher = Dispatcher.CurrentDispatcher;
+
+            _refreshUsersTimer = new Timer(RefreshPeriod * 1000);
+            _refreshUsersTimer.Elapsed += RefreshUsersTimerElapsed;
+            _refreshUsersTimer.AutoReset = true;
 
             var connectionManager = new ConnectionManager();
             _helper = new DBHelper(connectionManager);
@@ -497,6 +525,8 @@ namespace RemoteAdministrator
             try
             {
                 this.FilteredUsersCollection = new ObservableCollection<User>();
+                AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
+                AutoFXUsers.Reverse();
 
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
@@ -551,6 +581,139 @@ namespace RemoteAdministrator
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "InitializeNotificationStatusesCollection");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RefreshUI()
+        {
+            try
+            {
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    AutoFXUsers = _helper.BuildUsersList();
+                    AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
+                    AutoFXUsers.Reverse();
+
+                    this.FilteredUsersCollection.Clear();
+
+                    foreach (var user in AutoFXUsers)
+                    {
+                        this.FilteredUsersCollection.Add(user);
+                    }
+                    ResetTimer();
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "RefreshUI");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SortBy(string sortBy)
+        {
+            try
+            {
+                List<User> sortedCollection = null;
+
+                if (sortBy == "ID")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.ID).ToList();
+                }
+                else if (sortBy == "Account ID")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.AccountNumber).ToList();
+                }
+                else if (sortBy == "Key String")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.KeyString).ToList();
+                }
+                else if (sortBy == "Email")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.Email).ToList();
+                }
+                else if (sortBy == "Status")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.Status).ToList();
+                }
+                else
+                {
+                    sortedCollection = this.FilteredUsersCollection.ToList();
+                }
+
+                if (_sortingState % 2 != 0)
+                {
+                    sortedCollection.Reverse();
+                    _sortingState++;
+                }
+                else
+                {
+                    _sortingState--;
+                }
+
+                this.FilteredUsersCollection.Clear();
+
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
+                                                                                        {
+                                                                                            foreach (var user in sortedCollection)
+                                                                                            {
+                                                                                                this.FilteredUsersCollection.Add(user);
+                                                                                            }
+                                                                                        }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SortBy");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RefreshUsersTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            RefreshUI();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ResetTimer()
+        {
+            _refreshUsersTimer.Stop();
+            _refreshUsersTimer.Start();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="radioButton"></param>
+        public void RadioButtonChecked(string radioButton)
+        {
+            if(radioButton == "All")
+            {
+                IsAllUsersChecked = true;
+                IsActiveUsersChecked = false;
+                IsRevokedUsersChecked = false;
+            }
+            else if (radioButton == "Active")
+            {
+                IsAllUsersChecked = false;
+                IsActiveUsersChecked = true;
+                IsRevokedUsersChecked = false;
+            }
+            else if (radioButton == "Revoked")
+            {
+                IsAllUsersChecked = false;
+                IsActiveUsersChecked = false;
+                IsRevokedUsersChecked = true;
             }
         }
     }

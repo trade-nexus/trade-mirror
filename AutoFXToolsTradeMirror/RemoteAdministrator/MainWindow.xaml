@@ -6,9 +6,10 @@
         Width="530"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanMinimize" 
-        Closing="WindowClosing">
+        Closing="WindowClosing" 
+        Icon="/RemoteAdministrator;component/Resources/auto-logo2.ico">
     
-    <Grid Width="520" Height="560" >
+    <!--<Grid Width="520" Height="560" >
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*"/>
@@ -97,7 +98,7 @@
                 FontWeight="Bold" />
 
         <RadioButton 
-                GroupName="SearchType"
+                GroupName="SearchingType"
                 Content="All Users" 
                 Grid.Column="1" 
                 Grid.ColumnSpan="1" 
@@ -108,10 +109,10 @@
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center"
                 Margin="40,1,1,1"
-                IsChecked="{Binding IsAllUsersChecked}"/>
+                IsChecked="{Binding IsAllUsersChecked, Mode=TwoWay}"/>
 
         <RadioButton 
-                GroupName="SearchType"
+                GroupName="SearchingType"
                 Content="Active" 
                 Grid.Column="1" 
                 Grid.ColumnSpan="1" 
@@ -122,10 +123,10 @@
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center"
                 Margin="15,1,1,1"
-                IsChecked="{Binding IsActiveUsersChecked}"/>
+                IsChecked="{Binding IsActiveUsersChecked, Mode=TwoWay}"/>
 
         <RadioButton 
-                GroupName="SearchType"
+                GroupName="SearchingType"
                 Content="Revoked" 
                 Grid.Column="1" 
                 Grid.ColumnSpan="1" 
@@ -136,7 +137,7 @@
                 VerticalContentAlignment="Center"
                 HorizontalContentAlignment="Center"
                 Margin="1,1,30,1"
-                IsChecked="{Binding IsRevokedUsersChecked}"/>
+                IsChecked="{Binding IsRevokedUsersChecked, Mode=TwoWay}"/>
 
         <ListView 
                         Grid.Column="0" 
@@ -158,7 +159,9 @@
                 <GridView>
                     <GridViewColumn 
                                     Width="40">
-                        <GridViewColumnHeader>ID</GridViewColumnHeader>
+                        <GridViewColumnHeader 
+                            Command="{Binding SortByIDCommand}"
+                            Content="ID" />
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -172,7 +175,9 @@
 
                     <GridViewColumn
                                     Width="100">
-                        <GridViewColumnHeader>Account ID</GridViewColumnHeader>
+                        <GridViewColumnHeader 
+                            Command="{Binding SortByAccountIDCommand}"
+                            Content="Account ID" />
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -186,7 +191,9 @@
 
                     <GridViewColumn 
                                     Width="100">
-                        <GridViewColumnHeader>Key String</GridViewColumnHeader>
+                        <GridViewColumnHeader 
+                            Command="{Binding SortByKeyStringCommand}"
+                            Content="Key String" />
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -200,7 +207,9 @@
 
                     <GridViewColumn 
                                     Width="170">
-                        <GridViewColumnHeader>Email ID</GridViewColumnHeader>
+                        <GridViewColumnHeader 
+                            Command="{Binding SortByEmailCommand}"
+                            Content="Email ID" />
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -214,7 +223,9 @@
 
                     <GridViewColumn 
                                     Width="70">
-                        <GridViewColumnHeader>Status</GridViewColumnHeader>
+                        <GridViewColumnHeader 
+                            Command="{Binding SortByStatusCommand}"
+                            Content="Status" />
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -265,6 +276,22 @@
                         FontWeight="Bold" />
 
         <Button 
+                        Content="Refresh" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="3" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding RefreshCommand}"
+                        Margin="1,1,180,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+        <Button 
                         Content="Export" 
                         Grid.Column="0" 
                         Grid.ColumnSpan="1" 
@@ -280,5 +307,320 @@
                         FontSize="14"
                         FontWeight="Bold" />
 
-    </Grid>
+    </Grid>-->
+    <!--<TabControl 
+            Grid.Column="0"
+            Grid.ColumnSpan="2" 
+            Grid.Row="1" 
+            Grid.RowSpan="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Name="UsersTabControl" 
+            Width="520">
+
+        <TabItem Header="Users" Name="UsersTabItem">-->
+            <Grid Width="520" Height="560" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.2*"/>
+                    <RowDefinition Height="0.07*"/>
+                    <RowDefinition Height="0.68*"/>
+                    <RowDefinition Height="0.05*"/>
+                </Grid.RowDefinitions>
+
+                <Image 
+                Grid.Column="0"
+                Grid.ColumnSpan="2" 
+                Grid.Row="0" 
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Stretch="Fill" 
+                Source="/RemoteAdministrator;component/Resources/auto-logo.jpg" />
+
+                <Label 
+                        Content="Search:" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Name="SearchLabel"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                <TextBox 
+                        Text="{Binding SearchItem}" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Name="textBox1" 
+                        Width="100"
+                        Height="25"
+                        Margin="1,1,1,1"/>
+
+                <ComboBox 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Width="80"
+                        ItemsSource="{Binding SearchTermsCollection}"
+                        SelectedItem="{Binding SelectedSearchType}"
+                        Margin="1,1,50,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12" 
+                        FontWeight="Bold" />
+
+                <Button 
+                        Content="Go" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SearchGoCommand}"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                <RadioButton 
+                        GroupName="SearchType"
+                        Content="All Users" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="40,1,1,1"
+                        Command="{Binding AllUsersCheckedCommand}"/>
+
+                <RadioButton 
+                        GroupName="SearchType"
+                        Content="Active" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="15,1,1,1"
+                        IsChecked="{Binding IsActiveUsersChecked}"
+                        Command="{Binding ActiveUsersCheckedCommand}"/>
+
+                <RadioButton 
+                        GroupName="SearchType"
+                        Content="Revoked" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="1,1,30,1"
+                        IsChecked="{Binding IsRevokedUsersChecked}"
+                        Command="{Binding RevokedUsersCheckedCommand}"/>
+
+                <ListView 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="2" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Width="510"
+                        Height="380"
+                        ItemsSource="{Binding FilteredUsersCollection}" 
+                        SelectionChanged="ListViewSelectionChanged"
+                        SelectedItem="{Binding SelectedUser}">
+
+                    <ListView.View>
+
+                        <GridView>
+                            <GridViewColumn 
+                                    Width="40">
+                                <GridViewColumnHeader 
+                            Command="{Binding SortByIDCommand}"
+                            Content="ID" />
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock 
+                                                    Text="{Binding ID}"
+                                                    HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn
+                                    Width="100">
+                                <GridViewColumnHeader 
+                            Command="{Binding SortByAccountIDCommand}"
+                            Content="Account ID" />
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock 
+                                                    Text="{Binding AccountNumber}"
+                                                    HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn 
+                                    Width="100">
+                                <GridViewColumnHeader 
+                            Command="{Binding SortByKeyStringCommand}"
+                            Content="Key String" />
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock 
+                                                    Text="{Binding KeyString}"
+                                                    HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn 
+                                    Width="170">
+                                <GridViewColumnHeader 
+                            Command="{Binding SortByEmailCommand}"
+                            Content="Email ID" />
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock 
+                                                    Text="{Binding Email}"
+                                                    HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn 
+                                    Width="70">
+                                <GridViewColumnHeader 
+                            Command="{Binding SortByStatusCommand}"
+                            Content="Status" />
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock 
+                                                    Text="{Binding Status}"
+                                                    HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                        </GridView>
+
+                    </ListView.View>
+                </ListView>
+
+                <Button 
+                        Content="Add New User" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="3" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding AddNewUserCommand}"
+                        Margin="1,1,20,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                <Button 
+                        Content="Edit User" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="3" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding EditUserCommand}"
+                        Margin="1,1,120,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                <Button 
+                        Content="Refresh" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="3" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding RefreshCommand}"
+                        Margin="1,1,190,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                <Button 
+                        Content="Export" 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="3" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding ExportUserCommand}"
+                        Margin="1,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+            </Grid>
+
+        <!--</TabItem>
+    </TabControl>-->
 </Window>
