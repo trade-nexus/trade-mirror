@@ -78,11 +78,20 @@
     <Compile Include="Commands\AddNewUserCommand.cs" />
     <Compile Include="Commands\EditUserCommand.cs" />
     <Compile Include="Commands\ExportUserCommand.cs" />
+    <Compile Include="Commands\RefreshCommand.cs" />
     <Compile Include="Commands\SaveUserCommand.cs" />
     <Compile Include="Commands\SendManualEmailCommand.cs" />
+    <Compile Include="Commands\SortByAccountIDCommand.cs" />
+    <Compile Include="Commands\SortByEmailCommand.cs" />
+    <Compile Include="Commands\SortByIDCommand.cs" />
+    <Compile Include="Commands\SortByKeyStringCommand.cs" />
+    <Compile Include="Commands\SortByStatusCommand.cs" />
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DBHelper.cs" />
+    <Compile Include="ErrorMessageWindow.xaml.cs">
+      <DependentUpon>ErrorMessageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MailingHelper.cs" />
     <Compile Include="MailingService.cs" />
     <Compile Include="SearchHelper.cs" />
@@ -105,6 +114,10 @@
       <DependentUpon>AutoFXToolsServerShell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ErrorMessageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

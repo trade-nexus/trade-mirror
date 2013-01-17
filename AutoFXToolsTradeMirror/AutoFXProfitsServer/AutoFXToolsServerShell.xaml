@@ -269,6 +269,7 @@
                         Margin="40,1,1,1"
                         IsChecked="{Binding IsAllUsersChecked}"/>
 
+
                     <RadioButton 
                         GroupName="SearchType"
                         Content="Active" 
@@ -313,11 +314,13 @@
                         SelectedItem="{Binding SelectedUser}">
 
                         <ListView.View>
-                            
+
                             <GridView>
                                 <GridViewColumn 
                                     Width="40">
-                                    <GridViewColumnHeader>ID</GridViewColumnHeader>
+                                    <GridViewColumnHeader 
+                            Command="{Binding SortByIDCommand}"
+                            Content="ID" />
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -331,7 +334,9 @@
 
                                 <GridViewColumn
                                     Width="100">
-                                    <GridViewColumnHeader>Account ID</GridViewColumnHeader>
+                                    <GridViewColumnHeader 
+                            Command="{Binding SortByAccountIDCommand}"
+                            Content="Account ID" />
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -345,7 +350,9 @@
 
                                 <GridViewColumn 
                                     Width="100">
-                                    <GridViewColumnHeader>Key String</GridViewColumnHeader>
+                                    <GridViewColumnHeader 
+                            Command="{Binding SortByKeyStringCommand}"
+                            Content="Key String" />
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -359,7 +366,9 @@
 
                                 <GridViewColumn 
                                     Width="170">
-                                    <GridViewColumnHeader>Email ID</GridViewColumnHeader>
+                                    <GridViewColumnHeader 
+                            Command="{Binding SortByEmailCommand}"
+                            Content="Email ID" />
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -373,7 +382,9 @@
 
                                 <GridViewColumn 
                                     Width="70">
-                                    <GridViewColumnHeader>Status</GridViewColumnHeader>
+                                    <GridViewColumnHeader 
+                            Command="{Binding SortByStatusCommand}"
+                            Content="Status" />
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -386,7 +397,7 @@
                                 </GridViewColumn>
 
                             </GridView>
-                            
+
                         </ListView.View>
                     </ListView>
 
@@ -418,6 +429,22 @@
                         HorizontalContentAlignment="Center"
                         Command="{Binding EditUserCommand}"
                         Margin="1,1,120,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                    <Button 
+                        Content="Refresh" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="3" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding RefreshCommand}"
+                        Margin="1,1,190,1" 
                         FontFamily="Calibri" 
                         FontSize="14"
                         FontWeight="Bold" />

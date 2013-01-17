@@ -21,6 +21,7 @@ namespace AutoFXProfitsServer
     public partial class AutoFXToolsServerShell : Window
     {
         private AutoFXToolsServerShellViewModel _autoFXToolsServerShellViewModel;
+        private ErrorMessageWindow _errorMessageWindow;
 
         public AutoFXToolsServerShell()
         {
@@ -52,7 +53,17 @@ namespace AutoFXProfitsServer
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _autoFXToolsServerShellViewModel.FreeResources();
+            _errorMessageWindow = new ErrorMessageWindow {Owner = this};
+            _errorMessageWindow.ShowDialog();
+            if (_errorMessageWindow.MessageBoxSelection)
+            {
+                _autoFXToolsServerShellViewModel.FreeResources();
+            }
+            else
+            {
+                e.Cancel = true;
+                _errorMessageWindow.Close();
+            }
         }
 
         private void ListViewSelectionChanged(object sender, SelectionChangedEventArgs e)

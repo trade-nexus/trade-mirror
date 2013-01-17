@@ -6,12 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using AutoFXProfitsServer.Commands;
 using Microsoft.Practices.Unity;
 using TraceSourceLogger;
+using Timer = System.Timers.Timer;
 
 namespace AutoFXProfitsServer
 {
@@ -27,6 +29,12 @@ namespace AutoFXProfitsServer
         public ICommand SaveUserCommand { get; set; }
         public ICommand SendManualEmailCommand { get; set; }
         public ICommand ExportUserCommand { get; set; }
+        public ICommand RefreshCommand { get; set; }
+        public ICommand SortByIDCommand { get; set; }
+        public ICommand SortByAccountIDCommand { get; set; }
+        public ICommand SortByKeyStringCommand { get; set; }
+        public ICommand SortByEmailCommand { get; set; }
+        public ICommand SortByStatusCommand { get; set; }
 
         private DBHelper _helper = null;
         //private TradeMirrorService _tradeMirrorService = null;
@@ -39,11 +47,16 @@ namespace AutoFXProfitsServer
         private bool _editStatus = false;
         private UserWindow _userWindow;
 
+        private int _sortingState = 0;
+
         public bool EditStatus
         {
             get { return this._editStatus; }
             set { this._editStatus = value; }
         }
+
+        private static Timer _refreshUsersTimer;
+        private const int RefreshPeriod = 150;
 
         /// <summary>
         /// Holds reference to UI dispatcher
@@ -452,10 +465,20 @@ namespace AutoFXProfitsServer
             this.SaveUserCommand=new SaveUserCommand(this);
             this.SendManualEmailCommand = new SendManualEmailCommand(this);
             this.ExportUserCommand = new ExportUserCommand(this);
+            this.RefreshCommand = new RefreshCommand(this);
+            this.SortByIDCommand = new SortByIDCommand(this);
+            this.SortByAccountIDCommand = new SortByAccountIDCommand(this);
+            this.SortByKeyStringCommand = new SortByKeyStringCommand(this);
+            this.SortByEmailCommand = new SortByEmailCommand(this);
+            this.SortByStatusCommand = new SortByStatusCommand(this);
 
             SearchHelper.ClientSubscribed += ClientSubscribed;
             SearchHelper.ClientUnSubscribed += ClientUnSubscribed;
             ConnectedUsersCount = 0;
+
+            _refreshUsersTimer = new Timer(RefreshPeriod * 1000);
+            _refreshUsersTimer.Elapsed += RefreshUsersTimerElapsed;
+            _refreshUsersTimer.AutoReset = true;
 
             ConnectedUsers = new ObservableCollection<User>();
 
@@ -612,6 +635,8 @@ namespace AutoFXProfitsServer
             try
             {
                 this.FilteredUsersCollection=new ObservableCollection<User>();
+                AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
+                AutoFXUsers.Reverse();
 
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
                                                                                         {
@@ -995,6 +1020,113 @@ namespace AutoFXProfitsServer
             {
                 Logger.Error(exception, OType.FullName, "ExportUsers");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void RefreshUI()
+        {
+            try
+            {
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    AutoFXUsers = _helper.BuildUsersList();
+                    AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
+                    AutoFXUsers.Reverse();
+
+                    this.FilteredUsersCollection.Clear();
+
+                    foreach (var user in AutoFXUsers)
+                    {
+                        this.FilteredUsersCollection.Add(user);
+                    }
+                    ResetTimer();
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "RefreshUI");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SortBy(string sortBy)
+        {
+            try
+            {
+                List<User> sortedCollection = null;
+
+                if (sortBy == "ID")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.ID).ToList();
+                }
+                else if (sortBy == "Account ID")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.AccountNumber).ToList();
+                }
+                else if (sortBy == "Key String")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.KeyString).ToList();
+                }
+                else if (sortBy == "Email")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.Email).ToList();
+                }
+                else if (sortBy == "Status")
+                {
+                    sortedCollection = this.FilteredUsersCollection.OrderBy(x => x.Status).ToList();
+                }
+                else
+                {
+                    sortedCollection = this.FilteredUsersCollection.ToList();
+                }
+
+                if (_sortingState % 2 != 0)
+                {
+                    sortedCollection.Reverse();
+                    _sortingState++;
+                }
+                else
+                {
+                    _sortingState--;
+                }
+
+                this.FilteredUsersCollection.Clear();
+
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    foreach (var user in sortedCollection)
+                    {
+                        this.FilteredUsersCollection.Add(user);
+                    }
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SortBy");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void RefreshUsersTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            RefreshUI();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ResetTimer()
+        {
+            _refreshUsersTimer.Stop();
+            _refreshUsersTimer.Start();
         }
     }
 }

@@ -38,6 +38,7 @@ namespace AutoFXProfitsServer
         {
             try
             {
+                this._autoFXUsers.Clear();
                 MySqlConnection connection = this._connectionManager.Connect();
                 MySqlCommand selectDistinctSenders = new MySqlCommand(QueryUsers, connection);
                 MySqlDataReader reader = selectDistinctSenders.ExecuteReader();
