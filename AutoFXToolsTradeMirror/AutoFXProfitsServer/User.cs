@@ -10,7 +10,7 @@ namespace AutoFXProfitsServer
         private string _email;
         private string _role;
         private bool _status;
-        private int _accountNumber;
+        private string _accountNumber;
         private string _keyString;
         private DateTime _created;
         private DateTime _modified;
@@ -54,7 +54,7 @@ namespace AutoFXProfitsServer
             }
         }
 
-        public int AccountNumber
+        public string AccountNumber
         {
             get { return this._accountNumber; }
             set { this._accountNumber = value; }
@@ -108,7 +108,7 @@ namespace AutoFXProfitsServer
         /// </summary>
         public User()
         {
-            this._accountNumber = 0;
+            this._accountNumber = "";
             this._created = DateTime.MinValue;
             this._email = "email@default.com";
             this._id = 0;
@@ -126,7 +126,7 @@ namespace AutoFXProfitsServer
         /// <param name="id"></param>
         /// <param name="accountNumber"></param>
         /// <param name="keyString"></param>
-        public User(int id, int accountNumber, string keyString)
+        public User(int id, string accountNumber, string keyString)
         {
             this._accountNumber = accountNumber;
             this._created = DateTime.MinValue;
@@ -151,7 +151,7 @@ namespace AutoFXProfitsServer
         /// <param name="keyString"></param>
         /// <param name="created"></param>
         /// <param name="modified"></param>
-        public User(int id, string email, string role, bool status, int accountNumber, string keyString, DateTime created, DateTime modified)
+        public User(int id, string email, string role, bool status, string accountNumber, string keyString, DateTime created, DateTime modified)
         {
             this._accountNumber = accountNumber;
             this._created = created;
@@ -178,7 +178,7 @@ namespace AutoFXProfitsServer
         /// <param name="modified"></param>
         /// <param name="sendNotifications"></param>
         /// <param name="alternativeEmail"></param>
-        public User(int id, string email, string role, bool status, int accountNumber, string keyString, DateTime created, DateTime modified, bool sendNotifications, string alternativeEmail)
+        public User(int id, string email, string role, bool status, string accountNumber, string keyString, DateTime created, DateTime modified, bool sendNotifications, string alternativeEmail)
         {
             this._accountNumber = accountNumber;
             this._created = created;
@@ -204,33 +204,40 @@ namespace AutoFXProfitsServer
 
         public int CompareTo(object obj)
         {
-            User user2 = (User) obj;
-            if (user2.AccountNumber == this.AccountNumber)
+            try
             {
-                if (this.KeyString == user2.KeyString)
+                User user2 = (User)obj;
+                if (user2.AccountNumber == this.AccountNumber)
                 {
-                    if (this.Status == "Active")
+                    if (this.KeyString == user2.KeyString)
                     {
-                        return 0;
+                        if (this.Status == "Active")
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+
                     }
                     else
                     {
                         return -1;
                     }
-                    
                 }
-                else
+                else if (Convert.ToInt32(user2.AccountNumber) < Convert.ToInt32(this.AccountNumber))
                 {
                     return -1;
                 }
+                else
+                {
+                    return 1;
+                }
             }
-            else if (user2.AccountNumber < this.AccountNumber)
+            catch (Exception)
             {
                 return -1;
-            }
-            else
-            {
-                return 1;
             }
         }
     }

@@ -33,6 +33,7 @@ namespace AutoFXProfitsServer
         public string SignalInformation;
     }
 
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, AutomaticSessionShutdown = false)]
     public class TradeMirrorService : DependencyObject, ITradeMirror
     {
         private static readonly Type OType = typeof(TradeMirrorService);
@@ -66,10 +67,10 @@ namespace AutoFXProfitsServer
         /// </summary>
         public TradeMirrorService()
         {
-            if (_helper == null)
-            {
+            //if (_helper == null)
+            //{
                 _helper = new DBHelper(_connectionManager);
-            }
+            //}
         }
 
         /// <summary>
@@ -91,6 +92,7 @@ namespace AutoFXProfitsServer
                     Logger.Debug("Client Authenticated. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
                     _callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();
                     _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
+                    NewSignalEvent -= _newSignalHandler;
                     NewSignalEvent += _newSignalHandler;
                     //return true;
 
@@ -125,6 +127,8 @@ namespace AutoFXProfitsServer
             {
                 if (SearchHelper.UnAuthenticateUserCredentials(userName, password, accountID, _helper))
                 {
+                    _callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();
+                    _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
                     NewSignalEvent -= _newSignalHandler;
                     Logger.Debug("Client Unsubscribed. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Unsubscribe");
                     return true;

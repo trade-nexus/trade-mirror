@@ -12,7 +12,7 @@ namespace AutoFXProfitsServer
         /// <summary>
         /// Send Mail Notification to the specified Recipients
         /// </summary>
-        public void SendMailNotification(string subject, string mailId, string password, string mailClient, string mailRecipients, string report, string senderName)
+        public bool SendMailNotification(string subject, string mailId, string password, string mailClient, string mailRecipients, string report, string senderName)
         {
             try
             {
@@ -37,11 +37,17 @@ namespace AutoFXProfitsServer
                 {
                     smtp.Credentials = new NetworkCredential(mailId, password);
                     smtp.Send(message);
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "SendMailNotification");
+                return false;
             }
         }
 

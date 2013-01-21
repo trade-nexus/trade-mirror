@@ -29,7 +29,7 @@ namespace AutoFXProfitsServer
         /// 
         /// </summary>
         /// <param name="signal"></param>
-        public void SendEmail(Signal signal)
+        public bool SendEmail(Signal signal)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace AutoFXProfitsServer
 
                 if (!File.Exists(path))
                 {
-                    return;
+                    return false;
                 }
 
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
@@ -113,24 +113,26 @@ namespace AutoFXProfitsServer
                 fs.Close();
 
                 Logger.Info("Sending Notfocation = " + stringBuilder.ToString(), OType.FullName, "SendEmail");
-                _mailingService.SendMailNotification(subject, MailID, Password, MailingClient, GetEmailReceipients(), stringBuilder.ToString(), SenderName);
+                return _mailingService.SendMailNotification(subject, MailID, Password, MailingClient, GetEmailReceipients(), stringBuilder.ToString(), SenderName);
             }
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "SendEmail");
+                return false;
             }
         }
 
-        public void SendEmail(string subject, string receipients, string body)
+        public bool SendEmail(string subject, string receipients, string body)
         {
             try
             {
                 Logger.Info("Sending Manual Email = " + body, OType.FullName, "SendEmail");
-                _mailingService.SendMailNotification(subject, MailID, Password, MailingClient, GetEmailReceipients(receipients), body, SenderName);
+                return _mailingService.SendMailNotification(subject, MailID, Password, MailingClient, GetEmailReceipients(receipients), body, SenderName);
             }
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "SendEmail");
+                return false;
             }
         }
 
@@ -246,6 +248,8 @@ namespace AutoFXProfitsServer
 
                 StreamWriter sw = new StreamWriter(stream);
                 sw.Write(newEmailTemplate);
+
+                Logger.Info(templateName + " Email Template updated to :" + newEmailTemplate, OType.FullName, "EmailTemplateSelectionChanged");
 
                 sw.Close();
                 stream.Close();

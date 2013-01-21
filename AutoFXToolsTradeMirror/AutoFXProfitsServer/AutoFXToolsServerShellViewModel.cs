@@ -21,6 +21,8 @@ namespace AutoFXProfitsServer
     {
         private static readonly Type OType = typeof(AutoFXToolsServerShellViewModel);
 
+        #region Command Objects
+
         public ICommand SaveTemplateChangesCommand { get; set; }
         public ICommand SearchGoCommand { get; set; }
         public ICommand UndoEmailTemplateCommand { get; set; }
@@ -35,6 +37,9 @@ namespace AutoFXProfitsServer
         public ICommand SortByKeyStringCommand { get; set; }
         public ICommand SortByEmailCommand { get; set; }
         public ICommand SortByStatusCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
+
+        #endregion
 
         private DBHelper _helper = null;
         //private TradeMirrorService _tradeMirrorService = null;
@@ -338,11 +343,11 @@ namespace AutoFXProfitsServer
         #region Account
 
         public static readonly DependencyProperty AccountProperty =
-            DependencyProperty.Register("Account", typeof (int), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(int)));
+            DependencyProperty.Register("Account", typeof (string), typeof (AutoFXToolsServerShellViewModel), new PropertyMetadata(default(string)));
 
-        public int Account
+        public string Account
         {
-            get { return (int) GetValue(AccountProperty); }
+            get { return (string) GetValue(AccountProperty); }
             set { SetValue(AccountProperty, value); }
         }
 
@@ -457,6 +462,8 @@ namespace AutoFXProfitsServer
         /// </summary>
         public AutoFXToolsServerShellViewModel()
         {
+            #region Command Initializations
+
             this.SaveTemplateChangesCommand = new SaveTemplateChangesCommand(this);
             this.SearchGoCommand = new SearchGoCommand(this);
             this.UndoEmailTemplateCommand = new UndoEmailTemplateCommand(this);
@@ -471,6 +478,9 @@ namespace AutoFXProfitsServer
             this.SortByKeyStringCommand = new SortByKeyStringCommand(this);
             this.SortByEmailCommand = new SortByEmailCommand(this);
             this.SortByStatusCommand = new SortByStatusCommand(this);
+            this.DeleteCommand = new DeleteCommand(this);
+
+            #endregion
 
             SearchHelper.ClientSubscribed += ClientSubscribed;
             SearchHelper.ClientUnSubscribed += ClientUnSubscribed;
@@ -660,6 +670,8 @@ namespace AutoFXProfitsServer
         {
             try
             {
+                EmailTemplateViewEnabled = false;
+
                 string command = string.Empty;
                 if (SelectedEmailTemplateName == "New")
                 {
@@ -721,6 +733,10 @@ namespace AutoFXProfitsServer
                 }
 
                 var searchedUsers = SearchHelper.SearchUser(SelectedSearchType, SearchItem, searchFilter, AutoFXUsers);
+
+                searchedUsers = searchedUsers.OrderBy(x => x.ID).ToList();
+                searchedUsers.Reverse();
+
                 foreach (var revokedUser in searchedUsers)
                 {
                     this.FilteredUsersCollection.Add(revokedUser);
@@ -846,6 +862,9 @@ namespace AutoFXProfitsServer
         public void AddNewUser()
         {
             _editStatus = false;
+            
+            ResetUserInformation();
+
             _userWindow = new UserWindow(this);
             _userWindow.Show();
         }
@@ -858,6 +877,16 @@ namespace AutoFXProfitsServer
             _editStatus = true;
             _userWindow = new UserWindow(this);
             _userWindow.Show();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DeleteUser()
+        {
+            _helper.DeleteUser(ID);
+            UpdateUserList();
+            ResetUserInformation();
         }
 
         /// <summary>
@@ -877,19 +906,10 @@ namespace AutoFXProfitsServer
                 }
                 _helper.AddNewUser(Email, Account, Key, SelectedStatus, SelectedNotificationMode, AlternativeEmail);
             }
+
             UpdateUserList();
             _userWindow.Close();
-
-            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
-            {
-                this.ID = 0;
-                this.Email = "";
-                this.SelectedStatus = "";
-                this.Account = 0;
-                this.Key = "";
-                this.SelectedNotificationMode = "";
-                this.AlternativeEmail = "";
-            }));
+            ResetUserInformation();
         }
 
         /// <summary>
@@ -903,16 +923,13 @@ namespace AutoFXProfitsServer
 
                 if(selectedUser != null)
                 {
-                    this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
-                    {
-                        this.ID = selectedUser.ID;
-                        this.Email = selectedUser.Email;
-                        this.SelectedStatus = selectedUser.Status;
-                        this.Account = selectedUser.AccountNumber;
-                        this.Key = selectedUser.KeyString;
-                        this.SelectedNotificationMode = selectedUser.SendNotifications;
-                        this.AlternativeEmail = selectedUser.AlternativeEmail;
-                    }));
+                    this.ID = selectedUser.ID;
+                    this.Email = selectedUser.Email;
+                    this.SelectedStatus = selectedUser.Status;
+                    this.Account = selectedUser.AccountNumber;
+                    this.Key = selectedUser.KeyString;
+                    this.SelectedNotificationMode = selectedUser.SendNotifications;
+                    this.AlternativeEmail = selectedUser.AlternativeEmail;
                 }
             }
             catch (Exception exception)
@@ -930,6 +947,8 @@ namespace AutoFXProfitsServer
             {
                 AutoFXUsers.Clear();
                 AutoFXUsers = _helper.BuildUsersList();
+                AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
+                AutoFXUsers.Reverse();
 
                 FilteredUsersCollection.Clear();
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
@@ -969,7 +988,14 @@ namespace AutoFXProfitsServer
                     receipientType = "Revoked";
                 }
 
-                mailingHelper.SendEmail(ManualEmailSubject, receipientType, EnteredManualEmail);
+                if(mailingHelper.SendEmail(ManualEmailSubject, receipientType, EnteredManualEmail))
+                {
+                    MessageBox.Show("Manual Email Sent");
+                }
+                else
+                {
+                    MessageBox.Show("Manual Email Failed");
+                }
             }
             catch (Exception exception)
             {
@@ -1127,6 +1153,20 @@ namespace AutoFXProfitsServer
         {
             _refreshUsersTimer.Stop();
             _refreshUsersTimer.Start();
+        }
+
+        private void ResetUserInformation()
+        {
+            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+            {
+                this.ID = 0;
+                this.Email = "";
+                this.SelectedStatus = "";
+                this.Account = "";
+                this.Key = "";
+                this.SelectedNotificationMode = "";
+                this.AlternativeEmail = "";
+            }));
         }
     }
 }

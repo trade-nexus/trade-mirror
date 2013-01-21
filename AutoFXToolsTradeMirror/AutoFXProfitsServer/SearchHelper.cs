@@ -35,6 +35,24 @@ namespace AutoFXProfitsServer
         /// 
         /// </summary>
         /// <returns></returns>
+        public static List<User> GetActiveYesUsers(List<User> UsersLists)
+        {
+            try
+            {
+                var activeUsers = UsersLists.Where(x => (x.Status == "Active") && (x.SendNotifications == "Yes")).ToList();
+                return activeUsers;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "GetActiveUsers");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static List<User> GetRevokedUsers(List<User> UsersLists)
         {
             try
@@ -61,13 +79,13 @@ namespace AutoFXProfitsServer
                         if (searchFilter == "All")
                         {
                             searchedUsers =
-                                UsersLists.Where(x => x.AccountNumber == Convert.ToInt32(searchTerm)).ToList();
+                                UsersLists.Where(x => x.AccountNumber == searchTerm).ToList();
                         }
                         else if (searchFilter == "Active" || searchFilter == "Revoked")
                         {
                             searchedUsers =
                                 UsersLists.Where(
-                                    x => (x.AccountNumber == Convert.ToInt32(searchTerm)) && (x.Status == searchFilter)).
+                                    x => (x.AccountNumber == searchTerm) && (x.Status == searchFilter)).
                                     ToList();
                         }
                         else
@@ -147,7 +165,8 @@ namespace AutoFXProfitsServer
             try
             {
                 List<User> users = new List<User>();
-                users = GetActiveUsers(UsersLists);
+                //users = GetActiveUsers(UsersLists);
+                users = GetActiveYesUsers(UsersLists);
                 string userAddresses = users.Aggregate(String.Empty, (current, user) => current + ";" + user.AlternativeEmail);
 
                 return userAddresses;
@@ -204,7 +223,7 @@ namespace AutoFXProfitsServer
                 List<User> users = new List<User>();
                 users = dbHelper.BuildUsersList();
 
-                User testUser = new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password);
+                User testUser = new User(Convert.ToInt32(userName), userName, password);
                 if (users.BinarySearch(testUser) > -1)
                 {
                     if(ClientSubscribed != null)
@@ -238,7 +257,7 @@ namespace AutoFXProfitsServer
                 List<User> users = new List<User>();
                 users = dbHelper.BuildUsersList();
 
-                User testUser = new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password);
+                User testUser = new User(Convert.ToInt32(userName), userName, password);
                 if (users.BinarySearch(testUser) > -1)
                 {
                     if(ClientUnSubscribed != null)
