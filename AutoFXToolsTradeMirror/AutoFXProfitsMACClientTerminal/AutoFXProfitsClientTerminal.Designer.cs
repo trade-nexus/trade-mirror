@@ -146,6 +146,7 @@
             this.MaximizeBox = false;
             this.Name = "AutoFXProfitsClientTerminal";
             this.Text = "Auto FX Profits Client Terminal";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoFXProfitsClientTerminalFormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

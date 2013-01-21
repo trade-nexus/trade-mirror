@@ -150,15 +150,22 @@ namespace AutoFXProfitsMACClientTerminal
         /// <param name="signalInformation"></param>
         public void NewSignal(string signalInformation)
         {
-            if (signalInformation.Contains("___autofxtools trademirror___Alive___"))
+            try
             {
-                Logger.Debug("Heartbeat. = " + signalInformation, OType.FullName, "NewSignal");
-                ResetTimer();
-                return;
-            }
+                if (signalInformation.Contains("___autofxtools trademirror___Alive___"))
+                {
+                    Logger.Debug("Heartbeat. = " + signalInformation, OType.FullName, "NewSignal");
+                    ResetTimer();
+                    return;
+                }
 
-            Logger.Debug("New Signal Received = " + signalInformation, OType.FullName, "NewSignal");
-            PlaceOrder(signalInformation);
+                Logger.Debug("New Signal Received = " + signalInformation, OType.FullName, "NewSignal");
+                PlaceOrder(signalInformation);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "NewSignal");
+            }
         }
 
         /// <summary>
@@ -168,8 +175,15 @@ namespace AutoFXProfitsMACClientTerminal
         /// <param name="e"></param>
         public void HeartbeatTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            DisconnectFromServer();
-            Logger.Debug("Connection lost to server", OType.FullName, "HeartbeatTimerElapsed");
+            try
+            {
+                DisconnectFromServer();
+                Logger.Debug("Connection lost to server", OType.FullName, "HeartbeatTimerElapsed");
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "HeartbeatTimerElapsed");
+            }
         }
 
         /// <summary>
@@ -318,29 +332,38 @@ namespace AutoFXProfitsMACClientTerminal
         /// </summary>
         private bool InitializeCredentials()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + @"\\trademirrorcredentials.txt";
-
-            if (File.Exists(path))
+            try
             {
-                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
-                StreamReader streamReader = new StreamReader(fs);
+                string path = AppDomain.CurrentDomain.BaseDirectory + @"\\trademirrorcredentials.txt";
 
-                string tempString = streamReader.ReadLine();
+                if (File.Exists(path))
+                {
+                    FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
+                    StreamReader streamReader = new StreamReader(fs);
 
-                string[] tempArray = tempString.Split(':');
+                    string tempString = streamReader.ReadLine();
 
-                AccountID = tempArray[0].Trim();
-                KeyString = tempArray[1].Trim();
+                    string[] tempArray = tempString.Split(':');
 
-                Logger.Debug("User Credentials Initialized. Account ID = " + AccountID + " | Keystring = " + KeyString, OType.FullName, "InitializeCredentials");
+                    AccountID = tempArray[0].Trim();
+                    KeyString = tempArray[1].Trim();
 
-                streamReader.Close();
-                fs.Close();
+                    Logger.Debug("User Credentials Initialized. Account ID = " + AccountID + " | Keystring = " + KeyString, OType.FullName, "InitializeCredentials");
 
-                return true;
+                    streamReader.Close();
+                    fs.Close();
+
+                    return true;
+                }
+                else
+                {
+                    Logger.Debug("User Credentials not available", OType.FullName, "InitializeCredentials");
+                    return false;
+                }
             }
-            else
+            catch (Exception exception)
             {
+                Logger.Error(exception, OType.FullName, "InitializeCredentials");
                 return false;
             }
         }
@@ -350,15 +373,22 @@ namespace AutoFXProfitsMACClientTerminal
         /// </summary>
         public void FreeResources()
         {
-            if (Status == "Connected")
+            try
             {
-                this.DisconnectFromServer();
+                if (Status == "Connected")
+                {
+                    this.DisconnectFromServer();
+                }
+                if (_client != null)
+                {
+                    _client.Close();
+                    _client.Abort();
+                    _client = null;
+                }
             }
-            if (_client != null)
+            catch (Exception exception)
             {
-                _client.Close();
-                _client.Abort();
-                _client = null;
+                Logger.Error(exception, OType.FullName, "FreeResources");
             }
         }
 
@@ -367,10 +397,21 @@ namespace AutoFXProfitsMACClientTerminal
         /// </summary>
         private void ResetTimer()
         {
-            _heartbeatTimer.Stop();
-            _heartbeatTimer.Start();
+            try
+            {
+                _heartbeatTimer.Stop();
+                _heartbeatTimer.Start();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "ResetTimer");
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="suffixes"></param>
         private void SetSuffixes(string suffixes)
         {
             try
@@ -419,6 +460,11 @@ namespace AutoFXProfitsMACClientTerminal
         private void DisconnectButtonClick(object sender, EventArgs e)
         {
             DisconnectFromServer();
+        }
+
+        private void AutoFXProfitsClientTerminalFormClosing(object sender, FormClosingEventArgs e)
+        {
+            FreeResources();
         }
     }
 }
