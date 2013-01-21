@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using Microsoft.Practices.Unity;
+using TraceSourceLogger;
 
 namespace AutoFXProfitsClientTerminal
 {
@@ -13,23 +14,35 @@ namespace AutoFXProfitsClientTerminal
     /// </summary>
     public partial class App : Application
     {
+        private static readonly Type OType = typeof(App);
+
         private MainWindow _mainWindow;
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            try
+            {
+                base.OnStartup(e);
 
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
-            IUnityContainer container = new UnityContainer();
+                Logger.Info("Exception handler hooked", OType.FullName, "OnStartup");
 
-            // Create main application window.
-            _mainWindow = container.Resolve<MainWindow>();
-            _mainWindow.Show();
+                IUnityContainer container = new UnityContainer();
+
+                // Create main application window.
+                _mainWindow = container.Resolve<MainWindow>();
+                _mainWindow.Show();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "OnStartup");
+            }
         }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
+            Logger.Error("Unhandled Application Level exception occured", OType.FullName, "CurrentDomainOnUnhandledException");
             _mainWindow.Close();
         }
     }
