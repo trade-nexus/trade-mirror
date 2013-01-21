@@ -57,7 +57,7 @@ namespace RemoteAdministrator
                     string alternativeEmail = String.IsNullOrEmpty(reader.GetString("alternate_email")) ? "email@default.com" : reader.GetString("alternate_email");
 
                     User newUser = new User(Convert.ToInt32(id), email, role, Convert.ToBoolean(status),
-                                            Convert.ToInt32(accountNumber), keyString, Convert.ToDateTime(created),
+                                            accountNumber, keyString, Convert.ToDateTime(created),
                                             Convert.ToDateTime(modified), Convert.ToBoolean(notificationStatus), alternativeEmail);
 
                     this._autoFXUsers.Add(newUser);
@@ -131,7 +131,7 @@ namespace RemoteAdministrator
         /// <summary>
         /// 
         /// </summary>
-        public void AddNewUser(string email, int account, string key, string status, string notificationStatus, string alternateEmail)
+        public void AddNewUser(string email, string account, string key, string status, string notificationStatus, string alternateEmail)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace RemoteAdministrator
         /// <summary>
         /// 
         /// </summary>
-        public void EditUser(int id, string email, int account, string key, string status, string notificationStatus, string alternateEmail)
+        public void EditUser(int id, string email, string account, string key, string status, string notificationStatus, string alternateEmail)
         {
             try
             {
@@ -202,6 +202,31 @@ namespace RemoteAdministrator
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "EditUser");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteUser(int id)
+        {
+            try
+            {
+                MySqlConnection connection = _connectionManager.Connect();
+                MySqlCommand dataInsertion = new MySqlCommand { Connection = connection };
+
+                const string query = "DELETE FROM users WHERE `id`=@id";
+                dataInsertion.Parameters.AddWithValue("@id", id);
+
+                dataInsertion.CommandText = query;
+
+                Logger.Debug("Number of Rows Affected = " + dataInsertion.ExecuteNonQuery(), OType.FullName, "DeleteUser");
+                _connectionManager.Disconnect();
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "DeleteUser");
             }
         }
 

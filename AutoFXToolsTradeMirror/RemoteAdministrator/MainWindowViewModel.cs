@@ -16,6 +16,8 @@ namespace RemoteAdministrator
     {
         private static readonly Type OType = typeof(MainWindowViewModel);
 
+        #region Command Declaration
+
         public ICommand SearchGoCommand { get; set; }
         public ICommand AddNewUserCommand { get; set; }
         public ICommand EditUserCommand { get; set; }
@@ -29,7 +31,10 @@ namespace RemoteAdministrator
         public ICommand SortByStatusCommand { get; set; }
         public ICommand RevokedUsersCheckedCommand { get; set; }
         public ICommand ActiveUsersCheckedCommand { get; set; }
-        public ICommand AllUsersCheckedCommand { get; set; } 
+        public ICommand AllUsersCheckedCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
+
+        #endregion
 
         #region SearchItem
 
@@ -183,11 +188,11 @@ namespace RemoteAdministrator
         #region Account
 
         public static readonly DependencyProperty AccountProperty =
-            DependencyProperty.Register("Account", typeof(int), typeof(MainWindowViewModel), new PropertyMetadata(default(int)));
+            DependencyProperty.Register("Account", typeof (string), typeof (MainWindowViewModel), new PropertyMetadata(default(string)));
 
-        public int Account
+        public string Account
         {
-            get { return (int)GetValue(AccountProperty); }
+            get { return (string) GetValue(AccountProperty); }
             set { SetValue(AccountProperty, value); }
         }
 
@@ -270,6 +275,8 @@ namespace RemoteAdministrator
 
         public MainWindowViewModel()
         {
+            #region Command Initialization
+
             this.SearchGoCommand = new SearchGoCommand(this);
             this.AddNewUserCommand = new AddNewUserCommand(this);
             this.EditUserCommand = new EditUserCommand(this);
@@ -284,6 +291,9 @@ namespace RemoteAdministrator
             this.AllUsersCheckedCommand = new AllUsersCheckedCommand(this);
             this.ActiveUsersCheckedCommand = new ActiveUsersCheckedCommand(this);
             this.RevokedUsersCheckedCommand = new RevokedUsersCheckedCommand(this);
+            this.DeleteCommand = new DeleteCommand(this);
+
+            #endregion
 
             this._currentDispatcher = Dispatcher.CurrentDispatcher;
 
@@ -307,6 +317,9 @@ namespace RemoteAdministrator
         public void AddNewUser()
         {
             _editStatus = false;
+
+            ResetUserInformation();
+
             _userWindow = new UserWindow(this);
             _userWindow.Show();
         }
@@ -319,6 +332,16 @@ namespace RemoteAdministrator
             _editStatus = true;
             _userWindow = new UserWindow(this);
             _userWindow.Show();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DeleteUser()
+        {
+            _helper.DeleteUser(ID);
+            UpdateUserList();
+            ResetUserInformation();
         }
 
         /// <summary>
@@ -341,16 +364,7 @@ namespace RemoteAdministrator
             UpdateUserList();
             _userWindow.Close();
 
-            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
-            {
-                this.ID = 0;
-                this.Email = "";
-                this.SelectedStatus = "";
-                this.Account = 0;
-                this.Key = "";
-                this.SelectedNotificationMode = "";
-                this.AlternativeEmail = "";
-            }));
+            ResetUserInformation();
         }
 
         /// <summary>
@@ -391,6 +405,9 @@ namespace RemoteAdministrator
             {
                 AutoFXUsers.Clear();
                 AutoFXUsers = _helper.BuildUsersList();
+
+                AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
+                AutoFXUsers.Reverse();
 
                 FilteredUsersCollection.Clear();
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
@@ -484,6 +501,8 @@ namespace RemoteAdministrator
                 }
 
                 var searchedUsers = SearchHelper.SearchUser(SelectedSearchType, SearchItem, searchFilter, AutoFXUsers);
+                searchedUsers = searchedUsers.OrderBy(x => x.ID).ToList();
+                searchedUsers.Reverse();
                 foreach (var revokedUser in searchedUsers)
                 {
                     this.FilteredUsersCollection.Add(revokedUser);
@@ -715,6 +734,20 @@ namespace RemoteAdministrator
                 IsActiveUsersChecked = false;
                 IsRevokedUsersChecked = true;
             }
+        }
+
+        private void ResetUserInformation()
+        {
+            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+            {
+                this.ID = 0;
+                this.Email = "";
+                this.SelectedStatus = "";
+                this.Account = "";
+                this.Key = "";
+                this.SelectedNotificationMode = "";
+                this.AlternativeEmail = "";
+            }));
         }
     }
 }

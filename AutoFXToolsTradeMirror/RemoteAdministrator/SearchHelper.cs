@@ -60,13 +60,13 @@ namespace RemoteAdministrator
                         if (searchFilter == "All")
                         {
                             searchedUsers =
-                                UsersLists.Where(x => x.AccountNumber == Convert.ToInt32(searchTerm)).ToList();
+                                UsersLists.Where(x => x.AccountNumber == searchTerm).ToList();
                         }
                         else if (searchFilter == "Active" || searchFilter == "Revoked")
                         {
                             searchedUsers =
                                 UsersLists.Where(
-                                    x => (x.AccountNumber == Convert.ToInt32(searchTerm)) && (x.Status == searchFilter)).
+                                    x => (x.AccountNumber == searchTerm) && (x.Status == searchFilter)).
                                     ToList();
                         }
                         else
@@ -203,7 +203,7 @@ namespace RemoteAdministrator
                 List<User> users = new List<User>();
                 users = dbHelper.BuildUsersList();
 
-                User testUser = new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password);
+                User testUser = new User(Convert.ToInt32(userName), userName, password);
                 if (users.BinarySearch(testUser) > -1)
                 {
                     if(ClientSubscribed != null)
@@ -237,7 +237,7 @@ namespace RemoteAdministrator
                 List<User> users = new List<User>();
                 users = dbHelper.BuildUsersList();
 
-                User testUser = new User(Convert.ToInt32(userName), Convert.ToInt32(userName), password);
+                User testUser = new User(Convert.ToInt32(userName), userName, password);
                 if (users.BinarySearch(testUser) > -1)
                 {
                     if(ClientUnSubscribed != null)

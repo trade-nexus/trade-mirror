@@ -71,6 +71,7 @@
     <Compile Include="AllUsersCheckedCommand.cs" />
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="DBHelper.cs" />
+    <Compile Include="DeleteCommand.cs" />
     <Compile Include="EditUserCommand.cs" />
     <Compile Include="ExportUserCommand.cs" />
     <Compile Include="RefreshCommand.cs" />
