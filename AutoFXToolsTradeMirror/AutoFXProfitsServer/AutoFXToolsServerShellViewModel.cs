@@ -68,6 +68,8 @@ namespace AutoFXProfitsServer
         /// </summary>
         private readonly Dispatcher _currentDispatcher;
 
+        private DeleteUserConfirmation _deleteUserConfirmationWindow;
+
         #region SearchItem
 
         public static readonly DependencyProperty SearchItemProperty =
@@ -489,6 +491,7 @@ namespace AutoFXProfitsServer
             _refreshUsersTimer = new Timer(RefreshPeriod * 1000);
             _refreshUsersTimer.Elapsed += RefreshUsersTimerElapsed;
             _refreshUsersTimer.AutoReset = true;
+            _refreshUsersTimer.Enabled = true;
 
             ConnectedUsers = new ObservableCollection<User>();
 
@@ -803,7 +806,6 @@ namespace AutoFXProfitsServer
                 _servcieStatus = true;
                 while (_servcieStatus)
                 {
-                    
                 }
             }
             catch (Exception exception)
@@ -884,9 +886,20 @@ namespace AutoFXProfitsServer
         /// </summary>
         public void DeleteUser()
         {
-            _helper.DeleteUser(ID);
-            UpdateUserList();
-            ResetUserInformation();
+            _deleteUserConfirmationWindow = new DeleteUserConfirmation();
+            _deleteUserConfirmationWindow.ShowDialog();
+
+            if (_deleteUserConfirmationWindow.MessageBoxSelection)
+            {
+                _helper.DeleteUser(ID);
+                UpdateUserList();
+                ResetUserInformation();
+                _deleteUserConfirmationWindow.Close();
+            }
+            else
+            {
+                _deleteUserConfirmationWindow.Close();
+            }
         }
 
         /// <summary>
@@ -958,9 +971,8 @@ namespace AutoFXProfitsServer
                         this.FilteredUsersCollection.Add(user);
                     }
                     this.TotalClients = this.FilteredUsersCollection.Count;
+                    _mailingHelper.UsersList = AutoFXUsers;
                 }));
-
-                _mailingHelper.UsersList = AutoFXUsers;
             }
             catch (Exception exception)
             {
@@ -1057,16 +1069,7 @@ namespace AutoFXProfitsServer
             {
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
-                    AutoFXUsers = _helper.BuildUsersList();
-                    AutoFXUsers = AutoFXUsers.OrderBy(x => x.ID).ToList();
-                    AutoFXUsers.Reverse();
-
-                    this.FilteredUsersCollection.Clear();
-
-                    foreach (var user in AutoFXUsers)
-                    {
-                        this.FilteredUsersCollection.Add(user);
-                    }
+                    UpdateUserList();
                     ResetTimer();
                 }));
             }
@@ -1143,6 +1146,7 @@ namespace AutoFXProfitsServer
         /// <param name="e"></param>
         public void RefreshUsersTimerElapsed(object sender, ElapsedEventArgs e)
         {
+            Logger.Info("Refreshing Application Data", OType.FullName, "RefreshUsersTimerElapsed");
             RefreshUI();
         }
 

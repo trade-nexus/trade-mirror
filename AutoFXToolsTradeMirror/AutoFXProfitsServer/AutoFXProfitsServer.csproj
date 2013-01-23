@@ -90,6 +90,9 @@
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DBHelper.cs" />
+    <Compile Include="DeleteUserConfirmation.xaml.cs">
+      <DependentUpon>DeleteUserConfirmation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ErrorMessageWindow.xaml.cs">
       <DependentUpon>ErrorMessageWindow.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,10 @@
       <DependentUpon>AutoFXToolsServerShell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="DeleteUserConfirmation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ErrorMessageWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -113,7 +113,6 @@ namespace AutoFXProfitsServer
                 Console.WriteLine(exception);
                 Logger.Error(exception, OType.FullName, "Subscribe");
                 //return false;
-                //ToDO: Return a string showing authentication failure
                 return "FAILED";
             }
         }

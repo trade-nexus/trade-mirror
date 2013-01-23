@@ -232,11 +232,11 @@ namespace AutoFXProfitsServer
                 }
                 else if (command == "PL")
                 {
-                    path = path + "Stop Move.txt";
+                    path = path + "Partial Close.txt";
                 }
                 else if (command == "CL")
                 {
-                    path = path + "Stop Move.txt";
+                    path = path + "Close Trade.txt";
                 }
 
                 if (File.Exists(path))
