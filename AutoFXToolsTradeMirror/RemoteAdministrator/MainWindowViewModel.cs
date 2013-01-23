@@ -271,6 +271,8 @@ namespace RemoteAdministrator
         /// </summary>
         private readonly Dispatcher _currentDispatcher;
 
+        private DeleteUserConfirmation _deleteUserConfirmationWindow;
+
         private int _sortingState = 0;
 
         public MainWindowViewModel()
@@ -339,9 +341,20 @@ namespace RemoteAdministrator
         /// </summary>
         public void DeleteUser()
         {
-            _helper.DeleteUser(ID);
-            UpdateUserList();
-            ResetUserInformation();
+            _deleteUserConfirmationWindow = new DeleteUserConfirmation();
+            _deleteUserConfirmationWindow.ShowDialog();
+
+            if (_deleteUserConfirmationWindow.MessageBoxSelection)
+            {
+                _helper.DeleteUser(ID);
+                UpdateUserList();
+                ResetUserInformation();
+                _deleteUserConfirmationWindow.Close();
+            }
+            else
+            {
+                _deleteUserConfirmationWindow.Close();
+            }
         }
 
         /// <summary>
