@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Timers;
 using System.Windows;
 using Microsoft.Practices.Unity;
 using TraceSourceLogger;
@@ -15,7 +17,7 @@ namespace AutoFXProfitsClientTerminal
     public partial class App : Application
     {
         private static readonly Type OType = typeof(App);
-
+        
         private MainWindow _mainWindow;
 
         protected override void OnStartup(StartupEventArgs e)

@@ -13,7 +13,7 @@ using TraceSourceLogger;
 
 namespace AutoFXProfitsClientTerminal
 {
-    public class MainWindowViewModel : DependencyObject, ITradeMirrorCallback
+    public class MainWindowViewModel : DependencyObject, ITradeMirrorCallback, IDisposable
     {
         private static readonly Type OType = typeof(MainWindowViewModel);
 
@@ -30,6 +30,45 @@ namespace AutoFXProfitsClientTerminal
         /// Holds reference to UI dispatcher
         /// </summary>
         private readonly Dispatcher _currentDispatcher;
+
+        #region IDisposable implementation
+ 
+        /// <summary>
+        /// IDisposable.Dispose implementation, calls Dispose(true).
+        /// </summary>
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+        }
+ 
+        /// <summary>
+        /// Dispose worker method. Handles graceful shutdown of the
+        /// client even if it is an faulted state.
+        /// </summary>
+        /// <param name="disposing">Are we disposing (alternative
+        /// is to be finalizing)</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    if (_client.State != CommunicationState.Faulted)
+                    {
+                        _client.Close();
+                    }
+                }
+                finally
+                {
+                    if (_client.State != CommunicationState.Closed)
+                    {
+                        _client.Abort();
+                    }
+                }
+            }
+        }
+ 
+        #endregion
 
         #region AccountID
 
@@ -114,7 +153,7 @@ namespace AutoFXProfitsClientTerminal
                 _heartbeatTimer = new Timer(AcceptedDelaySeconds * 1000);
                 _heartbeatTimer.Elapsed += HeartbeatTimerElapsed;
                 _heartbeatTimer.AutoReset = true;
-
+                
                 UpdateUI("Disconnected");
                 if (!InitializeCredentials())
                 {
@@ -182,8 +221,7 @@ namespace AutoFXProfitsClientTerminal
             {
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
                                                                                         {
-                                                                                            if (
-                                                                                                _client.Unsubscribe(AccountID, KeyString,Convert.ToInt32(AccountID)))
+                                                                                            if (_client.Unsubscribe(AccountID, KeyString,Convert.ToInt32(AccountID)))
                                                                                             {
                                                                                                 Logger.Info("Unsubscribed",OType.FullName,"DisconnectFromServer");
 
@@ -448,12 +486,13 @@ namespace AutoFXProfitsClientTerminal
                 {
                     this.DisconnectFromServer();
                 }
-                if (_client != null)
-                {
-                    _client.Close();
-                    _client.Abort();
-                    _client = null;
-                }
+                Dispose(true);
+                //if (_client != null)
+                //{
+                //    _client.Close();
+                //    _client.Abort();
+                //    _client = null;
+                //}
             }
             catch (Exception exception)
             {
