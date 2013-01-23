@@ -345,7 +345,10 @@ bool ReceiveSignals()
                   
    if(orderInformation != "NULL")
    {
-      Print("Order Information Received = "+ orderInformation);
+      Print("Order Information Received = " + orderInformation);
+      
+      FileDelete("orders.csv");
+      Print("Order File Deleted");
       
       int index2 = StringFind(orderInformation, ";", 0);
       Print("Index2 = " + index2);
@@ -440,7 +443,7 @@ string ReadOrderInformation()
    {
       string order = FileReadString(handle);
       FileClose(handle);
-      FileDelete("orders.csv");
+      //FileDelete("orders.csv");
       return(order);
    }
    else
@@ -580,15 +583,26 @@ double NormalizeLotSize(string sym, double lots)
    
    double permittedMaxLot = AccountFreeMargin()/MarketInfo(sym,MODE_MARGINREQUIRED);
    double minLot = MarketInfo(sym,MODE_MINLOT);
-   if(lots<minLot) lots=minLot;
-   if (lots>permittedMaxLot) lots = permittedMaxLot;
    
+   Print("Max Lot = " + permittedMaxLot + " | Min Lot = "  + minLot);
+   
+   if(lots<minLot)
+   {
+      lots = minLot;
+      Print("Lots set to minLot");
+   }
+   if(lots>permittedMaxLot)
+   {
+      lots = permittedMaxLot;
+      Print("Lots set to max lot");
+   }
    
    if(MarketInfo(sym,MODE_LOTSTEP)>=0.01 && MarketInfo(sym,MODE_LOTSTEP)<0.1) digit_lot=2;   
    if(MarketInfo(sym,MODE_LOTSTEP)>=0.1 && MarketInfo(sym,MODE_LOTSTEP)<1) digit_lot=1;
-   if(MarketInfo(sym,MODE_LOTSTEP)>=1) digit_lot=0;  
+   if(MarketInfo(sym,MODE_LOTSTEP)>=1) digit_lot=0;
+   
    lots=NormalizeDouble(lots,digit_lot);
-            
+   Print("Lots = " + lots + " with normalization to " + digit_lot + " digits");
    
    return (lots);
 }
