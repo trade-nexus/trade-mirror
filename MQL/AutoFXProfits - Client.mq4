@@ -11,7 +11,10 @@ int  GetTimeZoneInformation(int& TZInfoArray[]);
 #import
 
 #import "Communication Library.dll"
-   bool SpawnClientTerminal(int handle, string path, string runningMode, string terminalName);
+   bool     SpawnClientTerminal(int handle, string terminalName);
+   bool     WriteToFile(string message, string fileName, string terminalName);
+   string   ReadFromFile(string fileName, string terminalName);
+   bool     FileDeleteExternal(string fileName, string terminalName);
 #import
 
 #include <stdlib.mqh>
@@ -22,8 +25,6 @@ extern double FixedLot = 0.1;
 extern double DefaultSL = 20;
 
 //=============GLOBAL VARIABLES=============
-//string PredefinedPrefix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";       //Defined set of Symbol Prefixes
-//string PredefinedPostfix = ".,m,fx,_fx,$,FXF,pro,.arm,-,v,fxr,SB,iam,2,r,_,fxr";      //Defined set of Symbol Postfixes
 string PredefinedPrefix = "";
 string PredefinedPostfix = "";
 
@@ -76,7 +77,7 @@ int init()
       mode = "LIVE";
    }
    
-   SpawnClientTerminal(WindowHandle(Symbol(), Period()), TerminalPath(), mode, "AutoFXProfitsClientTerminal");
+   SpawnClientTerminal(WindowHandle(Symbol(), Period()), "AutoFXProfitsClientTerminal");
    
    int TZInfoArray[43];         
    int dst = GetTimeZoneInformation(TZInfoArray);
@@ -436,21 +437,8 @@ bool ReceiveSignals()
 //Reads order information from file
 string ReadOrderInformation()
 {
-   //Print("[ReadOrderInformation] Hello. Im IN!");
-   int handle = FileOpen("orders.csv", FILE_CSV|FILE_READ, '=');
-   
-   if (handle != -1)
-   {
-      string order = FileReadString(handle);
-      FileClose(handle);
-      //FileDelete("orders.csv");
-      return(order);
-   }
-   else
-   {
-      //Print("[ReadOrderInformation] File orders.csv could not be opened. ERROR: " + ErrorDescription(GetLastError()));
-      return("NULL");
-   }
+   string order = ReadFromFile("orders.csv", "AutoFXProfitsClientTerminal");
+   return(order);
 }
 
 int GetSignalType(string signal)
@@ -1228,29 +1216,19 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
 //+-------------------------------------------------------------------------------------+
 void WriteAccountInfoToFile()
 {
-   int handle = FileOpen("accountinfo.txt", FILE_CSV|FILE_READ|FILE_WRITE);
-   if (handle != -1)
-   {
-      FileWrite(handle, StringConcatenate("accountNumber: ", AccountNumber()));
-      FileWrite(handle, StringConcatenate("currency: \"", AccountCurrency(), "\""));
-      FileWrite(handle, StringConcatenate("isDemo: ", IsDemo()));
-      FileWrite(handle, StringConcatenate("accountServer: \"", AccountServer(), "\""));
-      FileWrite(handle, StringConcatenate("balance: ", AccountBalance()));
-      FileWrite(handle, StringConcatenate("equity: ", AccountEquity()));
-      FileWrite(handle, StringConcatenate("floatingPL: ", AccountProfit()));
-      FileWrite(handle, StringConcatenate("credit: ", AccountCredit()));
-      FileWrite(handle, StringConcatenate("marginInUse: ", AccountMargin()));
-      FileWrite(handle, StringConcatenate("freeMargin: ", AccountFreeMargin()));
-      FileWrite(handle, StringConcatenate("openOrders: ", OrdersTotal()));
-      FileWrite(handle, StringConcatenate("closedOrders: ", OrdersHistoryTotal()));
-      FileWrite(handle, StringConcatenate("brokerTime: ", TimeCurrent()));
-      
-      FileClose(handle);
-   }
-   else
-   {
-      Print("[WriteAccountInfoToFile] File accountinfo.csv could not be opened. ERROR: " + ErrorDescription(GetLastError()));
-   }
+   WriteToFile(StringConcatenate("accountNumber: ", AccountNumber()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("currency: \"", AccountCurrency()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("isDemo: ", IsDemo()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("accountServer: \"", AccountServer(), "\""), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("balance: ", AccountBalance()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("equity: ", AccountEquity()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("floatingPL: ", AccountProfit()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("credit: ", AccountCredit()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("marginInUse: ", AccountMargin()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("freeMargin: ", AccountFreeMargin()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("openOrders: ", OrdersTotal()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("closedOrders: ", OrdersHistoryTotal()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("brokerTime: ", TimeCurrent()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
 }
 
 //Return the Pip Size in double
@@ -1267,33 +1245,27 @@ double GetPipSizePrecision(string symbol)
 //Reads order information form file
 void ReadSuffixes()
 {
-   int handle = FileOpen("suffixes.csv", FILE_CSV|FILE_READ, ';');
-   
-   if (handle != -1)
-   {
-      string order = FileReadString(handle);
+   string order = ReadFromFile("suffixes.csv", "AutoFXProfitsClientTerminal");
       
-      if(order != "NULL")
+   if(order != "NULL")
+   {
+      PredefinedPrefix = order;
+      PredefinedPostfix = order;
+      Print("[ReadSuffixes] Read Suffixes = " + order);
+      SetSymbolPrefixAndPostfix();
+      SuffixesRead = true;
+      
+      if(FileDeleteExternal("suffixes.csv", "AutoFXProfitsClientTerminal"))
       {
-         PredefinedPrefix = order;
-         PredefinedPostfix = order;
-         Print("[ReadSuffixes] Read Suffixes = " + order);
-         SetSymbolPrefixAndPostfix();
-         SuffixesRead = true;
-         
-         FileClose(handle);
-         FileDelete("suffixes.csv");
-         Print("[ReadSuffixes] LAST ERROR: " + ErrorDescription(GetLastError()));
+         Print("[ReadSuffixes] suffixes.csv deleted");
       }
       else
       {
-         Print("[ReadSuffixes] No Suffixes");
+         Print("[ReadSuffixes] suffixes.csv could not be deleted");
       }
-      //FileClose(handle);
    }
    else
    {
-      //Print("[ReadSuffixes] File orders.csv could not be opened. ERROR: " + ErrorDescription(GetLastError()));
-      return(false);
+      Print("[ReadSuffixes] No Suffixes or Error");
    }
 }
