@@ -6,8 +6,8 @@
 #property copyright "Copyright 2013, Auto FX Profits"
 
 #import "Communication Library.dll"
-   bool SendToSocket(string orderInfo);
-   bool SpawnClientTerminal(int handle, string path, string runningMode, string terminalName);
+   bool     SendToSocket(string orderInfo);
+   bool     SpawnClientTerminal(int handle, string terminalName);
 #import
 
 #include <stdlib.mqh>
@@ -73,7 +73,7 @@ int init()
       mode = "LIVE";
    }
    
-   SpawnClientTerminal(WindowHandle(Symbol(), Period()), TerminalPath(), mode, "datasource");
+   SpawnClientTerminal(WindowHandle(Symbol(), Period()), "datasource");
    
    SetSymbolPrefixAndPostfix();
    
@@ -233,43 +233,6 @@ void SetSymbolPrefixAndPostfix()
    //}
 }
 
-void split(string& arr[], string str, string sym) 
-{
-   ArrayResize(arr, 0);
-   string item;
-   int pos, size;
-  
-   int len = StringLen(str);
-   for (int i=0; i < len;) 
-   {
-     pos = StringFind(str, sym, i);
-     if (pos == -1) pos = len;
-    
-     if (pos-i == 0)
-     {
-       item = "";
-     }
-     else
-     {
-       item = StringSubstr(str, i, pos-i);
-       item = StringTrimLeft(item);
-       item = StringTrimRight(item);
-     }
-    
-     size = ArraySize(arr);
-     ArrayResize(arr, size+1);
-     arr[size] = item;
-    
-     i = pos+StringLen(sym);
-   }
-  
-   size = ArraySize(arr);
-   if (size == 1)
-   {
-     ArrayResize(arr, size+1);
-     arr[size] = "";
-   }
-}
 
 bool AuthenticateSender()
 {
