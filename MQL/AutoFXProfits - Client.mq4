@@ -343,13 +343,22 @@ bool ReceiveSignals()
    string orderInformation;
    
    orderInformation = ReadOrderInformation();
-                  
-   if(orderInformation != "NULL")
+   //Print("Return size = " + StringLen(orderInformation));
+   
+   if(StringLen(orderInformation) > 0)
    {
-      Print("Order Information Received = " + orderInformation);
+      Print("[ReceiveSignals]Order Information Received = " + orderInformation);
       
-      FileDelete("orders.csv");
-      Print("Order File Deleted");
+      //FileDelete("orders.csv");
+      //bool     FileDeleteExternal(string fileName, string terminalName)
+      if(FileDeleteExternal("orders.csv", "AutoFXProfitsClientTerminal"))
+      {
+         Print("[ReceiveSignals] Order File Deleted");
+      }
+      else
+      {
+         Print("[ReceiveSignals] Order file not deleted");
+      }
       
       int index2 = StringFind(orderInformation, ";", 0);
       Print("Index2 = " + index2);
