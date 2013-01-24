@@ -13,6 +13,9 @@ namespace CommunicationLibrary
     {
     public:
 		static __declspec(dllexport) bool SendToSocket(char*);
-		static __declspec(dllexport) bool SpawnClientTerminal(int, char*, char*, char*);
+		static __declspec(dllexport) bool SpawnClientTerminal(int, char*);
+		static __declspec(dllexport) bool WriteToFile(char*, char*, char*, int);
+		static __declspec(dllexport) char* ReadFromFile(char*, char*);
+		static __declspec(dllexport) bool FileDeleteExternal(char*, char*);
     };
 }
