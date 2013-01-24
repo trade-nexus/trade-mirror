@@ -18,6 +18,12 @@ namespace InstallerHelpProject
         public InstallerHelperClass()
         {
             InitializeComponent();
+
+            string appDataLocation = System.Environment.GetEnvironmentVariable("APPDATA");
+            //MessageBox.Show("App Data Loc = " + appDataLocation);
+            Directory.CreateDirectory(appDataLocation + "\\AutoFX Profits");
+            Directory.CreateDirectory(appDataLocation + "\\AutoFX Profits\\datasource");
+            Directory.CreateDirectory(appDataLocation + "\\AutoFX Profits\\logs");
         }
 
 

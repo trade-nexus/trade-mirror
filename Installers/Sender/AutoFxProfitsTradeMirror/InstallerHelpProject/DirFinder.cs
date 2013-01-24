@@ -11,10 +11,6 @@ namespace InstallerHelpProject
 {
     class DirFinder
     {
-        private static readonly Type OType = typeof(DirFinder);
-
-        private const string EnvironementVariable = "USERPROFILE";
-
         public DirFinder()
         {
             
@@ -39,7 +35,7 @@ namespace InstallerHelpProject
                 {
                     files.AddRange(GetFiles(d.RootDirectory.FullName, "terminal.exe"));
                 }
-                //MessageBox.Show(files.Count + " MetaTrader Instances found");
+                
                 foreach (var file in files)
                 {
                     string path = Path.GetDirectoryName(file);
@@ -48,8 +44,7 @@ namespace InstallerHelpProject
             }
             catch (Exception exception)
             {
-                //MessageBox.Show(exception.ToString());
-                //Logger.Error(exception, OType.FullName, "GetInstalledSoftware2");
+                
             }
         }
 
@@ -64,14 +59,11 @@ namespace InstallerHelpProject
                 if (File.Exists(target))
                 {
                     File.Delete(target);
-                    //Logger.Debug("File deleted", OType.FullName, "Delete");
-                    //MessageBox.Show("Deleted: " + target);
                 }
             }
             catch (Exception exception)
             {
-                //Logger.Error(exception, OType.FullName, "Delete");
-                //MessageBox.Show(exception.ToString());
+                
             }
         }
 

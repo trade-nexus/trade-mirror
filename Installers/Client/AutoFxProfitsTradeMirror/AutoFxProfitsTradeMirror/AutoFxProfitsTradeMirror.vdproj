@@ -22,24 +22,24 @@
         "Entry"
         {
         "MsmKey" = "8:_0384A4A7BB22C41AF6636F2C431EE382"
-        "OwnerKey" = "8:_DD32AD07C6D941F99E1A02451EE688AC"
+        "OwnerKey" = "8:_FCC015454649493393AA7A5C750514DD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_0BF7EBDE3AB248738EEAA170D34E981F"
+        "MsmKey" = "8:_0CAAAEF653764609913C81FD9C05534F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_18B52F13196D4A57A05B71EF3E0161F6"
+        "MsmKey" = "8:_27AFEAD8D8C34CE3A67725331E11ADF7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_464E7217553E47E0A7648680D646CB75"
+        "MsmKey" = "8:_495FF29781964CA685AFE13D62CA009E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -51,19 +51,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5C100C2F635144D5BE5190C1DD2A99D3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7B84D3C643C34681B13ACE68B592B16D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7BA63A15676645F2832AF4B1EB1B3A3D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_83E1DC6EC88749A29A0FBE0D156733FE"
+        "MsmKey" = "8:_8464E28174E34A51B0D0B7807508AF7F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_8F1E5E82D82D44B0BE96FC6A0C7D18B2"
+        "MsmKey" = "8:_8E17EB25E35741C7936778570997EC84"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -76,43 +88,31 @@
         "Entry"
         {
         "MsmKey" = "8:_9BC2D35213EB470F3DE8EE522BD18C69"
-        "OwnerKey" = "8:_F79B8F4B79B84A40A750E4D874291438"
+        "OwnerKey" = "8:_495FF29781964CA685AFE13D62CA009E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A8966A6C53FE4736BC2F226C85F04233"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C9CEFC0BAA2F4A5092D1C009A0C9D9AF"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CFD6353711B948198D59CF02D0CA643A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DD32AD07C6D941F99E1A02451EE688AC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E32B6438D3424C2B860E04816B984749"
+        "MsmKey" = "8:_D5A3CC9DDB3E486CB01C204315304EEC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_E3BF63232B0A7E18A7B610D408D5641C"
-        "OwnerKey" = "8:_DD32AD07C6D941F99E1A02451EE688AC"
+        "OwnerKey" = "8:_FCC015454649493393AA7A5C750514DD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E5EA0695A1994B1DB1EB5B6A038AA265"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E9094FB24FC54A25BA76E330E540415B"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,12 +130,12 @@
         "Entry"
         {
         "MsmKey" = "8:_F6BF1FFE657FD05110BAC0F0FA4B52BB"
-        "OwnerKey" = "8:_464E7217553E47E0A7648680D646CB75"
+        "OwnerKey" = "8:_D5A3CC9DDB3E486CB01C204315304EEC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F79B8F4B79B84A40A750E4D874291438"
+        "MsmKey" = "8:_FCC015454649493393AA7A5C750514DD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -148,25 +148,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8F1E5E82D82D44B0BE96FC6A0C7D18B2"
+        "OwnerKey" = "8:_E5EA0695A1994B1DB1EB5B6A038AA265"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F79B8F4B79B84A40A750E4D874291438"
+        "OwnerKey" = "8:_495FF29781964CA685AFE13D62CA009E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_83E1DC6EC88749A29A0FBE0D156733FE"
+        "OwnerKey" = "8:_0CAAAEF653764609913C81FD9C05534F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_464E7217553E47E0A7648680D646CB75"
+        "OwnerKey" = "8:_D5A3CC9DDB3E486CB01C204315304EEC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -178,7 +178,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DD32AD07C6D941F99E1A02451EE688AC"
+        "OwnerKey" = "8:_FCC015454649493393AA7A5C750514DD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -383,85 +383,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0BF7EBDE3AB248738EEAA170D34E981F"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.vshost.exe.manifest"
-            "TargetName" = "8:AutoFXProfitsClientTerminal.vshost.exe.manifest"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_18B52F13196D4A57A05B71EF3E0161F6"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\Comm Library\\Release\\Communication Library.dll"
-            "TargetName" = "8:Communication Library.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_A56455148DB549DC90400B87ED34CF1A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_464E7217553E47E0A7648680D646CB75"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:vshost32-clr2, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_464E7217553E47E0A7648680D646CB75"
-                    {
-                    "Name" = "8:AutoFXProfitsClientTerminal.vshost.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.vshost.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_83E1DC6EC88749A29A0FBE0D156733FE"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0CAAAEF653764609913C81FD9C05534F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_83E1DC6EC88749A29A0FBE0D156733FE"
+                    "_0CAAAEF653764609913C81FD9C05534F"
                     {
                     "Name" = "8:Microsoft.Practices.ObjectBuilder2.dll"
                     "Attributes" = "3:512"
@@ -485,23 +414,123 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8F1E5E82D82D44B0BE96FC6A0C7D18B2"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_27AFEAD8D8C34CE3A67725331E11ADF7"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.vshost.exe.config"
+            "TargetName" = "8:AutoFXProfitsClientTerminal.vshost.exe.config"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_495FF29781964CA685AFE13D62CA009E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:TraceSourceLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8F1E5E82D82D44B0BE96FC6A0C7D18B2"
+                    "_495FF29781964CA685AFE13D62CA009E"
                     {
-                    "Name" = "8:TraceSourceLogger.dll"
+                    "Name" = "8:Microsoft.Practices.Unity.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\TraceSourceLogger.dll"
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\Microsoft.Practices.Unity.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5C100C2F635144D5BE5190C1DD2A99D3"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\MQL\\AutoFXProfits - Client.mq4"
+            "TargetName" = "8:AutoFXProfits - Client.mq4"
+            "Tag" = "8:"
+            "Folder" = "8:_A56455148DB549DC90400B87ED34CF1A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7B84D3C643C34681B13ACE68B592B16D"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.vshost.exe.manifest"
+            "TargetName" = "8:AutoFXProfitsClientTerminal.vshost.exe.manifest"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8464E28174E34A51B0D0B7807508AF7F"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.exe.config"
+            "TargetName" = "8:AutoFXProfitsClientTerminal.exe.config"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E17EB25E35741C7936778570997EC84"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\Comm Library\\Release\\Communication Library.dll"
+            "TargetName" = "8:Communication Library.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_A56455148DB549DC90400B87ED34CF1A"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -547,101 +576,21 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A8966A6C53FE4736BC2F226C85F04233"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\MQL\\AutoFXProfits - Client.mq4"
-            "TargetName" = "8:AutoFXProfits - Client.mq4"
-            "Tag" = "8:"
-            "Folder" = "8:_A56455148DB549DC90400B87ED34CF1A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C9CEFC0BAA2F4A5092D1C009A0C9D9AF"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.exe.config"
-            "TargetName" = "8:AutoFXProfitsClientTerminal.exe.config"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CFD6353711B948198D59CF02D0CA643A"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.vshost.exe.config"
-            "TargetName" = "8:AutoFXProfitsClientTerminal.vshost.exe.config"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DD32AD07C6D941F99E1A02451EE688AC"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D5A3CC9DDB3E486CB01C204315304EEC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AutoFXProfitsClientTerminal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:vshost32-clr2, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_DD32AD07C6D941F99E1A02451EE688AC"
+                    "_D5A3CC9DDB3E486CB01C204315304EEC"
                     {
-                    "Name" = "8:AutoFXProfitsClientTerminal.exe"
+                    "Name" = "8:AutoFXProfitsClientTerminal.vshost.exe"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.exe"
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.vshost.exe"
             "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E32B6438D3424C2B860E04816B984749"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.pdb"
-            "TargetName" = "8:AutoFXProfitsClientTerminal.pdb"
             "Tag" = "8:"
             "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
             "Condition" = "8:"
@@ -687,6 +636,57 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E5EA0695A1994B1DB1EB5B6A038AA265"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:TraceSourceLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_E5EA0695A1994B1DB1EB5B6A038AA265"
+                    {
+                    "Name" = "8:TraceSourceLogger.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\TraceSourceLogger.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E9094FB24FC54A25BA76E330E540415B"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.pdb"
+            "TargetName" = "8:AutoFXProfitsClientTerminal.pdb"
+            "Tag" = "8:"
+            "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EC0A893497D1471A986EB00D25000C4C"
@@ -740,20 +740,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F79B8F4B79B84A40A750E4D874291438"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FCC015454649493393AA7A5C750514DD"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AutoFXProfitsClientTerminal, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_F79B8F4B79B84A40A750E4D874291438"
+                    "_FCC015454649493393AA7A5C750514DD"
                     {
-                    "Name" = "8:Microsoft.Practices.Unity.dll"
+                    "Name" = "8:AutoFXProfitsClientTerminal.exe"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\Microsoft.Practices.Unity.dll"
+            "SourcePath" = "8:..\\..\\..\\..\\AutoFXToolsTradeMirror\\AutoFXProfitsClientTerminal\\bin\\Release\\AutoFXProfitsClientTerminal.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FCCB4DF81E4D4E50B4012CBB04B678D4"
@@ -860,15 +860,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Auto Fx Profits - Client"
-        "ProductCode" = "8:{6AD74865-D80F-4171-8738-F7FBFC13E59B}"
-        "PackageCode" = "8:{EC96BBA2-1AFA-4FBA-BA0B-3BF60AF33B8D}"
+        "ProductCode" = "8:{D27C8C81-650F-4CB3-A632-C648BA31A3BA}"
+        "PackageCode" = "8:{57C02353-B7A9-46F6-BD2A-17A69B69EA2E}"
         "UpgradeCode" = "8:{C1E40F3C-1605-4417-BDAE-8C2D80C060F4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.1"
+        "ProductVersion" = "8:1.2"
         "Manufacturer" = "8:Auto FX Profits"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

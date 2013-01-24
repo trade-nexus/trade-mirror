@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-//using TraceSourceLogger;
 
 namespace InstallerHelpProject
 {
     public class CopyFiles
     {
-        private static readonly Type OType = typeof(CopyFiles);
+        private string AppDataLocation = System.Environment.GetEnvironmentVariable("APPDATA");
 
         /// <summary>
         /// Specifies the source path and reteives the target path from the string that is passed to it and then calls the Method Copy to 
@@ -28,9 +27,6 @@ namespace InstallerHelpProject
                 string[] files = Directory.GetFiles(sourceDirectory);
                 int numOfFiles = files.Length;
 
-                //MessageBox.Show("No of files found in the installation directory to be deleted = ", numOfFiles.ToString());
-                //Logger.Debug("No of files found in the installation directory to be deleted = " + numOfFiles, OType.FullName, "Run");
-
                 if (numOfFiles > 0)
                 {
                     foreach (string fName in files)
@@ -40,96 +36,50 @@ namespace InstallerHelpProject
                             string copyFile = Path.GetFileName(fName);
                             string source = @sourceDirectory + copyFile;
                             File.Delete(source);
-                            //MessageBox.Show("File at " + source + " deleted");
-                            //Logger.Debug("File at " + source + " deleted", OType.FullName, "Run");
                         }
                         catch (Exception exception)
                         {
-                            //MessageBox.Show(exception.ToString());
-                            //Logger.Error(exception, OType.FullName, "Run");
                         }
                     }
 
                     string[] dirs = Directory.GetDirectories(sourceDirectory);
                     
                     int numOfDirectories = dirs.Length;
-                    //Logger.Info("Number of directories = " + numOfDirectories, OType.FullName, "Run");
-                    //MessageBox.Show("Number of directories = " + numOfDirectories);
-
+                    
                     if (numOfDirectories > 0)
                     {
                         foreach (string dirName in dirs)
                         {
-                            //MessageBox.Show("Directory Name: " + dirName);
-                            //Logger.Info("Directory Name: " + dirName, OType.FullName, "Run");
-
                             if (dirName.Contains("MQL"))
                             {
                                 string[] splittedDirName = dirName.Split('\\');
 
-                                ////MessageBox.Show(splittedDirName[splittedDirName.Length-1]);
-
                                 string tempDir = splittedDirName[splittedDirName.Length - 1];
-                                //MessageBox.Show("TEmp Dir = " + tempDir);
-                                //Logger.Info("TEmp Dir = " + tempDir, OType.FullName, "Run");
-
                                 string sourceDir = @sourceDirectory + "\\" + tempDir;
-                                //MessageBox.Show("Source Dir = " + sourceDir);
-                                //Logger.Info("Source Dir = " + sourceDir, OType.FullName, "Run");
-
                                 string[] sDirFiles = Directory.GetFiles(sourceDir);
-                                //MessageBox.Show("Found " + sDirFiles.Length + " Files at " + sourceDir);
-                                //Logger.Info("Found " + sDirFiles.Length + " Files at " + sourceDir, OType.FullName, "Run");
-
+                                
                                 if (sDirFiles.Length > 0)
                                 {
                                     foreach (string file in sDirFiles)
                                     {
                                         string[] splitFile = file.Split('\\');
 
-                                        //MessageBox.Show("File name = " + splitFile[splitFile.Length - 1]);
-                                        //Logger.Info("File name = " + splitFile[splitFile.Length - 1], OType.FullName, "Run");
-
                                         string copyFile = Path.GetFileName(file);
                                         string source = sourceDir + "\\" + copyFile;
-                                        //MessageBox.Show("Source path for File = " + source);
-                                        //Logger.Info("Source path for File = " + source, OType.FullName, "Run");
-
                                         string target = string.Empty;
 
                                         if (splitFile[splitFile.Length - 1].Trim() == "AutoFXProfits - Client.mq4")
                                         {
                                             target = @targetDirectory + "experts\\AutoFXProfits - Client.mq4";
-                                            //MessageBox.Show("Target location = " + target);
-                                            //Logger.Debug("Target location = " + target, OType.FullName, "Run");
                                         }
                                         else if (splitFile[splitFile.Length - 1].Trim() == "Communication Library.dll")
                                         {
                                             target = @targetDirectory + "experts\\libraries\\Communication Library.dll";
-                                            //MessageBox.Show("Target location = " + target);
-                                            //Logger.Debug("Target location = " + target, OType.FullName, "Run");
-                                        }
-                                        else if (splitFile[splitFile.Length - 1].Trim() == "msvcp100.dll")
-                                        {
-                                            target = @targetDirectory + "experts\\libraries\\msvcp100.dll";
-                                            //MessageBox.Show("Target location = " + target);
-                                            //Logger.Debug("Target location = " + target, OType.FullName, "Run");
-                                        }
-                                        else if (splitFile[splitFile.Length - 1].Trim() == "msvcr100.dll")
-                                        {
-                                            target = @targetDirectory + "experts\\libraries\\msvcr100.dll";
-                                            //MessageBox.Show("Target location = " + target);
-                                            //Logger.Debug("Target location = " + target, OType.FullName, "Run");
                                         }
 
                                         if(!string.IsNullOrEmpty(target))
                                         {
                                             Copy(source, target);
-                                        }
-                                        else
-                                        {
-                                            //Logger.Debug("Invalid target = " + target, OType.FullName, "Run");
-                                            //MessageBox.Show("Invalid target = " + target);
                                         }
                                     }
                                 }
@@ -138,58 +88,38 @@ namespace InstallerHelpProject
                             {
                                 string[] splittedDirName = dirName.Split('\\');
 
-                                ////MessageBox.Show(splittedDirName[splittedDirName.Length-1]);
-
                                 string tempDir = splittedDirName[splittedDirName.Length - 1];
-                                //MessageBox.Show("TEmp Dir = " + tempDir);
-                                //Logger.Info("TEmp Dir = " + tempDir, OType.FullName, "Run");
-
+                                
                                 string sourceDir = @sourceDirectory + "\\" + tempDir;
-                                //MessageBox.Show("Source Dir = " + sourceDir);
-                                //Logger.Info("Source Dir = " + sourceDir, OType.FullName, "Run");
-
+                                
                                 string[] sDirFiles = Directory.GetFiles(sourceDir);
-                                //MessageBox.Show("Found " + sDirFiles.Length + " Files at " + sourceDir);
-                                //Logger.Info("Found " + sDirFiles.Length + " Files at " + sourceDir, OType.FullName, "Run");
-
+                                
                                 if (sDirFiles.Length > 0)
                                 {
                                     foreach (string file in sDirFiles)
                                     {
                                         string[] splitFile = file.Split('\\');
 
-                                        //MessageBox.Show("File name = " + splitFile[splitFile.Length - 1]);
-                                        //Logger.Info("File name = " + splitFile[splitFile.Length - 1], OType.FullName, "Run");
-
                                         string copyFile = Path.GetFileName(file);
                                         string source = sourceDir + "\\" + copyFile;
-                                        //MessageBox.Show("Source path for File = " + source);
-                                        //Logger.Info("Source path for File = " + source, OType.FullName, "Run");
-
-                                        string target = @targetDirectory + "experts\\files\\" + splitFile[splitFile.Length - 1].Trim();
-
+                                        
+                                        string target = AppDataLocation + "\\AutoFX Profits\\AutoFXProfitsClientTerminal\\";
+                                        
+                                        target = target + splitFile[splitFile.Length - 1].Trim();
                                         if (!string.IsNullOrEmpty(target))
                                         {
                                             Copy(source, target);
-                                        }
-                                        else
-                                        {
-                                            //Logger.Debug("Invalid target = " + target, OType.FullName, "Run");
-                                            //MessageBox.Show("Invalid target = " + target);
                                         }
                                     }
                                 }
                             }
                         }
-                        //MessageBox.Show("Process Complete");
-                        //Logger.Debug("Process Complete", OType.FullName, "Run");
                     }
                 }
             }
             catch (Exception exception)
             {
-                //MessageBox.Show(exception.ToString());
-                //Logger.Error(exception, OType.FullName,"Run");
+                
             }
         }
 
@@ -204,22 +134,15 @@ namespace InstallerHelpProject
         {
             try
             {
-                //Logger.Debug("Initializing copy file operation", OType.FullName,"Copy");
-                //MessageBox.Show("Initializing copy file operation");
-
                 if (File.Exists(target))
                 {
-                    //MessageBox.Show("File already exists");
                     File.Delete(target);
                 }
+
                 File.Copy(source, target);
-                //MessageBox.Show("Copied file from " + source + " to " + target);
-                //Logger.Debug("Copied " + source + " to " + target, OType.FullName, "Copy");
             }
             catch (Exception exception)
             {
-                //MessageBox.Show(exception.ToString());
-                //Logger.Error(exception, OType.FullName, "Copy");
             }
         }
     }

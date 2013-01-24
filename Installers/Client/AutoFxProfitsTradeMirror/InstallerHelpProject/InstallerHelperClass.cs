@@ -18,6 +18,11 @@ namespace InstallerHelpProject
         public InstallerHelperClass()
         {
             InitializeComponent();
+
+            string appDataLocation = System.Environment.GetEnvironmentVariable("APPDATA");
+            Directory.CreateDirectory(appDataLocation + "\\AutoFX Profits");
+            Directory.CreateDirectory(appDataLocation + "\\AutoFX Profits\\AutoFXProfitsClientTerminal");
+            Directory.CreateDirectory(appDataLocation + "\\AutoFX Profits\\logs");
         }
 
 
@@ -33,10 +38,8 @@ namespace InstallerHelpProject
         {
             base.Commit(savedState);
             string targeted = this.Context.Parameters["targetdir"];
-            //string dir = targeted + "InstallerHelpProject.exe";
 
             DirFinder dr = new DirFinder();
-            ////MessageBox.Show("Deleting target: " + dir);
 
             dr.GetInstalledSoftware2(targeted);    
         }
