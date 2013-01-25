@@ -344,24 +344,27 @@ namespace AutoFXProfitsClientTerminal
         {
             try
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory + "\\orders.csv";
-
-                if (File.Exists(path))
+                lock (this)
                 {
-                    File.Delete(path);
+                    string path = AppDomain.CurrentDomain.BaseDirectory + "\\orders.csv";
+
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                    using (File.Create(path))
+                    {
+                    }
+
+                    var fileStream = new FileStream(path, FileMode.Open, FileAccess.Write, FileShare.Read);
+                    var streamWriter = new StreamWriter(fileStream);
+
+                    streamWriter.Write(orderInfo);
+                    Logger.Debug("Signal Information Written to file", OType.FullName, "PlaceOrder");
+
+                    streamWriter.Close();
+                    fileStream.Close();
                 }
-                using (File.Create(path))
-                {
-                }
-
-                var fileStream = new FileStream(path, FileMode.Open, FileAccess.Write, FileShare.None);
-                var streamWriter = new StreamWriter(fileStream);
-
-                streamWriter.Write(orderInfo);
-                Logger.Debug("Signal Information Written to file", OType.FullName, "PlaceOrder");
-
-                streamWriter.Close();
-                fileStream.Close();
             }
             catch (Exception exception)
             {
