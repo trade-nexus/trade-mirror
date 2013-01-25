@@ -12,7 +12,7 @@ int  GetTimeZoneInformation(int& TZInfoArray[]);
 
 #import "Communication Library.dll"
    bool     SpawnClientTerminal(int handle, string terminalName);
-   bool     WriteToFile(string message, string fileName, string terminalName);
+   bool     WriteToFile(string message, string fileName, string terminalName, int mode);
    string   ReadFromFile(string fileName, string terminalName);
    bool     FileDeleteExternal(string fileName, string terminalName);
 #import
@@ -345,7 +345,7 @@ bool ReceiveSignals()
    orderInformation = ReadOrderInformation();
    //Print("Return size = " + StringLen(orderInformation));
    
-   if(StringLen(orderInformation) > 0)
+   if(StringLen(orderInformation) > 2)
    {
       Print("[ReceiveSignals]Order Information Received = " + orderInformation);
       
@@ -1228,19 +1228,19 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
 //+-------------------------------------------------------------------------------------+
 void WriteAccountInfoToFile()
 {
-   WriteToFile(StringConcatenate("accountNumber: ", AccountNumber()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("currency: \"", AccountCurrency()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("isDemo: ", IsDemo()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("accountServer: \"", AccountServer(), "\""), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("balance: ", AccountBalance()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("equity: ", AccountEquity()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("floatingPL: ", AccountProfit()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("credit: ", AccountCredit()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("marginInUse: ", AccountMargin()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("freeMargin: ", AccountFreeMargin()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("openOrders: ", OrdersTotal()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("closedOrders: ", OrdersHistoryTotal()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
-   WriteToFile(StringConcatenate("brokerTime: ", TimeCurrent()), "accountinfo.txt", "AutoFXProfitsClientTerminal");
+   WriteToFile(StringConcatenate("accountNumber: ", AccountNumber()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 1);
+   WriteToFile(StringConcatenate("currency: \"", AccountCurrency()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("isDemo: ", IsDemo()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("accountServer: \"", AccountServer(), "\""), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("balance: ", AccountBalance()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("equity: ", AccountEquity()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("floatingPL: ", AccountProfit()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("credit: ", AccountCredit()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("marginInUse: ", AccountMargin()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("freeMargin: ", AccountFreeMargin()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("openOrders: ", OrdersTotal()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("closedOrders: ", OrdersHistoryTotal()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
+   WriteToFile(StringConcatenate("brokerTime: ", TimeCurrent()), "accountinfo.txt", "AutoFXProfitsClientTerminal", 0);
 }
 
 //Return the Pip Size in double
