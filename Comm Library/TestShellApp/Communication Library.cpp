@@ -180,7 +180,7 @@ namespace CommunicationLibrary
 		try
 		{
 			logFile.open(logPath, ios::app);
-			inputFile.open(inputFilePath, ios::app);
+			inputFile.open(inputFilePath, ios::in);
 
 			logFile << getTime() << "Input File Path = " << inputFilePath << endl;
 			logFile << getTime() << "Log File Path = " << logPath << endl;
