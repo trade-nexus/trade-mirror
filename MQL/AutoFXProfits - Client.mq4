@@ -1265,15 +1265,16 @@ void ReadSuffixes()
       PredefinedPostfix = order;
       Print("[ReadSuffixes] Read Suffixes = " + order);
       SetSymbolPrefixAndPostfix();
-      SuffixesRead = true;
       
       if(FileDeleteExternal("suffixes.csv", "AutoFXProfitsClientTerminal"))
       {
          Print("[ReadSuffixes] suffixes.csv deleted");
+         SuffixesRead = true;
       }
       else
       {
          Print("[ReadSuffixes] suffixes.csv could not be deleted");
+         SuffixesRead = false;
       }
    }
    else
