@@ -572,7 +572,7 @@ double CalculateLotsize(string sym, double riskPercent, double stoploss)
    newLotSize = NormalizeLotSize(sym,newLotSize);   
    
    Print("Balance = " + bal + " | dollarsToRisk = " + dollarsToRisk + " | dollarsPerTick = " + 
-         dollarsPerTick + " | newLotSize = " + newLotSize + " | newLotSize = " + newLotSize);
+         dollarsPerTick + " | newLotSize = " + newLotSize);
           
    return (newLotSize);
 }
