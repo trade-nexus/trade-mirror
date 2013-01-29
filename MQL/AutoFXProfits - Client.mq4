@@ -607,6 +607,20 @@ double NormalizeLotSize(string sym, double lots)
    return (lots);
 }
 
+double NormalizeCloseLotSize(string sym, double lots)
+{
+   int digit_lot = 1;
+   
+   if(MarketInfo(sym,MODE_LOTSTEP)>=0.01 && MarketInfo(sym,MODE_LOTSTEP)<0.1) digit_lot=2;   
+   if(MarketInfo(sym,MODE_LOTSTEP)>=0.1 && MarketInfo(sym,MODE_LOTSTEP)<1) digit_lot=1;
+   if(MarketInfo(sym,MODE_LOTSTEP)>=1) digit_lot=0;
+   
+   lots=NormalizeDouble(lots,digit_lot);
+   Print("Lots = " + lots + " with normalization to " + digit_lot + " digits");
+   
+   return (lots);
+}
+
 void InitSymbol(string symbol)
 {
    double points = MarketInfo( symbol, MODE_POINT  );
@@ -1086,7 +1100,7 @@ bool PlaceTrade(string message, bool pendingOrderOnly=false)
             if (OrderCloseTime()!=0) return (true);
             type = OrderType();
             success = false;
-            lots = NormalizeLotSize(OrderSymbol(),percentClose*OrderLots()/100);
+            lots = NormalizeCloseLotSize(OrderSymbol(),percentClose*OrderLots()/100);
             Print("Lots to close = " + lots);
             
             if (type==OP_BUY)
