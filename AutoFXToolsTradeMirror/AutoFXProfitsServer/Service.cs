@@ -33,7 +33,7 @@ namespace AutoFXProfitsServer
         public string SignalInformation;
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, AutomaticSessionShutdown = false)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
     public class TradeMirrorService : DependencyObject, ITradeMirror
     {
         private static readonly Type OType = typeof(TradeMirrorService);
@@ -42,6 +42,7 @@ namespace AutoFXProfitsServer
         public delegate void NewSignalEventHandler(object sender, NewSignalEventArgs e);
 
         ITradeMirrorClientContract _callback = null;
+        private InstanceContext _communicationObject = null;
 
         NewSignalEventHandler _newSignalHandler = null;
 
@@ -80,7 +81,6 @@ namespace AutoFXProfitsServer
         /// <param name="password"></param>
         /// <param name="accountID"> </param>
         /// <returns></returns>
-        //public bool Subscribe(string userName, string password, int accountID)
         public string Subscribe(string userName, string password, int accountID)
         {
             Logger.Debug("New Client Connection received. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
@@ -92,6 +92,11 @@ namespace AutoFXProfitsServer
                     Logger.Debug("Client Authenticated. UserName = " + userName + " | Password = " + password + " | AccountID = " + accountID, OType.FullName, "Subscribe");
                     _callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();
                     _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
+
+                    _communicationObject = OperationContext.Current.InstanceContext;
+                    _communicationObject.Closed += CommunicationObjectOnClosed;
+                    _communicationObject.Faulted += CommunicationObjectOnClosed;
+
                     NewSignalEvent -= _newSignalHandler;
                     NewSignalEvent += _newSignalHandler;
                     //return true;
@@ -277,6 +282,22 @@ namespace AutoFXProfitsServer
         private string GetSuffixes()
         {
             return _helper.GetSuffixes();
+        }
+
+        private void CommunicationObjectOnClosed(object clientHandler, EventArgs eventArgs)
+        {
+            try
+            {
+                //_callback = OperationContext.Current.GetCallbackChannel<ITradeMirrorClientContract>();                
+                _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
+                NewSignalEvent -= _newSignalHandler;
+                
+                Logger.Debug("Client Unsubscribed because of fault.", OType.FullName, "CommunicationObjectOnClosed");
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "CommunicationObjectOnClosed");
+            }
         }
     }
 }

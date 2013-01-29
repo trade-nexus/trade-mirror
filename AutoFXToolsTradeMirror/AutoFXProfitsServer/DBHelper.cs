@@ -61,7 +61,7 @@ namespace AutoFXProfitsServer
                                             Convert.ToDateTime(modified), Convert.ToBoolean(notificationStatus), alternativeEmail);
 
                     this._autoFXUsers.Add(newUser);
-                    Logger.Info("New User Added = " + newUser, OType.FullName, "BuildUsersList");
+                    //Logger.Info("New User Added = " + newUser, OType.FullName, "BuildUsersList");
                 }
                 reader.Close();
                 this._connectionManager.Disconnect();

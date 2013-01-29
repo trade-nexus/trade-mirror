@@ -116,6 +116,11 @@ namespace Microsoft.ServiceModel.Samples
             //PlaceOrder(signalInformation);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void HeartbeatTimerElapsed(object sender, ElapsedEventArgs e)
         {
             _client.PublishNewSignal(HeartbeatMessage + DateTime.UtcNow);

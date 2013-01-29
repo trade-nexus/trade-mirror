@@ -148,6 +148,9 @@ namespace AutoFXProfitsClientTerminal
 
                 // Create a client
                 _site = new InstanceContext(null, this);
+                _site.Closed += CommunicationObjectOnClosed;
+                _site.Faulted += CommunicationObjectOnClosed;
+                
                 _client = new TradeMirrorClient(_site);
 
                 _heartbeatTimer = new Timer(AcceptedDelaySeconds * 1000);
@@ -546,6 +549,19 @@ namespace AutoFXProfitsClientTerminal
             catch (Exception exception)
             {
                 Logger.Error(exception, OType.FullName, "SetSuffixes");
+            }
+        }
+
+        private void CommunicationObjectOnClosed(object clientHandler, EventArgs eventArgs)
+        {
+            try
+            {
+                DisconnectFromServer();
+                Logger.Debug("Client Unsubscribed because of fault.", OType.FullName, "CommunicationObjectOnClosed");
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "CommunicationObjectOnClosed");
             }
         }
     }
