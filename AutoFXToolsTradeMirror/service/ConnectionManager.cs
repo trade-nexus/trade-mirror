@@ -9,8 +9,8 @@ namespace Microsoft.Samples.NetTcp
     {
         private static readonly Type OType = typeof(TradeMirrorService);
 
-        //private const string ConnectionString = "SERVER=localhost;DATABASE=autofxtest;UID=root;PASSWORD=rootpassword";
-        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["autofxtest"].ConnectionString;
+        //private const string ConnectionString = "SERVER=localhost;DATABASE=autofxproduction;UID=root;PASSWORD=rootpassword";
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["autofxproduction"].ConnectionString;
 
         private readonly MySqlConnection _connection;
 
