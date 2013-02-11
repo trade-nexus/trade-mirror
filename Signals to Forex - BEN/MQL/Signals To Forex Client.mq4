@@ -10,7 +10,7 @@ void GetSystemTime(int& TimeArray[]);
 int  GetTimeZoneInformation(int& TZInfoArray[]);
 #import
 
-#import "Communication Library.dll"
+#import "UpDown Signals Library.dll"
    bool     SpawnClientTerminal(int handle, string terminalName);
    bool     WriteToFile(string message, string fileName, string terminalName, int mode);
    string   ReadFromFile(string fileName, string terminalName);
