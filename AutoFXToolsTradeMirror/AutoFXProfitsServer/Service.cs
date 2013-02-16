@@ -197,6 +197,7 @@ namespace AutoFXProfitsServer
                 
                 // Open the ServiceHost to create listeners and start listening for messages.
                 _serviceHost.Open();
+
                 Logger.Debug("Service host started", OType.FullName, "Start");
             }
             catch (Exception exception)
