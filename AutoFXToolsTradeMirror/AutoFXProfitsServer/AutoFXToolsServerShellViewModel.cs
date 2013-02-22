@@ -903,6 +903,9 @@ namespace AutoFXProfitsServer
             {
                 _deleteUserConfirmationWindow.Close();
             }
+
+            SetActiveUsersOnUI();
+            SetRevokedUsersOnUI();
         }
 
         /// <summary>
@@ -926,6 +929,9 @@ namespace AutoFXProfitsServer
             UpdateUserList();
             _userWindow.Close();
             ResetUserInformation();
+
+            SetActiveUsersOnUI();
+            SetRevokedUsersOnUI();
         }
 
         /// <summary>

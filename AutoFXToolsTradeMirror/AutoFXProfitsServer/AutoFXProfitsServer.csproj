@@ -102,6 +102,9 @@
     <Compile Include="Service.cs" />
     <Compile Include="Signal.cs" />
     <Compile Include="SignalParser.cs" />
+    <Compile Include="SubscriptionEndMessageWindow.xaml.cs">
+      <DependentUpon>SubscriptionEndMessageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="User.cs" />
     <Compile Include="UserWindow.xaml.cs">
       <DependentUpon>UserWindow.xaml</DependentUpon>
@@ -125,6 +128,10 @@
     <Page Include="ErrorMessageWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SubscriptionEndMessageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserWindow.xaml">
       <SubType>Designer</SubType>
