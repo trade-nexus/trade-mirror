@@ -1,0 +1,36 @@
+﻿<Window x:Class="TradeCopier.AddUser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AddUser" Height="250" Width="300" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Width="110" FontSize="16"  Text="User Name:"/>
+            <TextBox  Width="100" />
+        </StackPanel>
+        <StackPanel Margin="10" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Width="110" FontSize="16"  Text="Email:"/>
+            <TextBox  FontSize="16" Width="100" />
+        </StackPanel>
+        <StackPanel Margin="10" Grid.Row="2" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Width="110" FontSize="16"  Text="Status:"/>
+            <ComboBox  FontSize="16" Width="100" >
+                <ComboBoxItem Content="True"/>
+                <ComboBoxItem Content="False"/>
+            </ComboBox>
+        </StackPanel>
+        <StackPanel Margin="10" Grid.Row="3" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Width="110" FontSize="16"  Text="Password:"/>
+            <TextBox  FontSize="16" Width="100" />
+        </StackPanel>
+        <StackPanel Margin="0 10 0 0" Grid.Row="4">
+            <Button Width="100">Add User</Button>
+        </StackPanel>
+    </Grid>
+</Window>
