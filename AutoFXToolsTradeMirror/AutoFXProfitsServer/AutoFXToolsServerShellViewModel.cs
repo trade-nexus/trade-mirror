@@ -504,7 +504,8 @@ namespace AutoFXProfitsServer
             _mailingHelper = new MailingHelper(AutoFXUsers);
 
             Service = new TradeMirrorService();
-            ThreadPool.QueueUserWorkItem(InitializeService, Service);
+            //ThreadPool.QueueUserWorkItem(InitializeService, Service);
+            InitializeService(Service);
 
             InitializeSearchTermsCollection();
             InitializeEmailTemplateNamesCollection();
@@ -804,9 +805,11 @@ namespace AutoFXProfitsServer
                 var tradeMirrorService = (TradeMirrorService) tradeMirrorServiceObject;
                 tradeMirrorService.Start();
                 _servcieStatus = true;
-                while (_servcieStatus)
+                
+                //ToDo: Stop service properly
+                /*while (_servcieStatus)
                 {
-                }
+                }*/
             }
             catch (Exception exception)
             {
@@ -900,6 +903,9 @@ namespace AutoFXProfitsServer
             {
                 _deleteUserConfirmationWindow.Close();
             }
+
+            SetActiveUsersOnUI();
+            SetRevokedUsersOnUI();
         }
 
         /// <summary>
@@ -923,6 +929,9 @@ namespace AutoFXProfitsServer
             UpdateUserList();
             _userWindow.Close();
             ResetUserInformation();
+
+            SetActiveUsersOnUI();
+            SetRevokedUsersOnUI();
         }
 
         /// <summary>
