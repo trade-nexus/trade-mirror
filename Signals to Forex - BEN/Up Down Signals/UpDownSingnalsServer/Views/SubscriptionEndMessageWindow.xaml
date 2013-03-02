@@ -1,0 +1,50 @@
+﻿<Window x:Class="UpDownSingnalsServer.Views.SubscriptionEndMessageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Subscription Ended" 
+        Background="Black"
+        Height="120" Width="415" 
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.4*"/>
+        </Grid.RowDefinitions>
+        
+        <Label
+            Grid.Row="0"
+            Name="MessageBoxLabel"
+            Foreground="White" 
+            Content="Your subscription for the trial period of the service has expired."
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center" 
+            FontSize="12"
+            FontWeight="Bold"/>
+
+        <Label 
+            Name="MessageBoxLabel2"
+            Grid.Row="1"
+            Foreground="White" 
+            Content="Please clear all pending dues to start using the software."
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center" 
+            FontSize="12"
+            FontWeight="Bold"/>
+
+        <Button 
+            Content="OK" 
+            Click ="OkButtonClick" 
+            Foreground="Black"
+            Grid.Row="2"
+            Width="40"
+            Height="25"/>
+    </Grid>
+    
+</Window>

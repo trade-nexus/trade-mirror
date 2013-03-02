@@ -1,0 +1,424 @@
+﻿<Window x:Class="UpDownSingnalsServer.Views.UpDownSignalsServerShell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Auto FX Profits - Trade Mirror Server" Height="600" Width="530"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanMinimize" 
+        Closing="WindowClosing">
+
+    <Grid Width="510" Height="570" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.85*"/>
+        </Grid.RowDefinitions>
+
+        <Grid 
+            Grid.Column="0"
+            Grid.ColumnSpan="2" 
+            Grid.Row="0" 
+            Grid.RowSpan="1">
+
+            <Image 
+                Grid.Column="0"
+                Grid.ColumnSpan="4" 
+                Grid.Row="0"
+                Grid.RowSpan="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Stretch="Fill" 
+                Source="/UpDownSingnalsServer;component/Resources/Banner.png" />
+        </Grid>
+
+        <TabControl 
+            Grid.Column="0"
+            Grid.ColumnSpan="2" 
+            Grid.Row="1" 
+            Grid.RowSpan="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Name="UsersTabControl" 
+            Width="520">
+
+            <TabItem Header="Users" Name="UsersTabItem">
+                <Grid Width="495" Height="450" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.9*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label 
+                        Content="Search:" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Name="SearchLabel"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <TextBox 
+                        Text="{Binding SearchItem}" 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Name="textBox1" 
+                        Width="100"
+                        Height="25"
+                        Margin="1,1,1,1"/>
+
+                    <ComboBox 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left"
+                        Width="80"
+                        ItemsSource="{Binding SearchTermsCollection}"
+                        SelectedItem="{Binding SelectedSearchType}"
+                        Margin="1,1,50,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12" 
+                        FontWeight="Bold" />
+
+                    <Button 
+                        Content="Go" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SearchGoCommand}"
+                        Margin="10,1,1,1" 
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <RadioButton 
+                        GroupName="SearchType"
+                        Content="All Users" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="40,1,1,1"
+                        IsChecked="{Binding IsAllUsersChecked}"/>
+
+
+                    <RadioButton 
+                        GroupName="SearchType"
+                        Content="Active" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="15,1,1,1"
+                        IsChecked="{Binding IsActiveUsersChecked}"/>
+
+                    <RadioButton 
+                        GroupName="SearchType"
+                        Content="Revoked" 
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Margin="1,1,30,1"
+                        IsChecked="{Binding IsRevokedUsersChecked}"/>
+
+                    <ListView 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="1" 
+                        Grid.RowSpan="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Width="495"
+                        Height="395"
+                        ItemsSource="{Binding FilteredUsersCollection}">
+
+                        <ListView.View>
+
+                            <GridView>
+                                <GridViewColumn 
+                                    Width="40">
+                                    <GridViewColumnHeader 
+                            Content="ID" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding ID}"
+                                                    HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn
+                                    Width="100">
+                                    <GridViewColumnHeader 
+                            Content="Username" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding AccountNumber}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="100">
+                                    <GridViewColumnHeader 
+                            Content="Password" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding KeyString}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="170">
+                                    <GridViewColumnHeader 
+                            Content="Email ID" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding Email}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="70">
+                                    <GridViewColumnHeader 
+                            Content="Status" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding Status}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+            </TabItem>
+
+            <TabItem Header="Singals" Name="SignalsTabItem">
+                <Grid Width="500" Height="450" >
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="230*" />
+                        <ColumnDefinition Width="250*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.9*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label 
+                        Content="Select Signals File:" 
+                        Grid.Column="1" HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Name="EmailTemplateLabel"
+                        Margin="38,1,77,1" 
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                    <TextBox 
+                        Text="{Binding SelectedSignalFilePath}"
+                        Grid.Column="1" 
+                        Grid.ColumnSpan="2" Width="150"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Left" Margin="155,13,175,13" />
+
+                    <Button 
+                        Content="Browse" 
+                        Grid.Column="2" HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding BrowseFileCommand}"
+                        Margin="1,1,31,1" 
+                        Width="50"
+                        FontFamily="Calibri" 
+                        FontSize="12"
+                        FontWeight="Bold" />
+
+                    <ListView Grid.ColumnSpan="3" 
+                        Grid.Row="1" HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Top"
+                        HorizontalContentAlignment="Stretch"
+                        Width="490" 
+                        Height="375"
+                        ItemsSource="{Binding SignalsCollection}">
+
+                        <ListView.View>
+
+                            <GridView>
+                                <GridViewColumn 
+                                    Width="40">
+                                    <GridViewColumnHeader 
+                            Content="S.No." />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding ID}"
+                                                    HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn
+                                    Width="110">
+                                    <GridViewColumnHeader 
+                            Content="Symbol" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding Symbol}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="110">
+                                    <GridViewColumnHeader 
+                            Content="Entry Side" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding EntrySide}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="110">
+                                    <GridViewColumnHeader 
+                            Content="Entry Price" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding EntryPrice}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                    Width="110">
+                                    <GridViewColumnHeader 
+                            Content="Model" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock 
+                                                    Text="{Binding Model}"
+                                                    HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+
+                        </ListView.View>
+                    </ListView>
+
+                    <Button 
+                        Content="SEND" 
+                        Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Command="{Binding SendSignalsCommand}"
+                        Margin="1,1,11,5" 
+                        Width="50"
+                        FontFamily="Calibri" 
+                        FontSize="14"
+                        FontWeight="Bold" />
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
