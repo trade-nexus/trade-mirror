@@ -138,7 +138,6 @@
             FontSize="12"
             Margin="2,2,2,2"
             IsChecked="{Binding IsSavePasswordChecked}"/>
-
         <Label 
             Content= "Status:" 
             Grid.Column="1"

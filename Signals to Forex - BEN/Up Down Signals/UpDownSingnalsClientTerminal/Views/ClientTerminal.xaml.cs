@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UpDownSingnalsClientTerminal.ViewModels;
 
 namespace UpDownSingnalsClientTerminal.Views
 {
@@ -7,9 +8,13 @@ namespace UpDownSingnalsClientTerminal.Views
     /// </summary>
     public partial class ClientTerminal : Window
     {
-        public ClientTerminal()
+        private ApplicationViewModel _applicationViewModel;
+
+        public ClientTerminal(ApplicationViewModel applicationViewModel)
         {
             InitializeComponent();
+            _applicationViewModel = applicationViewModel;
+            this.DataContext = applicationViewModel;
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)

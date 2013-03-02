@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using Microsoft.Practices.Unity;
+using UpDownSingnalsClientTerminal.ViewModels;
 
 namespace UpDownSingnalsClientTerminal.Views
 {
@@ -7,14 +9,29 @@ namespace UpDownSingnalsClientTerminal.Views
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private ApplicationViewModel _applicationViewModel;
+
         public LoginWindow()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Sets LoginWindowViewModel
+        /// </summary>
+        [Dependency]
+        public ApplicationViewModel ApplicationViewModel
+        {
+            set
+            {
+                _applicationViewModel = value;
+                this.DataContext = _applicationViewModel;
+            }
+        }
+
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //ToDo: Complete this
+            _applicationViewModel.FreeResources();
         }
     }
 }

@@ -7,7 +7,7 @@ using UpDownSingnalsClientTerminal.ViewModels;
 
 namespace UpDownSingnalsClientTerminal.Command
 {
-    public class ConnectCommand : ICommand
+    public class DisconnectCommand : ICommand
     {
         private ApplicationViewModel _applicationViewModel;
         
@@ -15,7 +15,7 @@ namespace UpDownSingnalsClientTerminal.Command
         /// Argument Constructor
         /// </summary>
         /// <param name="applicationViewModel"></param>
-        public ConnectCommand(ApplicationViewModel applicationViewModel)
+        public DisconnectCommand(ApplicationViewModel applicationViewModel)
         {
             this._applicationViewModel = applicationViewModel;
         }
@@ -46,7 +46,7 @@ namespace UpDownSingnalsClientTerminal.Command
         /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-           _applicationViewModel.ConnectToServer();
+           _applicationViewModel.DisconnectFromServer();
         }
         #endregion
     }
