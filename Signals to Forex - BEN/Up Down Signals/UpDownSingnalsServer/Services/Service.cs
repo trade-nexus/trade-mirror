@@ -102,9 +102,9 @@ namespace UpDownSingnalsServer.Services
                     NewSignalEvent += _newSignalHandler;
                     //return true;
 
-                    string suffixes = GetSuffixes();
-                    Logger.Debug("Suffixes = " + suffixes, OType.FullName, "Subscribe");
-                    return suffixes;
+                    //string suffixes = GetSuffixes();
+                    //Logger.Debug("Suffixes = " + suffixes, OType.FullName, "Subscribe");
+                    return "SUCCESS";
                 }
                 else
                 {

@@ -459,6 +459,9 @@ namespace UpDownSingnalsServer.ViewModels
                     Signal newSignal = ParseSignalInformation(tempString);
                     SignalsCollection.Add(newSignal);
                 }
+
+                streamReader.Close();
+                fs.Close();
             }
             catch (Exception exception)
             {
