@@ -730,6 +730,7 @@ namespace UpDownSingnalsClientTerminal.ViewModels
             try
             {
                 DisconnectFromServer();
+                _clientTerminal.Close();
                 Logger.Debug("Client Unsubscribed because of fault.", OType.FullName, "CommunicationObjectOnClosed");
             }
             catch (Exception exception)
@@ -740,12 +741,19 @@ namespace UpDownSingnalsClientTerminal.ViewModels
 
         private void SpawnSettingWindow()
         {
-            _clientTerminal.Show();
+            try
+            {
+                _clientTerminal.Show();
+            }
+            catch (Exception)
+            {
+                
+            }
         }
 
         private void CloseSettingsWindow()
         {
-            _clientTerminal.Close();
+            _clientTerminal.Hide();
         }
 
         private void InitializeClientTerminalUI()
