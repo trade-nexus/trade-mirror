@@ -121,7 +121,6 @@ namespace AutoFXProfitsServer
                 }
                 this._connectionManager.Disconnect();
             }
-
             catch (Exception ex)
             {
                 Logger.Error("Exception while parsing or inserting message. Exception = " + ex, OType.FullName, "ParseAndInsertData");
