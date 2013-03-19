@@ -21,5 +21,10 @@ namespace UpDownSingnalsClientTerminal.Views
         {
             //ToDo: Complete this
         }
+
+        private void TradeSizeTypeSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            _applicationViewModel.TradeSizeTypeSelectionChanged();
+        }
     }
 }

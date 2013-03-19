@@ -38,20 +38,7 @@ namespace UpDownSingnalsClientTerminal.ViewModels
         }
 
         #endregion
-
-        #region Password
-
-        public static readonly DependencyProperty PasswordProperty =
-            DependencyProperty.Register("Password", typeof (string), typeof (ApplicationViewModel), new PropertyMetadata(default(string)));
-
-        public string Password
-        {
-            get { return (string) GetValue(PasswordProperty); }
-            set { SetValue(PasswordProperty, value); }
-        }
-
-        #endregion
-
+        
         #region Status
 
         public static readonly DependencyProperty StatusProperty =
@@ -266,6 +253,84 @@ namespace UpDownSingnalsClientTerminal.ViewModels
 
         #endregion
 
+        #region TotalBalanceAllocation
+
+        public static readonly DependencyProperty TotalBalanceAllocationProperty =
+            DependencyProperty.Register("TotalBalanceAllocation", typeof (string), typeof (ApplicationViewModel), new PropertyMetadata(default(string)));
+
+        public string TotalBalanceAllocation
+        {
+            get { return (string) GetValue(TotalBalanceAllocationProperty); }
+            set { SetValue(TotalBalanceAllocationProperty, value); }
+        }
+
+        #endregion
+
+        #region TradeSizeTypeCollection
+
+        public static readonly DependencyProperty TradeSizeTypeCollectionProperty =
+            DependencyProperty.Register("TradeSizeTypeCollection", typeof (List<string>), typeof (ApplicationViewModel), new PropertyMetadata(default(List<string>)));
+
+        public List<string> TradeSizeTypeCollection
+        {
+            get { return (List<string>) GetValue(TradeSizeTypeCollectionProperty); }
+            set { SetValue(TradeSizeTypeCollectionProperty, value); }
+        }
+
+        #endregion
+
+        #region SelectedTradeSizeType
+
+        public static readonly DependencyProperty SelectedTradeSizeTypeProperty =
+            DependencyProperty.Register("SelectedTradeSizeType", typeof (string), typeof (ApplicationViewModel), new PropertyMetadata(default(string)));
+
+        public string SelectedTradeSizeType
+        {
+            get { return (string) GetValue(SelectedTradeSizeTypeProperty); }
+            set { SetValue(SelectedTradeSizeTypeProperty, value); }
+        }
+
+        #endregion
+
+        #region TradeSizeType
+
+        public static readonly DependencyProperty TradeSizeTypeProperty =
+            DependencyProperty.Register("TradeSizeType", typeof (string), typeof (ApplicationViewModel), new PropertyMetadata(default(string)));
+
+        public string TradeSizeType
+        {
+            get { return (string) GetValue(TradeSizeTypeProperty); }
+            set { SetValue(TradeSizeTypeProperty, value); }
+        }
+
+        #endregion
+
+        #region TradeSizeValue
+
+        public static readonly DependencyProperty TradeSizeValueProperty =
+            DependencyProperty.Register("TradeSizeValue", typeof (string), typeof (ApplicationViewModel), new PropertyMetadata(default(string)));
+
+        public string TradeSizeValue
+        {
+            get { return (string) GetValue(TradeSizeValueProperty); }
+            set { SetValue(TradeSizeValueProperty, value); }
+        }
+
+        #endregion
+
+        #region TradeSizeValueVisibility
+
+        public static readonly DependencyProperty TradeSizeValueVisibilityProperty =
+            DependencyProperty.Register("TradeSizeValueVisibility", typeof (bool), typeof (ApplicationViewModel), new PropertyMetadata(default(bool)));
+
+        public bool TradeSizeValueVisibility
+        {
+            get { return (bool) GetValue(TradeSizeValueVisibilityProperty); }
+            set { SetValue(TradeSizeValueVisibilityProperty, value); }
+        }
+
+        #endregion
+
         /// <summary>
         /// Holds reference to UI dispatcher
         /// </summary>
@@ -285,6 +350,8 @@ namespace UpDownSingnalsClientTerminal.ViewModels
                 this._currentDispatcher = Dispatcher.CurrentDispatcher;
                 _clientTerminal = new ClientTerminal(this);
 
+                TradeSizeTypeCollection = new List<string>();
+
                 // Create a client
                 _site = new InstanceContext(null, this);
                 _site.Closed += CommunicationObjectOnClosed;
@@ -297,15 +364,7 @@ namespace UpDownSingnalsClientTerminal.ViewModels
                 _heartbeatTimer.AutoReset = true;
 
                 UpdateUI("Disconnected");
-                if (!InitializeCredentials())
-                {
-                    SetAccountID();
-                }
-                else
-                {
-                    IsSavePasswordChecked = true;
-                }
-
+                
                 InitializeClientTerminalUI();
             }
             catch (Exception exception)
@@ -344,90 +403,7 @@ namespace UpDownSingnalsClientTerminal.ViewModels
                 Logger.Error(exception, OType.FullName, "UpdateUI");
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private bool InitializeCredentials()
-        {
-            try
-            {
-                string path = AppDomain.CurrentDomain.BaseDirectory + @"\\trademirrorcredentials.txt";
-
-                if (File.Exists(path))
-                {
-                    FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
-                    StreamReader streamReader = new StreamReader(fs);
-
-                    string tempString = streamReader.ReadLine();
-
-                    string[] tempArray = tempString.Split(':');
-
-                    Username = tempArray[0].Trim();
-                    Password = tempArray[1].Trim();
-
-                    Logger.Debug("User Credentials Initialized. Account ID = " + Username + " | Keystring = " + Password, OType.FullName, "InitializeCredentials");
-
-                    streamReader.Close();
-                    fs.Close();
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, OType.FullName, "InitializeCredentials");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void SetAccountID()
-        {
-            try
-            {
-                string path = AppDomain.CurrentDomain.BaseDirectory + @"\\accountinfo.txt";
-
-                if (File.Exists(path))
-                {
-                    FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
-                    StreamReader streamReader = new StreamReader(fs);
-
-                    string tempString = string.Empty;
-
-                    while ((tempString = streamReader.ReadLine()) != null)
-                    {
-                        if (tempString.Contains("accountNumber"))
-                        {
-                            string[] tempArray = tempString.Split(':');
-                            this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
-                            {
-                                Username = tempArray[1].Trim();
-                            }));
-                        }
-                        break;
-                    }
-
-                    streamReader.Close();
-                    fs.Close();
-                }
-                else
-                {
-                    Logger.Debug("Account File not available", OType.FullName, "");
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, OType.FullName, "SetAccountID");
-            }
-        }
-
+        
         #endregion
 
         #region WCF Service Method Group
@@ -439,7 +415,7 @@ namespace UpDownSingnalsClientTerminal.ViewModels
         {
             try
             {
-                string suffixes = _client.Subscribe(Username, Password);
+                string suffixes = _client.Subscribe(Username);
 
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
@@ -452,15 +428,6 @@ namespace UpDownSingnalsClientTerminal.ViewModels
                         SetSuffixes(suffixes);
 
                         _heartbeatTimer.Enabled = true;
-
-                        if (IsSavePasswordChecked)
-                        {
-                            SaveAccountCredentials();
-                        }
-                        else
-                        {
-                            DeleteAccountCredentials();
-                        }
 
                         SpawnSettingWindow();
                     }
@@ -485,7 +452,7 @@ namespace UpDownSingnalsClientTerminal.ViewModels
             {
                 this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
-                    if (_client.Unsubscribe(Username, Password))
+                    if (_client.Unsubscribe(Username))
                     {
                         Logger.Info("Unsubscribed", OType.FullName, "DisconnectFromServer");
 
@@ -607,54 +574,6 @@ namespace UpDownSingnalsClientTerminal.ViewModels
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        private void SaveAccountCredentials()
-        {
-            try
-            {
-                string path = AppDomain.CurrentDomain.BaseDirectory + @"\\trademirrorcredentials.txt";
-
-                if (!File.Exists(path))
-                {
-                    FileStream fs = File.Create(path);
-                    StreamWriter streamWriter = new StreamWriter(fs);
-
-                    streamWriter.Write(Username + " : " + Password);
-                    Logger.Debug("User Credentials saved. Account ID = " + Username + " | Keystring = " + Password, OType.FullName, "PlaceOrder");
-
-                    streamWriter.Close();
-                    fs.Close();
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, OType.FullName, "SaveAccountCredentials");
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void DeleteAccountCredentials()
-        {
-            try
-            {
-                string path = AppDomain.CurrentDomain.BaseDirectory + @"\\trademirrorcredentials.txt";
-
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-                Logger.Debug("User Credentials Deleted" + Username, OType.FullName, "SaveAccountCredentials");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, OType.FullName, "SaveAccountCredentials");
-            }
-        }
-
-        /// <summary>
         /// Saves order into a text file
         /// </summary>
         public void PlaceOrder(string orderInfo)
@@ -772,6 +691,15 @@ namespace UpDownSingnalsClientTerminal.ViewModels
                                                                                             IsTakeProfitChecked = true;
                                                                                             TakeProfitBalance = "0.02";
                                                                                             IsMnaualStopsChecked = false;
+                                                                                            TotalBalanceAllocation = "0.25";
+                                                                                            TradeSizeTypeCollection.Add("Fixed Lots");
+                                                                                            TradeSizeTypeCollection.Add("Fixed Cash Risk");
+                                                                                            TradeSizeTypeCollection.Add("%age of Balance");
+                                                                                            TradeSizeTypeCollection.Add("%age of Equity");
+                                                                                            SelectedTradeSizeType = "Fixed Lots";
+                                                                                            TradeSizeType = "Enter Number of Lots";
+                                                                                            TradeSizeValue = "1.0";
+                                                                                            TradeSizeValueVisibility = true;
                                                                                         }));
 
             }
@@ -882,5 +810,37 @@ namespace UpDownSingnalsClientTerminal.ViewModels
                 return null;
             }
         }
+
+        public void TradeSizeTypeSelectionChanged()
+        {
+            try
+            {
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action) (() =>
+                                                                                        {
+                                                                                            if (SelectedTradeSizeType == "Fixed Lots")
+                                                                                            {
+                                                                                                TradeSizeType = "Number of Lots";
+                                                                                            }
+                                                                                            else if (SelectedTradeSizeType == "Fixed Cash Risk")
+                                                                                            {
+                                                                                                TradeSizeType = "Amount to Risk";
+                                                                                            }
+                                                                                            else if (SelectedTradeSizeType == "%age of Balance")
+                                                                                            {
+                                                                                                TradeSizeType = "% Balance to Risk";
+                                                                                            }
+                                                                                            else if (SelectedTradeSizeType == "%age of Equity")
+                                                                                            {
+                                                                                                TradeSizeType = "% Equity to Risk";
+                                                                                            }
+                                                                                        }));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "TradeSizeTypeSelectionChanged");
+            }
+        }
     }
 }
+
