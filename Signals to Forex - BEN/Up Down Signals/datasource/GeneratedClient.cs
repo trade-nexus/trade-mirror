@@ -16,10 +16,10 @@ public interface IUpDownSignals
 {
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://UpDownSingnalsServer.Services/IUpDownSignals/Subscribe", ReplyAction = "http://UpDownSingnalsServer.Services/IUpDownSignals/SubscribeResponse")]
-    string Subscribe(string userName, string password);
+    string Subscribe(string userName);
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://UpDownSingnalsServer.Services/IUpDownSignals/Unsubscribe", ReplyAction = "http://UpDownSingnalsServer.Services/IUpDownSignals/UnsubscribeResponse")]
-    bool Unsubscribe(string userName, string password);
+    bool Unsubscribe(string userName);
 
     [System.ServiceModel.OperationContractAttribute(Action = "http://UpDownSingnalsServer.Services/IUpDownSignals/PublishNewSignal", ReplyAction = "http://UpDownSingnalsServer.Services/IUpDownSignals/PublishNewSignalResponse")]
     void PublishNewSignal(string signalInformation);
@@ -68,14 +68,14 @@ public partial class UpDownSignalsClient : System.ServiceModel.DuplexClientBase<
     {
     }
 
-    public string Subscribe(string userName, string password)
+    public string Subscribe(string userName)
     {
-        return base.Channel.Subscribe(userName, password);
+        return base.Channel.Subscribe(userName);
     }
 
-    public bool Unsubscribe(string userName, string password)
+    public bool Unsubscribe(string userName)
     {
-        return base.Channel.Unsubscribe(userName, password);
+        return base.Channel.Unsubscribe(userName);
     }
 
     public void PublishNewSignal(string signalInformation)
