@@ -13,10 +13,10 @@ namespace UpDownSingnalsServer.Services
     public interface IUpDownSignals
     {
         [OperationContract]
-        string Subscribe(string userName, string password);
+        string Subscribe(string userName);
 
         [OperationContract]
-        bool Unsubscribe(string userName, string password);
+        bool Unsubscribe(string userName);
 
         [OperationContract]
         void PublishNewSignal(string signalInformation);
@@ -80,17 +80,16 @@ namespace UpDownSingnalsServer.Services
         /// Subscribes a user to the signals
         /// </summary>
         /// <param name="userName"></param>
-        /// <param name="password"></param>
         /// <returns></returns>
-        public string Subscribe(string userName, string password)
+        public string Subscribe(string userName)
         {
-            Logger.Debug("New Client Connection received. UserName = " + userName + " | Password = " + password, OType.FullName, "Subscribe");
+            Logger.Debug("New Client Connection received. UserName = " + userName, OType.FullName, "Subscribe");
 
             try
             {
-                if (SearchHelper.AuthenticateUserCredentials(userName, password, _helper))
+                if (SearchHelper.AuthenticateUserCredentials(userName, _helper))
                 {
-                    Logger.Debug("Client Authenticated. UserName = " + userName + " | Password = " + password, OType.FullName, "Subscribe");
+                    Logger.Debug("Client Authenticated. UserName = " + userName, OType.FullName, "Subscribe");
                     _callback = OperationContext.Current.GetCallbackChannel<IUpDownSignalsClientContract>();
                     _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
 
@@ -100,17 +99,11 @@ namespace UpDownSingnalsServer.Services
 
                     NewSignalEvent -= _newSignalHandler;
                     NewSignalEvent += _newSignalHandler;
-                    //return true;
-
-                    //string suffixes = GetSuffixes();
-                    //Logger.Debug("Suffixes = " + suffixes, OType.FullName, "Subscribe");
                     return "SUCCESS";
                 }
                 else
                 {
-                    Logger.Debug("Client Authentication failed. UserName = " + userName + " | Password = " + password, OType.FullName, "Subscribe");
-                    //return false;
-
+                    Logger.Debug("Client Authentication failed. UserName = " + userName, OType.FullName, "Subscribe");
                     return "FAILED";
                 }
             }
@@ -118,7 +111,6 @@ namespace UpDownSingnalsServer.Services
             {
                 Console.WriteLine(exception);
                 Logger.Error(exception, OType.FullName, "Subscribe");
-                //return false;
                 return "FAILED";
             }
         }
@@ -126,21 +118,21 @@ namespace UpDownSingnalsServer.Services
         /// <summary>
         /// Un-Subscribes a user
         /// </summary>
-        public bool Unsubscribe(string userName, string password)
+        public bool Unsubscribe(string userName)
         {
             try
             {
-                if (SearchHelper.UnAuthenticateUserCredentials(userName, password, _helper))
+                if (SearchHelper.UnAuthenticateUserCredentials(userName, _helper))
                 {
                     _callback = OperationContext.Current.GetCallbackChannel<IUpDownSignalsClientContract>();
                     _newSignalHandler = new NewSignalEventHandler(NewSignalHandler);
                     NewSignalEvent -= _newSignalHandler;
-                    Logger.Debug("Client Unsubscribed. UserName = " + userName + " | Password = " + password, OType.FullName, "Unsubscribe");
+                    Logger.Debug("Client Unsubscribed. UserName = " + userName, OType.FullName, "Unsubscribe");
                     return true;
                 }
                 else
                 {
-                    Logger.Debug("Client Cant be unsubscirbed. UserName = " + userName + " | Password = " + password, OType.FullName, "Subscribe");
+                    Logger.Debug("Client Cant be unsubscirbed. UserName = " + userName, OType.FullName, "Subscribe");
                     return false;
                 }
             }
@@ -234,11 +226,6 @@ namespace UpDownSingnalsServer.Services
         public void NewSignalHandler(object sender, NewSignalEventArgs e)
         {
             _callback.NewSignal(e.SignalInformation);
-        }
-
-        private string GetSuffixes()
-        {
-            return _helper.GetSuffixes();
         }
 
         private void CommunicationObjectOnClosed(object clientHandler, EventArgs eventArgs)
