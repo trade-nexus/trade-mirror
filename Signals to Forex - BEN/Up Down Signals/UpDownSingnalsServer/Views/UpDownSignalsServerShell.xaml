@@ -31,7 +31,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Stretch="Fill" 
-                Source="/UpDownSingnalsServer;component/Resources/Banner.png" />
+                Source="/UpDownSingnalsServer;component/Resources/Banner.png"/>
         </Grid>
 
         <TabControl 
@@ -264,7 +264,7 @@
 
             </TabItem>
 
-            <TabItem Header="Singals" Name="SignalsTabItem">
+            <TabItem Header="Signals" Name="SignalsTabItem">
                 <Grid Width="500" Height="450" >
 
                     <Grid.ColumnDefinitions>
@@ -279,13 +279,13 @@
                     </Grid.RowDefinitions>
 
                     <Label 
-                        Content="Select Signals File:" 
+                        Content="Monitoring Signals File:" 
                         Grid.Column="1" HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center" 
                         Name="EmailTemplateLabel"
-                        Margin="38,1,77,1" 
+                        Margin="1,1,1,1"
                         FontFamily="Calibri" 
                         FontSize="14"
                         FontWeight="Bold" />
@@ -293,13 +293,16 @@
                     <TextBox 
                         Text="{Binding SelectedSignalFilePath}"
                         Grid.Column="1" 
-                        Grid.ColumnSpan="2" Width="150"
+                        Grid.ColumnSpan="2" 
+                        Width="200"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
-                        HorizontalContentAlignment="Left" Margin="155,13,175,13" />
+                        HorizontalContentAlignment="Left" 
+                        Margin="100,1,1,1"
+                        IsEnabled="False"/>
 
-                    <Button 
+                    <!--<Button 
                         Content="Browse" 
                         Grid.Column="2" HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -310,15 +313,31 @@
                         Width="50"
                         FontFamily="Calibri" 
                         FontSize="12"
+                        FontWeight="Bold"/>-->
+
+                    <Label 
+                        Content="TRANSMITTED SIGNALS" 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2" 
+                        Grid.Row="1" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" 
+                        Margin="7,1,1,1"
+                        FontFamily="Calibri" 
+                        FontSize="14"
                         FontWeight="Bold" />
 
-                    <ListView Grid.ColumnSpan="3" 
-                        Grid.Row="1" HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
+                    <ListView 
+                        Grid.ColumnSpan="3" 
+                        Grid.Row="1" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
                         VerticalContentAlignment="Top"
                         HorizontalContentAlignment="Stretch"
                         Width="490" 
-                        Height="375"
+                        Height="380"
                         ItemsSource="{Binding SignalsCollection}">
 
                         <ListView.View>
@@ -404,7 +423,7 @@
                         </ListView.View>
                     </ListView>
 
-                    <Button 
+                    <!--<Button 
                         Content="SEND" 
                         Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
@@ -415,7 +434,7 @@
                         Width="50"
                         FontFamily="Calibri" 
                         FontSize="14"
-                        FontWeight="Bold" />
+                        FontWeight="Bold" />-->
 
                 </Grid>
             </TabItem>
