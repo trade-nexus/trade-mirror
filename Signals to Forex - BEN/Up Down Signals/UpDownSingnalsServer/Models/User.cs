@@ -61,14 +61,13 @@ namespace UpDownSingnalsServer.Models
         /// </summary>
         /// <param name="id"></param>
         /// <param name="accountNumber"></param>
-        /// <param name="keyString"></param>
-        public User(int id, string accountNumber, string keyString)
+        public User(int id, string accountNumber)
         {
             this.AccountNumber = accountNumber;
             this.Created = DateTime.MinValue;
             this.Email = "email@default.com";
             this.ID = id;
-            this.KeyString = keyString;
+            this.KeyString = "default";
             this.Modified = DateTime.MaxValue;
             this.Role = "user";
             this._status = true;
@@ -113,17 +112,9 @@ namespace UpDownSingnalsServer.Models
                 User user2 = (User)obj;
                 if (user2.AccountNumber == this.AccountNumber)
                 {
-                    if (this.KeyString == user2.KeyString)
+                    if (this.Status == "Active")
                     {
-                        if (this.Status == "Active")
-                        {
-                            return 0;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-
+                        return 0;
                     }
                     else
                     {

@@ -1,6 +1,8 @@
-﻿namespace UpDownSingnalsServer.Models
+﻿using System;
+
+namespace UpDownSingnalsServer.Models
 {
-    public class Signal
+    public class Signal : IComparable
     {
         public int ID { get; set; }
         public string Symbol { get; set; }
@@ -30,6 +32,47 @@
         {
             return "ID = " + ID + " | Symbol = " + Symbol + " | Entry Side = " + EntrySide +
                    " | Entry Price = " + EntryPrice + " | Model = " + Model;
+        }
+
+        public int CompareTo(object obj)
+        {
+            try
+            {
+                Signal signal2 = (Signal)obj;
+                if (signal2.EntryPrice == this.EntryPrice)
+                {
+                    if (signal2.EntrySide == this.EntrySide)
+                    {
+                        if(signal2.Symbol == this.Symbol)
+                        {
+                            if (signal2.Model == this.Model)
+                            {
+                                return 0;
+                            }
+                            else
+                            {
+                                return -1;
+                            }
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            catch (Exception exception)
+            {
+                return -1;
+            }
         }
     }
 }
