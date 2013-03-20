@@ -146,17 +146,16 @@ namespace UpDownSingnalsServer.Utility
         /// 
         /// </summary>
         /// <param name="userName"></param>
-        /// <param name="password"></param>
         /// <param name="dbHelper"> </param>
         /// <returns></returns>
-        public static bool AuthenticateUserCredentials(string userName, string password, DBHelper dbHelper)
+        public static bool AuthenticateUserCredentials(string userName, DBHelper dbHelper)
         {
             try
             {
                 List<User> users = new List<User>();
                 users = dbHelper.BuildUsersList();
 
-                User testUser = new User(Convert.ToInt32(userName), userName, password);
+                User testUser = new User(Convert.ToInt32(userName), userName);
                 if (users.BinarySearch(testUser) > -1)
                 {
                     if(ClientSubscribed != null)
@@ -182,14 +181,14 @@ namespace UpDownSingnalsServer.Utility
         /// <param name="password"></param>
         /// <param name="dbHelper"> </param>
         /// <returns></returns>
-        public static bool UnAuthenticateUserCredentials(string userName, string password, DBHelper dbHelper)
+        public static bool UnAuthenticateUserCredentials(string userName, DBHelper dbHelper)
         {
             try
             {
                 List<User> users = new List<User>();
                 users = dbHelper.BuildUsersList();
 
-                User testUser = new User(Convert.ToInt32(userName), userName, password);
+                User testUser = new User(Convert.ToInt32(userName), userName);
                 if (users.BinarySearch(testUser) > -1)
                 {
                     if(ClientUnSubscribed != null)
