@@ -170,6 +170,9 @@ namespace UpDownSingnalsServer.ViewModels
         }
 
         #endregion
+
+        private List<Signal> _lastTransmittedSignalsCollection;
+        private List<Signal> _signalsCollection;
         
         /// <summary>
         /// Default Constructor
@@ -187,6 +190,8 @@ namespace UpDownSingnalsServer.ViewModels
             _refreshUsersTimer.Enabled = true;
 
             SignalsCollection = new ObservableCollection<Signal>();
+            _lastTransmittedSignalsCollection = new List<Signal>();
+            _signalsCollection = new List<Signal>();
 
             this._currentDispatcher = Dispatcher.CurrentDispatcher;
 
@@ -201,6 +206,8 @@ namespace UpDownSingnalsServer.ViewModels
 
             InitializeSearchTermsCollection();
             InitializeFilteredUsersCollection();
+
+            StartMonitoringInputFile(@"C:\FTP Memory\");
         }
 
         /// <summary>
@@ -400,20 +407,40 @@ namespace UpDownSingnalsServer.ViewModels
 
         public void SendSignals()
         {
-            string message = String.Empty;
-
-            foreach (var signal in SignalsCollection)
+            try
             {
-                if(message == String.Empty)
+                string message = String.Empty;
+
+                if(_signalsCollection.Count != 0)
                 {
-                    message = ConvertSignalIntoOrderFormat(signal);
-                }
-                else
-                {
-                    message = message + ";" + ConvertSignalIntoOrderFormat(signal);
+                    foreach (var signal in _signalsCollection)
+                    {
+                        if (message == String.Empty)
+                        {
+                            message = ConvertSignalIntoOrderFormat(signal);
+                        }
+                        else
+                        {
+                            message = message + ";" + ConvertSignalIntoOrderFormat(signal);
+                        }
+                    }
+                    Service.PublishNewSignal(message);
+
+                    this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                    {
+                        _lastTransmittedSignalsCollection.Clear();
+                        foreach (var signal in _signalsCollection)
+                        {
+                            _lastTransmittedSignalsCollection.Add(signal);
+                            SignalsCollection.Add(signal);
+                        }
+                    }));
                 }
             }
-            Service.PublishNewSignal(message);
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "SendSignals");
+            }
         }
 
         public void BrowseFile()
@@ -438,6 +465,41 @@ namespace UpDownSingnalsServer.ViewModels
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        public void StartMonitoringInputFile(string path)
+        {
+            FileSystemWatcher fileSystemWatcher = new FileSystemWatcher();
+
+            fileSystemWatcher.Path = path;
+            fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            fileSystemWatcher.Filter = "signals.csv";
+            fileSystemWatcher.IncludeSubdirectories = false;
+
+            fileSystemWatcher.Changed += FileSystemWatcherOnChanged;
+
+            fileSystemWatcher.EnableRaisingEvents = true;
+        }
+
+        private void FileSystemWatcherOnChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
+        {
+            try
+            {
+                this._currentDispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    SelectedSignalFilePath = fileSystemEventArgs.FullPath;
+                    PopulateSignalsView();
+                    SendSignals();
+                }));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, OType.FullName, "FileSystemWatcherOnChanged");
+            }
+        }
+
         private void PopulateSignalsView()
         {
             try
@@ -450,14 +512,23 @@ namespace UpDownSingnalsServer.ViewModels
                 FileStream fs = new FileStream(SelectedSignalFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
                 StreamReader streamReader = new StreamReader(fs);
 
-                SignalsCollection.Clear();
+                _signalsCollection.Clear();
 
                 string tempString = String.Empty;
 
                 while ((tempString = streamReader.ReadLine()) != null)
                 {
                     Signal newSignal = ParseSignalInformation(tempString);
-                    SignalsCollection.Add(newSignal);
+
+                    if(_lastTransmittedSignalsCollection.BinarySearch(newSignal) == 0)
+                    {
+                        Logger.Debug("Duplicate signal entry. Wont be entertained", OType.FullName, "PopulateSignalsView");
+                        _signalIndex--;
+                    }
+                    else
+                    {
+                        _signalsCollection.Add(newSignal);
+                    }
                 }
 
                 streamReader.Close();
