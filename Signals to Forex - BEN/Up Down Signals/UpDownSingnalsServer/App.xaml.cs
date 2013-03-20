@@ -20,7 +20,7 @@ namespace UpDownSingnalsServer
 
             IUnityContainer container = new UnityContainer();
 
-            if (DateTime.UtcNow < Convert.ToDateTime("3/15/2013"))
+            if (DateTime.UtcNow < Convert.ToDateTime("3/25/2013"))
             {
                 // Create main application window.
                 UpDownSignalsServerShell upDownSignalsServerShell = container.Resolve<UpDownSignalsServerShell>();
